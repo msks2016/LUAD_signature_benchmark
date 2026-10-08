@@ -1,0 +1,9 @@
+paper_name,paper_ensembl,current_symbol,current_ensembl,gene_type,verified_by,notes
+AL034397.3,ENSG00000272630,AL731563.3,ENSG00000272630.1,lncRNA,Ensembl ID (base match),Paper name was pre-GENCODE v36; renamed to AL731563.3
+AC010980.2,ENSG00000272631,AC067750.1,ENSG00000272631.1,lncRNA,Ensembl ID (base match),Paper name was pre-GENCODE v36; renamed to AC067750.1
+HSPC324,ENSG00000228401,AL590226.1,ENSG00000228401.5,lncRNA,Ensembl ID (base match),Aliased to paper name
+KIAA0125,ENSG00000272646,AC079766.1,ENSG00000272646.1,lncRNA,Ensembl ID (base match),Aliased to paper name
+RP11-21L23.2,ENSG00000272650,AC110792.3,ENSG00000272650.1,lncRNA,Ensembl ID (base match),Aliased to paper name
+AC018629.1,ENSG00000279806,AC018629.1,ENSG00000279806.1,TEC,gene_name (TEC),TEC gene_type; kept as-is
+LINC00941,ENSG00000235884,LINC00941,ENSG00000235884.4,lncRNA,gene_name,All-zero in GDC STAR counts; not measurable in TCGA-LUAD
+RP11-295G20.2,ENSG00000272651,NA,NA,NA,not in GENCODE,Not present in current GENCODE (v36+)
