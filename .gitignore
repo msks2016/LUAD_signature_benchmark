@@ -23,3 +23,16 @@ logs/*
 *.tmp
 *.bak
 *~
+# GDC client binaries and manifests
+gdc-client
+gdc-client_*.zip
+gdc_client_configuration.dtt
+gdc_manifest.txt
+# Large regenerable matrices
+data/processed/tcga_luad_expr_clean*.rds
+data/processed/tcga_luad_expr_clean*.csv
+# Excel lock files (macOS/Office)
+~$*
+# R checkpoint files
+df.rds
+results.rds
