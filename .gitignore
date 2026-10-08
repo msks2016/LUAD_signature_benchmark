@@ -1,4 +1,25 @@
+# R specific
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+.Rprofile
+# renv
+renv/library/
+renv/staging/
+renv/local/
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+# Data (large files)
+data/raw/*
+!data/raw/.gitkeep
+# Logs
+logs/*
+!logs/.gitkeep
+# Temporary
+*.tmp
+*.bak
+*~
