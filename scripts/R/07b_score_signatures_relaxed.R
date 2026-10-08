@@ -7,7 +7,7 @@ suppressPackageStartupMessages({
 })
 
 message("Loading data...")
-expr <- readRDS("data/processed/tcga_luad_expr_clean_v2.rds")
+expr <- readRDS("data/processed/tcga_luad_expr_clean_v3.rds")
 surv <- readRDS("data/processed/tcga_luad_survival.rds")
 sigs <- read.csv("data/processed/signature_coefficients.csv")
 
