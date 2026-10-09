@@ -36,3 +36,7 @@ data/processed/tcga_luad_expr_clean*.csv
 # R checkpoint files
 df.rds
 results.rds
+data/processed/*.rds
+data/processed/*.RData
+data/processed/*.rda
+data/raw/CPTAC3_LUAD/
