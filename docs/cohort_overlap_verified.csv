@@ -1,0 +1,3 @@
+"paper","dev_cohort","author_validation","GSE31210","GSE50081","GSE30219","action"
+"Paper62","TCGA-LUAD","GSE3141 + GSE37745","No","No","No","Keep"
+"Paper305","TCGA-LUAD","GSE30219, GSE31210, GSE37745+GSE50081","YES","YES","YES","DROP from GPL570 cohorts"

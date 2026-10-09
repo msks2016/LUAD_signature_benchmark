@@ -14,3 +14,27 @@ Paper AL034397.3 (ENSG00000272630) = current AL731563.3, NOT AL034397.1
 Paper AC010980.2 (ENSG00000272631) = current AC067750.1, NOT AC010980.1
 Built v3 matrix with correct mappings. Rescored affected signatures.
 Commit: v2.2 (cd8e30a)
+
+## Deviation 3: GEO microarray coverage fallback (2026-10-09)
+
+Trigger: Phase 2 GEO coverage check on GPL570.
+Result: Only 2 of 15 signatures (Paper305, Paper62) had 100% coverage.
+Average coverage: ~28%. Five signatures had 0%.
+Decision: pivot to RNA-seq external cohorts (GSE81089, GSE72094, CPTAC-3).
+Table: results/tables/geo_coverage.csv
+
+## Deviation 3: GEO microarray coverage fallback (2026-10-09)
+
+Trigger: Phase 2 GEO coverage check on GPL570.
+Result: Only 2 of 15 signatures (Paper305, Paper62) had 100% coverage.
+Average coverage: ~28%. Five signatures had 0%.
+Decision: pivot to RNA-seq external cohorts (GSE81089, GSE72094, CPTAC-3).
+Table: results/tables/geo_coverage.csv
+
+## Deviation 3: GEO microarray coverage fallback (2026-10-09)
+
+Trigger: Phase 2 GEO coverage check on GPL570.
+Result: Only 2 of 15 signatures (Paper305, Paper62) had 100% coverage.
+Average coverage: ~28%. Five signatures had 0%.
+Decision: pivot to RNA-seq external cohorts (GSE81089, GSE72094, CPTAC-3).
+Table: results/tables/geo_coverage.csv
