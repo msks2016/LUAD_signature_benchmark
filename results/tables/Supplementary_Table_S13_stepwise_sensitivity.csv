@@ -1,0 +1,5 @@
+"setting","n_signatures","n_replicated","Wu_class","Wu_C","Yao_class","Yao_C","Yu_class","Yu_C"
+"A",15,0,"Inconclusive",0.335,"Contradicted",0.323,"Inconclusive",0.377
+"B",10,1,"Inconclusive",0.665,"Replicated",0.677,NA,NA
+"C",11,2,"Replicated",0.675,"Replicated",0.675,NA,NA
+"D",9,2,"Replicated",0.675,"Replicated",0.675,NA,NA
