@@ -55,3 +55,27 @@
  than chance when restricted to independent pairs. The paper's framing
  changes to a coverage-and-power finding: public LUAD cohorts lack the
  annotation and event counts needed to validate published lncRNA signatures.
+
+## 2026-10-10 — Metric terminology correction
+ The metric previously labeled 'calibration slope' is computed as the
+ coefficient of scale(risk_score) in a Cox model. This is the log-HR per
+ 1 SD of the published risk score, not the conventional calibration slope
+ (which would use the unstandardized published linear predictor). The
+ metric is renamed throughout the manuscript for accuracy.
+ Pre-specified decision rules (delta = log 1.25) remain valid for log-HR per SD.
+ No re-analysis required; terminology-only change.
+
+## 2026-10-10 — Metric terminology correction
+ The metric previously labeled 'calibration slope' is computed as the
+ coefficient of scale(risk_score) in a Cox model. This is the log-HR per
+ 1 SD of the published risk score, not the conventional calibration slope.
+ The metric is renamed 'log-HR per SD' throughout the manuscript.
+ Pre-specified decision rules (delta = log 1.25) remain valid for log-HR per SD.
+ No re-analysis required.
+
+## 2026-10-10 — Switch to raw log2 expression for signature scoring
+ Original publication formulas use raw expression (TPM/FPKM or microarray
+ intensity) multiplied by coefficient, without z-scoring. Prior pipeline
+ used per-cohort z-scored expression, which changes effective gene weights.
+ Pipeline updated to use raw log2(TPM+1) or raw log2(intensity).
+ All downstream outputs will be regenerated.

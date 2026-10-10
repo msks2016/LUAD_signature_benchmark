@@ -33,11 +33,11 @@ cohorts <- list(
   )
 )
 
-# z-score each cohort separately
+# (z-scoring disabled; raw expression used)
 for (cn in names(cohorts)) {
   e <- cohorts[[cn]]$expr
-  cohorts[[cn]]$z <- t(scale(t(e)))
-  cohorts[[cn]]$z <- cohorts[[cn]]$z[complete.cases(cohorts[[cn]]$z), ]
+  # z-scoring disabled; raw expression used
+  # cohorts[[cn]]$z <- cohorts[[cn]]$expr[complete.cases(cohorts[[cn]]$z), ]
 }
 
 # --- 2. Load signatures and build independent-pairs table ----------
@@ -54,14 +54,14 @@ sigs <- do.call(rbind, lapply(sig_files, function(f) {
 # Since all 15 signatures are TCGA-developed (per screening), only CPTAC3 and
 # GSE31210 are independent pairs.
 
-# Coverage rule: >= 80% of genes present in the cohort's z matrix
+# Coverage rule: 100% of genes present (primary analysis)
 pairs_list <- list()
 for (cn in c("CPTAC3", "GSE31210")) {
-  z <- cohorts[[cn]]$z
+  expr_cohort <- cohorts[[cn]]$expr
   for (sig_id in unique(sigs$record_no)) {
     s <- sigs[sigs$record_no == sig_id, ]
-    n_present <- sum(s$gene %in% rownames(z))
-    if (n_present / nrow(s) >= 0.80) {
+    n_present <- sum(s$gene %in% rownames(expr_cohort))
+    if (n_present / nrow(s) >= 1.0) {
       pairs_list[[length(pairs_list) + 1]] <- data.frame(
         record_no = sig_id, cohort = cn,
         n_genes = nrow(s), n_present = n_present,
@@ -79,12 +79,13 @@ cidx <- function(score, time, event, i = seq_along(time)) {
   unname(concordance(Surv(time[i], event[i]) ~ score[i], reverse = TRUE)$concordance)
 }
 
-lp_published <- function(sig_genes, sig_coefs, z) {
-  keep <- sig_genes %in% rownames(z)
-  as.numeric(crossprod(sig_coefs[keep], z[sig_genes[keep], , drop = FALSE]))
+lp_published <- function(sig_genes, sig_coefs, expr) {
+  keep <- sig_genes %in% rownames(expr_cohort)
+  as.numeric(crossprod(sig_coefs[keep], expr[sig_genes[keep], , drop = FALSE]))
 }
 
 calib <- function(lp, time, event) {
+  if (sd(lp, na.rm = TRUE) < 1e-6) return(c(beta = NA_real_, se = NA_real_))
   s <- as.numeric(scale(lp))
   f <- coxph(Surv(time, event) ~ s)
   c(beta = unname(coef(f)), se = sqrt(vcov(f)[1, 1]))
@@ -96,8 +97,8 @@ ridge_lp <- function(x, t, e) {
 }
 
 refit_c <- function(sig_genes, co) {
-  g <- intersect(sig_genes, rownames(co$z))
-  x <- t(co$z[g, , drop = FALSE])
+  g <- intersect(sig_genes, rownames(co$expr))
+  x <- t(co$expr[g, , drop = FALSE])
   t <- co$time; e <- co$event
   if (ncol(x) < 2 || length(unique(e)) < 2) {
     return(c(refit_apparent = NA, optimism = NA, refit_corrected = NA))
@@ -120,7 +121,7 @@ est <- do.call(rbind, lapply(seq_len(nrow(pairs)), function(k) {
   cn   <- pairs$cohort[k]
   co   <- cohorts[[cn]]
   s    <- sigs[sigs$record_no == pairs$record_no[k], ]
-  lp   <- lp_published(s$gene, s$coefficient, co$z)
+  lp   <- lp_published(s$gene, s$coefficient, co$expr)
   raw_c <- cidx(lp, co$time, co$event)
   sl   <- calib(lp, co$time, co$event)
   rc   <- refit_c(s$gene, co)
@@ -150,7 +151,7 @@ pool_once <- function() {
     i  <- idx[[cn]]
     s  <- sigs[sigs$record_no == pairs$record_no[k], ]
     tryCatch(
-      calib(lp_published(s$gene, s$coefficient, co$z[, i, drop = FALSE]),
+      calib(lp_published(s$gene, s$coefficient, co$expr[, i, drop = FALSE]),
             co$time[i], co$event[i])[["beta"]],
       error = function(e) NA_real_
     )
@@ -182,10 +183,10 @@ bins <- lapply(cohorts, function(co) {
 })
 
 div_once <- function(genes, coefs, co) {
-  keep <- genes %in% rownames(co$z)
+  keep <- genes %in% rownames(co$expr)
   if (sum(keep) < 2) return(NA_real_)
   genes <- genes[keep]; coefs <- coefs[keep]
-  x <- t(co$z[genes, , drop = FALSE])
+  x <- t(co$expr[genes, , drop = FALSE])
   raw <- cidx(as.numeric(x %*% coefs), co$time, co$event)
   app <- tryCatch(cidx(ridge_lp(x, co$time, co$event), co$time, co$event),
                   error = function(e) NA_real_)
@@ -199,7 +200,7 @@ for (k in seq_len(nrow(pairs))) {
   cn <- pairs$cohort[k]
   co <- cohorts[[cn]]
   s  <- sigs[sigs$record_no == pairs$record_no[k], ]
-  keep <- s$gene %in% rownames(co$z)
+  keep <- s$gene %in% rownames(co$expr)
   s <- s[keep, ]
   obs_div[k] <- div_once(s$gene, s$coefficient, co)
   
