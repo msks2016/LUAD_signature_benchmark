@@ -32,3 +32,26 @@
  3. Leave-one-cohort-out: pooled Yao HR stable at 1.68-1.80 across all subsets, I2=0%.
  4. Early-death exclusion (no deaths within 3 months): pattern unchanged.
  All checks support the primary finding; no re-analysis required.
+
+## 2026-10-11 — Transportability decision rules (pre-specified before running)
+ Primary summary: pooled mean calibration slope (log-HR per SD of published score)
+ across all independent signature-cohort pairs, with cluster-bootstrap 95% CI.
+ Effect-size threshold: delta = log(1.25) = 0.223.
+ Decision rules (set before running):
+   - CI lower bound > 0: Transportable (positive finding)
+   - CI upper bound < 0: Contradicted (published weights point wrong way)
+   - CI includes 0 and upper bound < delta: Informative null
+   - CI includes 0 and upper bound >= delta: Inconclusive
+ Independent pairs only (TCGA excluded as non-independent for signatures developed on it).
+ Total independent pairs: 12 (CPTAC-3 = 10, GSE31210 = 2).
+
+## 2026-10-11 — Transportability analysis result
+ Calibration-slope analysis on 12 independent pairs.
+ Mean slope: 0.311 (95% CI -0.107 to 0.684).
+ Classification by pre-specified rules: Inconclusive.
+ Divergence null test: 1 observed vs 5.1 expected (proportion 0.083 vs 0.427).
+ Conclusion: the original 'coefficient non-transportability' framing is not
+ supported. The paired-C-index divergence observed earlier is less frequent
+ than chance when restricted to independent pairs. The paper's framing
+ changes to a coverage-and-power finding: public LUAD cohorts lack the
+ annotation and event counts needed to validate published lncRNA signatures.
