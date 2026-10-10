@@ -149,3 +149,29 @@ cat("Metrics saved:", nrow(metrics), "signatures\n")
 print(metrics[, c("signature", "n_patients", "n_events",
                   "C_index", "C_index_lo", "C_index_hi",
                   "HR_per_SD", "logrank_p", "logrank_p_BH")])
+
+sig_names_to_test <- c(
+  "Paper369_Wu2022",    # 0.335 / 0.665
+  "Paper298_Li2023",    # 0.372 / 0.628
+  "Paper53_Yang2022"    # 0.385 / 0.615
+)
+for (s in sig_names_to_test) {
+  sig <- read.delim(paste0("signatures/", s, ".tsv"), stringsAsFactors = FALSE)
+  sig <- sig[sig$gene %in% rownames(expr), ]
+  if (nrow(sig) == 0) { cat(s, " — 0 genes\n"); next }
+  k <- nrow(sig)
+  coefs <- sig$coefficient  
+  nd <- replicate(200, {
+    rg <- sample(valid_genes, k)
+    sub <- expr[rg, , drop = FALSE]
+    sub_z <- t(scale(t(sub)))
+    sc <- as.numeric(crossprod(coefs, sub_z))
+    df <- data.frame(score = sc, os_time = clin$os_time, os_event = clin$os_event)
+    concordance(Surv(os_time, os_event) ~ score, data = df)$concordance
+  })  
+  cat("\n===", s, "===\n")
+  cat("  Median:", round(median(nd), 3), 
+      " 2.5%:", round(quantile(nd, 0.025), 3),
+      " 97.5%:", round(quantile(nd, 0.975), 3), "\n")
+  cat("  Null range:", round(min(nd), 3), "–", round(max(nd), 3), "\n")
+}  
