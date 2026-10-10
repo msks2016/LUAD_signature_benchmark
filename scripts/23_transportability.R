@@ -92,8 +92,8 @@ calib <- function(lp, time, event) {
 }
 
 ridge_lp <- function(x, t, e) {
-  f <- cv.glmnet(x, Surv(t, e), family = "cox", alpha = 0, nfolds = 5)
-  as.numeric(predict(f, x, s = "lambda.min", type = "link"))
+  f <- cv.glmnet(x, Surv(t, e), family = 'cox', alpha = 0, nfolds = 5)
+  as.numeric(predict(f, x, s = 'lambda.min', type = 'link'))
 }
 
 refit_c <- function(sig_genes, co) {
