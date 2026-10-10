@@ -24,3 +24,11 @@
  contrasts with its univariable C-index of 0.323, suggesting its
  prognostic signal is stage-dependent and was masked in the
  univariable analysis.
+
+## 2026-10-10 — Phase 8 robustness checks
+ 1. Missing-gene threshold sensitivity: 10%->10 evaluable, 20%->11, 30%->13.
+    Paper352 flips at 10/20 boundary; Paper165 and Paper9 become evaluable only at 30%.
+ 2. Stage-restricted: inversion pattern (raw C < 0.5, Cox C > 0.5) unchanged in stage I-II only.
+ 3. Leave-one-cohort-out: pooled Yao HR stable at 1.68-1.80 across all subsets, I2=0%.
+ 4. Early-death exclusion (no deaths within 3 months): pattern unchanged.
+ All checks support the primary finding; no re-analysis required.
