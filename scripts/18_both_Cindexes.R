@@ -9,7 +9,7 @@ compute_both <- function(d, cohort, platform, sig_short) {
   if (nrow(d) < 50) return(NULL)
   d$risk_z <- as.numeric(scale(d$risk_score))
   
-  c_raw <- concordance(Surv(os_time, os_event) ~ risk_score, data = d)$concordance
+  c_raw <- concordance(Surv(os_time, os_event) ~ risk_score, data = d, reverse = TRUE)$concordance
   
   fit   <- coxph(Surv(os_time, os_event) ~ risk_z, data = d)
   hr    <- exp(coef(fit))

@@ -34,13 +34,13 @@ for (sig in sig_names) {
   cat("  N =", n, " Events =", n_events, "\n")
   
   # ---- C-index (bootstrap 95% CI) ----
-  cfit <- concordance(Surv(os_time, os_event) ~ risk_z, data = d)
+  cfit <- concordance(Surv(os_time, os_event) ~ risk_z, data = d, reverse = TRUE)
   cidx <- cfit$concordance
   
   boot_c <- replicate(1000, {
     idx <- sample(n, replace = TRUE)
     tryCatch({
-      cf <- concordance(Surv(os_time, os_event) ~ risk_z, data = d[idx, ])
+      cf <- concordance(Surv(os_time, os_event) ~ risk_z, data = d[idx, ], reverse = TRUE)
       cf$concordance
     }, error = function(e) NA_real_)
   })
@@ -167,7 +167,7 @@ for (s in sig_names_to_test) {
     sub_z <- t(scale(t(sub)))
     sc <- as.numeric(crossprod(coefs, sub_z))
     df <- data.frame(score = sc, os_time = clin$os_time, os_event = clin$os_event)
-    concordance(Surv(os_time, os_event) ~ score, data = df)$concordance
+    concordance(Surv(os_time, os_event) ~ score, data = df, reverse = TRUE)$concordance
   })  
   cat("\n===", s, "===\n")
   cat("  Median:", round(median(nd), 3), 

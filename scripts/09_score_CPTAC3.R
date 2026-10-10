@@ -7,9 +7,9 @@ expr <- readRDS("data/processed/CPTAC3_LUAD_expr_matched.rds")
 clin <- readRDS("data/processed/CPTAC3_LUAD_clin_matched.rds")
 cat("Expression:", nrow(expr), "genes x", ncol(expr), "patients\n")
 
-expr_z <- t(scale(t(expr)))
-expr_z <- expr_z[complete.cases(expr_z), ]
-cat("After z-score filter:", nrow(expr_z), "genes\n")
+# expr_z <- t(scale(t(expr)))  # disabled: raw expression used
+expr <- expr[complete.cases(expr), ]
+cat("After NA filter:", nrow(expr), "genes\n")
 
 sig_files <- list.files("signatures", pattern = "\\.tsv$", full.names = TRUE)
 cat("Signatures found:", length(sig_files), "\n")
@@ -18,23 +18,23 @@ score_one <- function(sig_path) {
   sig <- read.delim(sig_path, stringsAsFactors = FALSE)
   sig_name <- tools::file_path_sans_ext(basename(sig_path))
   
-  present     <- intersect(sig$gene, rownames(expr_z))
+  present     <- intersect(sig$gene, rownames(expr))
   missing_pct <- 1 - length(present) / nrow(sig)
   cat(sprintf("  %-25s  %d/%d present (%.1f%% missing)\n",
               sig_name, length(present), nrow(sig), 100 * missing_pct))
   
   if (missing_pct > 0.20) {
-    return(data.frame(submitter_id = colnames(expr_z),
+    return(data.frame(submitter_id = colnames(expr),
                       signature    = sig_name,
                       risk_score   = NA_real_,
                       evaluable    = FALSE))
   }
   
   sig_sub <- sig[sig$gene %in% present, ]
-  mat <- expr_z[sig_sub$gene, , drop = FALSE]
+  mat <- expr[sig_sub$gene, , drop = FALSE]
   scores <- as.numeric(crossprod(sig_sub$coefficient, mat))
   
-  data.frame(submitter_id = colnames(expr_z),
+  data.frame(submitter_id = colnames(expr),
              signature    = sig_name,
              risk_score   = scores,
              evaluable    = TRUE)

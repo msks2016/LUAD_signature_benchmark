@@ -70,7 +70,7 @@ compute_metrics <- function(d, label) {
   hr  <- exp(coef(fit))
   ci  <- exp(confint(fit))
   c_cox <- concordance(fit)$concordance
-  c_raw <- concordance(Surv(os_time, os_event) ~ risk_score, data = d)$concordance
+  c_raw <- concordance(Surv(os_time, os_event) ~ risk_score, data = d, reverse = TRUE)$concordance
   data.frame(
     subset = label,
     n = nrow(d),

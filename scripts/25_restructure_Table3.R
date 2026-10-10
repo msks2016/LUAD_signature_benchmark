@@ -16,20 +16,20 @@ table3 <- transport[, c("record_no", "cohort", "n_genes",
 # Rename for the paper
 colnames(table3) <- c(
   "signature", "cohort", "n_genes",
-  "raw_C_index", "calibration_slope", "slope_SE",
+  "raw_C_index", "log_HR_per_SD", "log_HR_SE",
   "HR_per_SD", "refit_C_apparent", "refit_C_corrected",
   "observed_divergence", "null_divergence_prob"
 )
 
 # Add a direction-of-effect column based on slope sign
-table3$slope_direction <- ifelse(table3$calibration_slope > 0, "Positive",
-                                 ifelse(table3$calibration_slope < 0, "Negative", "Null"))
+table3$log_HR_direction <- ifelse(table3$log_HR_per_SD > 0, "Positive",
+                                 ifelse(table3$log_HR_per_SD < 0, "Negative", "Null"))
 
 # Add a classification column based on the raw-C / slope consistency
 table3$pair_interpretation <- ifelse(
-  table3$calibration_slope > 0.3 & table3$raw_C_index > 0.5, "Consistent positive",
-  ifelse(table3$calibration_slope < -0.1, "Consistent negative",
-         ifelse(abs(table3$calibration_slope) < 0.15, "Near null",
+  table3$log_HR_per_SD > 0.3 & table3$raw_C_index > 0.5, "Consistent positive",
+  ifelse(table3$log_HR_per_SD < -0.1, "Consistent negative",
+         ifelse(abs(table3$log_HR_per_SD) < 0.15, "Near null",
                 "Weak positive")))
 
 write.csv(table3, "results/tables/Table3_transportability.csv",

@@ -1,24 +1,25 @@
 # scripts/15_score_GSE31210.R
 # Applies the two evaluable signatures to GSE31210 and runs the
 # expression-matched coefficient null test (2000 draws per signature).
+# Uses raw log2 expression for scoring (no z-scoring).
 
 suppressPackageStartupMessages(library(survival))
 set.seed(2026)
 
-expr_31210 <- readRDS("data/processed/GSE31210_expr_matched.rds")
-clin_31210 <- readRDS("data/processed/GSE31210_clin_matched.rds")
+# Load data
+expr_31210 <- readRDS('data/processed/GSE31210_expr_matched.rds')
+clin_31210 <- readRDS('data/processed/GSE31210_clin_matched.rds')
 
 stopifnot(all(colnames(expr_31210) == clin_31210$sample_id))
 
-# z-score genes within cohort
-zexpr <- t(scale(t(expr_31210)))
-zexpr <- zexpr[complete.cases(zexpr), ]
-cat("Expression:", nrow(zexpr), "genes x", ncol(zexpr), "patients\n")
-cat("Events:", sum(clin_31210$os_event), "\n\n")
+# Filter to genes with complete cases (no NAs across patients)
+expr_31210 <- expr_31210[complete.cases(expr_31210), ]
+cat('Expression:', nrow(expr_31210), 'genes x', ncol(expr_31210), 'patients\n')
+cat('Events:', sum(clin_31210$os_event), '\n\n')
 
-# mean-expression bins for the null
+# Mean-expression bins for the expression-matched null
 mu   <- rowMeans(expr_31210, na.rm = TRUE)
-pool <- intersect(rownames(zexpr), names(mu))
+pool <- intersect(rownames(expr_31210), names(mu))
 q    <- quantile(mu[pool], probs = 0:10 / 10, include.lowest = TRUE)
 bin  <- cut(mu[pool], breaks = q, labels = FALSE, include.lowest = TRUE)
 names(bin) <- pool
@@ -28,25 +29,23 @@ pool_by_bin <- split(pool, bin)
 sig_files <- c("signatures/Paper62_Yao2021.tsv",
                "signatures/Paper305_Yu2024.tsv")
 
-cstat <- function(sc) concordance(Surv(clin_31210$os_time,
-                                       clin_31210$os_event) ~ sc)$concordance
+cstat <- function(sc) concordance(Surv(clin_31210$os_time, clin_31210$os_event) ~ sc, reverse = TRUE)$concordance
 
 B <- 2000
 
 run_sig <- function(sig_path) {
   sig <- read.delim(sig_path, stringsAsFactors = FALSE)
-  sig <- sig[sig$gene %in% rownames(zexpr), ]
+  sig <- sig[sig$gene %in% rownames(expr_31210), ]
   k   <- nrow(sig)
   coefs <- sig$coefficient
   
-  sc  <- as.numeric(crossprod(coefs, zexpr[sig$gene, , drop = FALSE]))
+  sc  <- as.numeric(crossprod(coefs, expr_31210[sig$gene, , drop = FALSE]))
   obs <- cstat(sc)
   
   boot <- replicate(1000, {
     i <- sample(length(sc), replace = TRUE)
     if (sum(clin_31210$os_event[i]) < 5) return(NA_real_)
-    concordance(Surv(clin_31210$os_time[i],
-                     clin_31210$os_event[i]) ~ sc[i])$concordance
+    concordance(Surv(clin_31210$os_time[i], clin_31210$os_event[i]) ~ sc[i], reverse = TRUE)$concordance
   })
   lo <- quantile(boot, 0.025, na.rm = TRUE)
   hi <- quantile(boot, 0.975, na.rm = TRUE)
@@ -56,7 +55,7 @@ run_sig <- function(sig_path) {
     g <- vapply(sig_bins,
                 function(b) sample(pool_by_bin[[as.character(b)]], 1),
                 character(1))
-    cstat(as.numeric(crossprod(coefs, zexpr[g, , drop = FALSE])))
+    cstat(as.numeric(crossprod(coefs, expr_31210[g, , drop = FALSE])))
   })
   
   p_two <- (1 + sum(abs(null - 0.5) >= abs(obs - 0.5))) / (B + 1)
@@ -64,7 +63,7 @@ run_sig <- function(sig_path) {
   data.frame(
     signature   = tools::file_path_sans_ext(basename(sig_path)),
     n_genes     = k,
-    n_patients  = ncol(zexpr),
+    n_patients  = ncol(expr_31210),
     n_events    = sum(clin_31210$os_event),
     C_observed  = round(obs, 3),
     C_lo        = round(lo, 3),
