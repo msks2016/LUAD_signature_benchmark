@@ -35,3 +35,18 @@ Many lncRNA and miRNA prognostic signatures have been published for LUAD, but fe
 9. Generate figures and tables
 
 ## Project Structure
+## Release history
+
+- **v0.3 (2026-10-10, current)** — Corrected pipeline. The C-index direction
+  bug was fixed (reverse = TRUE), signature scoring switched from z-scored
+  to raw log2 expression, and the coverage rule tightened from 80% to 100%
+  for the primary analysis. This is the version from which all manuscript
+  numbers are drawn.
+
+- **v0.2 (2026-10-10, superseded)** — Contained a coding error in the
+  C-index direction and used z-scored expression. The results from this
+  version (a reported direction-inversion pattern and a Contradicted Yao
+  2021 classification) do not survive the correction and are documented
+  only in the git history.
+
+- **v0.1 (2026-10-09, superseded)** — Initial pipeline.
