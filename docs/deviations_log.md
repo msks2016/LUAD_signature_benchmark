@@ -79,3 +79,9 @@
  used per-cohort z-scored expression, which changes effective gene weights.
  Pipeline updated to use raw log2(TPM+1) or raw log2(intensity).
  All downstream outputs will be regenerated.
+
+## 2026-10-10 — Final transportability result (raw expression, 100% coverage)
+ Pooled log-HR per SD: 0.322 (95% CI -0.062 to 0.677). Classification by
+ pre-specified rules: Inconclusive. Divergence null test: 0 observed vs 4.9
+ expected. Two pairs (He 2021, Diao 2022) had constant linear predictors in
+ CPTAC-3 and were handled by a variance guard.
