@@ -13,13 +13,13 @@ sig_files <- list.files("signatures", pattern = "\\.tsv$", full.names = TRUE)
 
 stopifnot(all(colnames(expr) == clin$submitter_id))
 
-# Z-score each gene across patients
-zexpr <- t(scale(t(expr)))
-zexpr <- zexpr[complete.cases(zexpr), ]
+# (z-scoring disabled; raw log2 expression used for scoring)
+# zexpr <- t(scale(t(expr)))  # disabled: raw expression used
+expr <- expr[complete.cases(expr), ]
 
 # Mean expression per gene for the expression-matched null
 mu   <- rowMeans(expr, na.rm = TRUE)
-pool <- intersect(rownames(zexpr), names(mu))
+pool <- intersect(rownames(expr), names(mu))
 
 # Deciles of mean expression
 q   <- quantile(mu[pool], probs = 0:10 / 10, include.lowest = TRUE)
@@ -29,7 +29,7 @@ pool_by_bin <- split(pool, bin)
 
 # --- 2. Helper functions --------------------------------------------
 cstat <- function(sc) {
-  concordance(Surv(clin$os_time, clin$os_event) ~ sc)$concordance
+  concordance(Surv(clin$os_time, clin$os_event) ~ sc, reverse = TRUE)$concordance
 }
 
 boot_c <- function(sc, B = 1000) {
@@ -37,7 +37,7 @@ boot_c <- function(sc, B = 1000) {
   replicate(B, {
     i <- sample(n, replace = TRUE)
     if (sum(clin$os_event[i]) < 5) return(NA_real_)
-    concordance(Surv(clin$os_time[i], clin$os_event[i]) ~ sc[i])$concordance
+    concordance(Surv(clin$os_time[i], clin$os_event[i]) ~ sc[i], reverse = TRUE)$concordance
   })
 }
 
@@ -46,14 +46,15 @@ B <- 2000
 
 run_sig <- function(sig_path) {
   sig <- read.delim(sig_path, stringsAsFactors = FALSE)
-  sig <- sig[sig$gene %in% rownames(zexpr), ]
+  n_present <- sum(sig$gene %in% rownames(expr)); n_total <- nrow(sig); if (n_present / n_total < 1.0) return(NULL)  # require 100% coverage
+  sig <- sig[sig$gene %in% rownames(expr), ]
   k   <- nrow(sig)
   if (k == 0) return(NULL)
   
   coefs <- sig$coefficient
   
   # Observed score and C-index
-  sc  <- as.numeric(crossprod(coefs, zexpr[sig$gene, , drop = FALSE]))
+  sc  <- as.numeric(crossprod(coefs, expr[sig$gene, , drop = FALSE]))
   obs <- cstat(sc)
   
   # Bootstrap 95% CI for observed
@@ -67,7 +68,7 @@ run_sig <- function(sig_path) {
     g <- vapply(sig_bins,
                 function(b) sample(pool_by_bin[[as.character(b)]], 1),
                 character(1))
-    cstat(as.numeric(crossprod(coefs, zexpr[g, , drop = FALSE])))
+    cstat(as.numeric(crossprod(coefs, expr[g, , drop = FALSE])))
   })
   
   p_two <- (1 + sum(abs(null - 0.5) >= abs(obs - 0.5))) / (B + 1)
