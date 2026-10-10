@@ -1,0 +1,26 @@
+"signature","cohort","platform","n","events","HR","HR_lo","HR_hi","C_index","dir_pub","dir_obs","consistent"
+"Paper141","TCGA-LUAD","RNA-seq",NA,NA,2.34523258260525,1.98748443722207,2.76737556456083,0.704107309549901,"increases risk","increases risk",TRUE
+"Paper62","TCGA-LUAD","RNA-seq",NA,NA,1.80058291314696,1.55785674657529,2.08112769947819,0.662973334956776,"increases risk","increases risk",TRUE
+"Paper51","TCGA-LUAD","RNA-seq",NA,NA,1.58664282349539,1.37516728375891,1.83063942771253,0.652989163521247,"increases risk","increases risk",TRUE
+"Paper159","TCGA-LUAD","RNA-seq",NA,NA,1.54536181128891,1.32388732375695,1.80388699622338,0.643248508462194,"increases risk","increases risk",TRUE
+"Paper352","TCGA-LUAD","RNA-seq",NA,NA,1.58356842575548,1.36532756648472,1.83669400706982,0.636227119607127,"increases risk","increases risk",TRUE
+"Paper298","TCGA-LUAD","RNA-seq",NA,NA,1.81168095301779,1.42759823391987,2.29909774160709,0.631742359673688,"increases risk","increases risk",TRUE
+"Paper91","TCGA-LUAD","RNA-seq",NA,NA,1.5852802432943,1.33023772220738,1.88922130821025,0.63028126141483,"increases risk","increases risk",TRUE
+"Paper369","TCGA-LUAD","RNA-seq",NA,NA,1.42244939858409,1.22537390095876,1.65122032544443,0.618267786841998,"increases risk","increases risk",TRUE
+"Paper193","TCGA-LUAD","RNA-seq",NA,NA,1.40378215330348,1.21967728844057,1.61567682911673,0.61686756767726,"increases risk","increases risk",TRUE
+"Paper9","TCGA-LUAD","RNA-seq",NA,NA,1.50949652567796,1.32586708316657,1.7185582099164,0.613894638581111,"increases risk","increases risk",TRUE
+"Paper165","TCGA-LUAD","RNA-seq",NA,NA,1.45921684406205,1.25074187533485,1.70244063941999,0.613478631437964,"increases risk","increases risk",TRUE
+"Paper53","TCGA-LUAD","RNA-seq",NA,NA,1.32250228258657,1.11648928446201,1.5665285030384,0.610333211575145,"increases risk","increases risk",TRUE
+"Paper192","TCGA-LUAD","RNA-seq",NA,NA,1.44301962985235,1.2022777040021,1.73196728610012,0.610130281261415,"increases risk","increases risk",TRUE
+"Paper159","CPTAC-3","RNA-seq",150,38,1.247,0.92,1.689,0.567,"increases risk","increases risk",TRUE
+"Paper369","CPTAC-3","RNA-seq",150,38,1.67,1.267,2.201,0.665,"increases risk","increases risk",TRUE
+"Paper53","CPTAC-3","RNA-seq",150,38,1.962,1.27,3.03,0.615,"increases risk","increases risk",TRUE
+"Paper352","CPTAC-3","RNA-seq",150,38,1.032,0.74,1.438,0.51,"increases risk","increases risk",TRUE
+"Paper91","CPTAC-3","RNA-seq",150,38,1.002,0.725,1.383,0.52,"increases risk","increases risk",TRUE
+"Paper298","CPTAC-3","RNA-seq",150,38,1.601,1.12,2.29,0.628,"increases risk","increases risk",TRUE
+"Paper193","CPTAC-3","RNA-seq",150,38,0.859,0.62,1.19,0.507,"increases risk","decreases risk",FALSE
+"Paper62","CPTAC-3","RNA-seq",150,38,1.578,1.194,2.085,0.677,"increases risk","increases risk",TRUE
+"Paper192","CPTAC-3","RNA-seq",150,38,1.116,0.802,1.552,0.549,"increases risk","increases risk",TRUE
+"Paper141","CPTAC-3","RNA-seq",150,38,1.165,0.832,1.63,0.575,"increases risk","increases risk",TRUE
+"Paper62","GSE31210","Microarray",226,35,1.817,1.323,2.494,0.637,"increases risk","increases risk",TRUE
+"Paper305","GSE31210","Microarray",226,35,1.94,1.448,2.599,0.718,"increases risk","increases risk",TRUE
