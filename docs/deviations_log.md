@@ -119,3 +119,15 @@
  Interpretation: proliferation is a meaningful component of signal in both
  cohorts (C > 0.6) but does not dominate Yao 2021 in either cohort.
  Neither score consistently outperforms the other.
+
+## 2026-10-11 — Yao 2021 GPL570 probe mapping
+ All 7 Yao 2021 genes are represented on GPL570:
+   ARHGEF26-AS1: 236575_at
+   LINC01137:    229678_at
+   C20orf197:    1553311_at
+   MGC32805:     1554781_at, 233475_at (2 probes; highest-mean rule applied)
+   TMPO-AS1:     227578_at
+   LINC00324:    230012_at
+   LINC01116:    228564_at
+ Probe sequence identity against RNA-seq transcripts has not been verified;
+ this is a known limitation of cross-platform lncRNA validation.
