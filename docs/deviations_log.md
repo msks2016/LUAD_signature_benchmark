@@ -111,3 +111,11 @@
  reach significance in that cohort. It adds value beyond stage (H2 p = 0.027)
  but does not pass a strict two-cohort replication rule at the per-cohort
  significance level.
+
+## 2026-10-11 — Yao 2021 vs proliferation score
+ 11-gene proliferation signature (Nielsen et al. 2010) as reference:
+   CPTAC-3:  Yao 0.675 | Proliferation 0.643
+   GSE31210: Yao 0.643 | Proliferation 0.690
+ Interpretation: proliferation is a meaningful component of signal in both
+ cohorts (C > 0.6) but does not dominate Yao 2021 in either cohort.
+ Neither score consistently outperforms the other.
