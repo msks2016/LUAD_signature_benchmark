@@ -85,3 +85,18 @@
  pre-specified rules: Inconclusive. Divergence null test: 0 observed vs 4.9
  expected. Two pairs (He 2021, Diao 2022) had constant linear predictors in
  CPTAC-3 and were handled by a variance guard.
+
+## 2026-10-11 — Yao 2021 cohort overlap check
+ Verified from the original publication (Cancer Cell Int 2021;21:340):
+   Training: TCGA-LUAD (n = 477 after OS > 30 days filter)
+   Validation: GSE3141 (n = 58) + GSE37745 (n = 106), merged
+   Feature selection: GSE37745
+ GSE31210 and CPTAC-3 were NOT used. Both are independent for Yao 2021.
+ TCGA-LUAD is the development cohort and was excluded from the pooled estimate.
+
+## 2026-10-11 — Yao 2021 H2 in GSE31210
+ Stage-only Cox C-index: 0.678; stage + risk-score: 0.748 (Delta C = +0.071).
+ Adjusted HR per SD of Yao 2021 score: 1.46 (p = 0.023).
+ Likelihood-ratio test p = 0.027.
+ Interpretation: Yao 2021 adds significant prognostic value beyond stage
+ in GSE31210, consistent with the same finding in CPTAC-3.
