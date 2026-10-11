@@ -131,3 +131,12 @@
    LINC01116:    228564_at
  Probe sequence identity against RNA-seq transcripts has not been verified;
  this is a known limitation of cross-platform lncRNA validation.
+
+## 2026-10-11 — Justification for pooling Yao 2021 only
+ Under the pre-specified 100% coverage rule:
+   - Only 1 of 15 signatures is evaluable in both CPTAC-3 and GSE31210
+     (Paper62_Yao2021; 7/7 genes present in both cohorts)
+   - All other signatures fail at least one cohort at 100% coverage
+ Therefore the pooled Yao-only meta-analysis is determined by the
+ coverage rule, not by post-hoc selection based on performance. No other
+ signature qualifies for pooling under the primary rule.
