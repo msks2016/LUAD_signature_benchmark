@@ -1,0 +1,2 @@
+"cohort","n","events","stage_only_c","stage_risk_c","delta_c","risk_HR_per_SD","risk_p","stage_II_HR","stage_II_p","LRT_chisq","LRT_p"
+"GSE31210",226,35,0.678,0.748,0.071,1.462,0.0232,3.306,9e-04,4.91,0.0267
