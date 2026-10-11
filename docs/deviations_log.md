@@ -100,3 +100,14 @@
  Likelihood-ratio test p = 0.027.
  Interpretation: Yao 2021 adds significant prognostic value beyond stage
  in GSE31210, consistent with the same finding in CPTAC-3.
+
+## 2026-10-11 — Yao 2021 random-gene null in GSE31210
+ Expression-matched null test (2,000 draws):
+   Observed C-index: 0.643
+   Null median: 0.508; null 2.5-97.5%: 0.356-0.663
+   Two-sided empirical p = 0.067 (marginal; consistent with the
+   primary null-test classification of Inconclusive, p_Holm = 0.077)
+ Interpretation: Yao 2021 shows a positive trend in GSE31210 that does not
+ reach significance in that cohort. It adds value beyond stage (H2 p = 0.027)
+ but does not pass a strict two-cohort replication rule at the per-cohort
+ significance level.
