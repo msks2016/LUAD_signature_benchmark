@@ -1,5 +1,0 @@
-"cohort","platform","n_samples","n_events","median_fu_mo","stage_I_II_pct","evaluable_sigs","role"
-"TCGA-LUAD","RNA-seq (STAR-Counts)",NA,NA,NA,NA,13,"Development/apparent"
-"CPTAC-3","RNA-seq (STAR-Counts)",150,38,19.7,76.7,15,"Independent RNA-seq validation"
-"GSE31210","GPL570 (microarray)",226,35,57.3,100,2,"Independent microarray validation"
-"GSE72094","GPL15048 (targeted panel)",442,NA,NA,NA,0,"Coverage analysis only"

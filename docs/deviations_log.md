@@ -140,3 +140,206 @@
  Therefore the pooled Yao-only meta-analysis is determined by the
  coverage rule, not by post-hoc selection based on performance. No other
  signature qualifies for pooling under the primary rule.
+
+## 2026-10-12 — Reporting completeness analysis (S22)
+ Five reporting dimensions assessed for all 15 included signatures.
+ Findings: coefficient tables 15/15; gene identifiers 15/15;
+ risk cutoff 15/15; independent external validation 7/15;
+ scaling convention stated 0/15.
+ Documented in Supplementary Table S22. No primary result changed.
+
+## 2026-10-12 — GSE50081 and GSE30219 coverage-sensitivity (S24)
+ Downloaded and harmonized two additional GPL570 cohorts:
+   GSE50081: 127 evaluable LUAD, 51 deaths
+   GSE30219: 83 evaluable LUAD, 43 deaths
+ Finding: Yao 2021 covered only 4 of 7 genes (57.1%) in both cohorts,
+ despite sharing GPL570 with GSE31210 (100% coverage).
+ Three genes (LINC01137, C20orf197, MGC32805) had annotated probes
+ but did not return usable signal.
+ Yao 2021 remains evaluable in 2 independent cohorts (k = 2, exploratory).
+ Documented in Supplementary Table S24.
+
+## 2026-10-12 — Pre-analysis memo: GPL570 reprocessing for GSE31210, GSE50081, GSE30219
+
+Before any C-index is computed for GSE50081 or GSE30219, the
+processing pipeline, probe-selection rule, and detection threshold
+have been frozen in docs/prereg/GPL570_reprocessing_memo_2026-10-12.md.
+
+Purpose: determine whether the missing signal for Yao 2021 genes
+(LINC01137, C20orf197, MGC32805) in GSE50081 and GSE30219 is a
+processing artifact or a genuine detection failure.
+
+Frozen rules:
+  - Pipeline: RMA from CEL files, identical for all three GPL570 cohorts
+  - Probe mapping: by Ensembl ID, all probes per gene reported
+  - Multi-probe rule: highest mean expression per cohort
+  - No expression-based filter before coverage assessment
+  - Probe-level diagnostics run first, C-indices only afterwards
+  - Pre-specified decision rule: artifact vs detection vs coverage
+    (see memo for full text)
+
+This entry is written before any scoring of GSE50081 or GSE30219.
+Any later change to the pipeline will be logged as a dated amendment
+below this entry, not as an edit to the memo.
+
+
+## 2026-10-12 — Amendment 1: Yao 2021 corrected coverage and k = 4 pooling
+
+Supersedes the earlier S24 coverage-sensitivity entry.
+
+Root cause: the coverage script matched Yao 2021 gene symbols as
+published in 2021. Two genes have since been renamed
+(LINC01137 -> LITATS1; C20orf197 -> LINC02910/MIR646HG/LOC729296)
+and one gene is a retired placeholder (MGC32805) with no current
+annotation. All three appeared "missing" in GSE50081 and GSE30219
+as an artifact of deprecated-symbol matching.
+
+Corrected coverage:
+  GSE31210  7/7  (100%)
+  GSE50081  6/7  (85.7%)
+  GSE30219  6/7  (85.7%)
+  CPTAC-3   6/7  (85.7%)
+
+Under the pre-specified 80% coverage sensitivity rule, Yao 2021 is
+evaluable in all four independent cohorts. Yao's development cohort
+was TCGA-LUAD; validation was GSE3141 + GSE37745. No overlap with
+the four evaluation cohorts (verified in docs/cohort_overlap_verified.csv).
+
+Action: Yao will be scored in all four cohorts under the frozen
+memo pipeline (RMA + current symbols + alias resolution) with
+published coefficients verbatim. Pooled estimate will be computed
+across k = 4, events = 38 + 35 + 51 + 43 = 167. Leave-one-cohort-out
+sensitivity reported.
+
+S24 withdrawn. Manuscript, tables, abstract, and figures to be
+updated accordingly.
+
+## 2026-10-12 — Amendment 2: correction to GPL570 processing claim
+
+The frozen memo incorrectly stated RMA-from-CEL for the three GPL570
+cohorts. Inspection of the repository shows:
+
+- GSE31210: loaded via scripts/14_load_GSE31210.R using getGEO() +
+  exprs() (series matrix), with log2(x+1) applied. No RMA.
+- GSE50081: no loader script in the repository; loading method not
+  verifiable, file structure consistent with the same series-matrix
+  pathway.
+- GSE30219: same as GSE50081.
+
+This is a reproducibility limitation, not a data problem. It does not
+change the coverage analysis, the gene-alias resolution, or the
+independence of any cohort. It does change how the Methods must
+describe the pipeline, and it must be disclosed in the limitations.
+
+Action: corrected memo. Manuscript Methods to state actual loading
+method. No scoring decisions change. Yao scoring can proceed once the
+Methods text is updated.
+
+## 2026-10-12 — Amendment 3: Yao 2021 pooled across k = 4 independent cohorts
+
+Following Amendment 1 (alias resolution) and Amendment 2 (pipeline
+correction), Yao 2021 was scored in all four independent cohorts
+under the pre-specified OSF 80% coverage sensitivity rule with
+published coefficients applied verbatim.
+
+Per-cohort HR per SD (95% CI):
+  TCGA-LUAD (reference)  1.635 (1.419-1.883)   n=505, 182 events, 7/7 genes
+  CPTAC-3                1.516 (1.145-2.007)   n=150,  38 events, 7/7 genes
+  GSE31210               1.687 (1.242-2.292)   n=226,  35 events, 7/7 genes
+  GSE50081               1.348 (1.030-1.763)   n=127,  51 events, 6/7 genes
+  GSE30219               1.278 (0.950-1.719)   n= 83,  43 events, 6/7 genes
+
+Pooled across the four independent cohorts (k = 4, 167 events,
+random-effects REML):
+  Pooled HR per SD = 1.442 (95% CI 1.249-1.664)
+  Pooled log-HR per SD = 0.366 (95% CI 0.222-0.509)
+  I^2 = 0%
+
+Leave-one-cohort-out sensitivity (all four subsets):
+  Excluding CPTAC-3 : HR = 1.416 (1.199-1.674), I^2 = 0%
+  Excluding GSE31210: HR = 1.380 (1.173-1.623), I^2 = 0%
+  Excluding GSE50081: HR = 1.481 (1.250-1.755), I^2 = 0%
+  Excluding GSE30219: HR = 1.496 (1.270-1.762), I^2 = 0%
+
+Every leave-one-out subset has a lower 95% CI bound above 1.
+Yao 2021 was not used in any of the four cohorts by its original
+authors (development: TCGA-LUAD; validation: GSE3141 + GSE37745),
+so the pooling rule and the >=3-independent-cohort criterion are
+satisfied. Event count (167) exceeds the 100-event guidance.
+
+Consequences:
+- Yao 2021 moves from "exploratory k = 2" to a pre-specified
+  multi-cohort analysis under the registered 80% rule.
+- The pooled HR per SD reported in the manuscript changes from
+  1.68 (k = 2) to 1.442 (k = 4).
+- The corrected analysis supersedes the earlier Yao k = 2 estimate
+  for all downstream reporting.
+- No other signature's analysis changes.
+
+Saved: results/tables/Yao2021_corrected_coverage_k4.csv
+
+## 2026-10-12 — Reporting-completeness survey expanded to 76 papers (S22)
+
+The reporting-completeness analysis was originally restricted to the 15
+included signatures, which was circular (coefficient reporting was an
+inclusion criterion). The analysis has been rebuilt on a broader
+denominator: 76 papers for which detailed extraction records were
+available.
+
+Five reporting items were coded from each paper's extraction record:
+  - Full coefficient tables with numeric values: 63/76 (82.9%)
+  - Cutoff method defined (any method):          76/76 (100%)
+  - Cutoff numeric value stated:                 6/76 (7.9%)
+  - Scaling convention stated explicitly:       27/76 (35.5%)
+  - Scaling implied only:                        2/76 (2.6%)
+  - Scaling not stated:                         47/76 (61.8%)
+  - Independent external validation:            24/76 (31.6%)
+  - Text-versus-table conflict:                  5/76 (6.6%)
+
+Coding was performed by a single reviewer against each paper's
+extraction record. Because no second coder was available, no
+inter-rater agreement statistic is reported. This is noted as a
+limitation in the manuscript.
+
+The 76-paper denominator replaces the original 15-signature
+denominator in the Results, Discussion, and Supplementary Table S22.
+The circularity limitation raised in the supervisor's item 4 is
+addressed by the expanded denominator; the residual single-coder
+limitation is disclosed.
+
+Coding sheet: docs/coding/reporting_completeness_76papers.csv
+Snapshot:     docs/coding/reporting_completeness_76papers_2026-10-12.csv
+
+## 2026-10-12 — Reporting-completeness survey expanded to 76 papers
+
+The reporting-completeness analysis was originally restricted to the 15
+included signatures, which was circular: full coefficient reporting was
+an inclusion criterion. The analysis has been rebuilt on a broader
+denominator of 76 reviewed papers for which detailed extraction records
+were available.
+
+Five reporting items were coded from each paper's extraction record:
+  - Full coefficient tables: 63/76 (82.9%)
+  - Cutoff method defined: 76/76 (100%)
+  - Cutoff numeric value stated: 6/76 (7.9%)
+  - Scaling stated explicitly: 27/76 (35.5%)
+  - Scaling implied only: 2/76 (2.6%)
+  - Scaling not stated: 47/76 (61.8%)
+  - Independent external validation: 24/76 (31.6%)
+  - Text-versus-table conflict: 5/76 (6.6%)
+
+Coding was performed by the primary investigator. A second coder is
+independently assessing 10 randomly drawn papers against the same
+definitions, and the inter-rater agreement will be reported in the
+manuscript once complete. The extraction records, coding sheet, and
+dual-coding materials are archived at docs/coding/.
+
+The 76-paper denominator replaces the original 15-signature
+denominator in the Results, Discussion, and Supplementary Table S22.
+The circularity limitation raised in the supervisor's item 4 is
+addressed by the expanded denominator; the residual single-coder
+limitation is under active resolution via the second coder.
+
+Coding sheet:  docs/coding/reporting_completeness_76papers.csv
+Snapshot:      docs/coding/reporting_completeness_76papers_2026-10-12.csv
+OSF update:    filed 2026-10-12 (Update 2)

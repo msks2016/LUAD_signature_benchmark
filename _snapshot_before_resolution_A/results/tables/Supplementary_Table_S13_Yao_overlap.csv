@@ -1,6 +1,0 @@
-"cohort","used_by_yao2021","independent_for_yao"
-"TCGA-LUAD","Yes - training","No (development)"
-"GSE3141","Yes - validation","N/A (not in current analysis)"
-"GSE37745","Yes - feature selection and validation","N/A (not in current analysis)"
-"CPTAC-3","No","Yes"
-"GSE31210","No","Yes"

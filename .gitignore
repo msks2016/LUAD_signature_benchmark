@@ -42,3 +42,4 @@ data/processed/*.rda
 data/raw/CPTAC3_LUAD/
 .DS_Store
 scripts/backup_before_*/
+signatures/Papers/

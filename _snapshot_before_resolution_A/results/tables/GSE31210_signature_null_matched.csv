@@ -1,3 +1,0 @@
-"signature","n_genes","n_patients","n_events","C_observed","C_lo","C_hi","null_2.5","null_97.5","p_two_sided","p_holm","class"
-"Paper62_Yao2021",7,226,35,0.643,0.551,0.736,0.352,0.664,0.0774612693653173,0.0774612693653173,"Inconclusive"
-"Paper305_Yu2024",9,226,35,0.713,0.621,0.797,0.345,0.655,0.00299850074962519,0.00599700149925037,"Replicated"

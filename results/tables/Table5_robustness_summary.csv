@@ -3,4 +3,3 @@
 "Stage restriction","Max change in raw C-index across all / stage I-II: 0.038","Directional pattern preserved in stage I-II subset"
 "Leave-one-cohort-out (Yao 2021)","Pooled HR range across subsets: 1.68-1.8; I2 = 0% in all subsets","Pooled HR stable; no single cohort drives the effect"
 "Early-death exclusion (no death <3 mo)","Max change in raw C-index: 0.032","Pattern unchanged after removing early deaths"
-"Scaling choice","Log-HR per SD computed with z-scored vs raw log2 expression; mean absolute difference reported in Supplementary Table S12","Coefficient essentially unchanged; conclusion robust to scaling choice"
