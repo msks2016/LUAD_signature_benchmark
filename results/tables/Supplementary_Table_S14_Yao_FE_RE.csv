@@ -1,0 +1,3 @@
+"model","pooled_HR","CI_lower","CI_upper","I2_percent","tau2","k"
+"Fixed-effect",1.682,1.362,2.076,NA,NA,2
+"Random-effects (REML)",1.682,1.362,2.076,0,0,2
