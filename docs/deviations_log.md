@@ -413,3 +413,24 @@ that rule only CPTAC-3 and GSE31210 qualify. The 80% rule was
 pre-specified as a sensitivity analysis and is now labeled as such
 throughout the manuscript. This relabel is distinct from the earlier
 raw log2 -> z-scored scaling change, which is logged separately above.
+
+## 2026-10-12 — Paper #203 text-vs-table item resolved as "no conflict"
+
+Paper #203 was the single pre-discussion disagreement on the
+text-versus-table item (primary coder: no; second coder: yes).
+Re-review of the full extraction block shows the paper is internally
+consistent:
+
+  - 522 patients: final analysis cohort
+  - 253 training + 254 test = 507 (split of the 522)
+  - 541 tumor + 59 normal: initial TCGA sample counts before filtering
+
+These are three distinct legitimate numbers, not a contradiction.
+All six coefficients are stated identically in the text, the formula,
+and the summary table; HRs are identical in text and table; the gene
+count (6) is consistent throughout.
+
+Resolution: the primary coder's "no" is correct. The reported
+text-vs-table conflict count remains 5/76 (6.6%). The second coder's
+"yes" was based on a misreading of the TCGA sample-count structure,
+which uses three numbers for three different things.
