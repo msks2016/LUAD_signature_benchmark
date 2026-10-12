@@ -450,3 +450,33 @@ conflicts verified manually before the reported rate (currently
 Recheck key (blind_id to real_id) is stored at
 docs/coding/recheck_key.csv and is not included in the package
 sent to the second coder.
+
+## 2026-10-12 — Blinded text-vs-table recheck returned; count updated from 5/76 to 8/76
+
+The blinded recheck of the text-versus-table conflict item on the
+66 papers outside the original 10-paper dual-coding sample returned
+3 "yes" flags (papers 93, 180, 194). All three were verified by
+manual re-reading of the paper and the extraction block:
+
+  93  — Formula lists LINC01137 coefficient 0.0538; Table 1 lists
+        0.05375. The primary extraction block already contained a
+        note flagging this discrepancy, but the binary item was
+        coded "no".
+  180 — Formula on page 5 lists coefficients that do not match
+        Table 2 for AC026355.1 (−0.4175 vs −0.2901); more broadly,
+        five of seven genes differ between the formula and Table 2.
+        The primary extraction block already flagged this as a
+        "critical error."
+  194 — Formula on page 8 lists AC026355.1 with +0.3963; Table 2
+        lists −0.3963. Sign flip. The primary extraction block
+        already flagged this discrepancy.
+
+All three were missed by the primary coder for the binary item even
+though the discrepancies were documented in the extraction notes.
+Reported text-vs-table conflict rate updated from 5/76 (6.6%) to
+8/76 (10.5%) in the Abstract, Results, Discussion, and Supplementary
+Table S22 caption.
+
+The verification confirms the supervisor's concern that the text-vs-
+table item is the hardest to detect and that the primary coder's
+rate was an undercount.
