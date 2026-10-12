@@ -1,0 +1,67 @@
+blind_id,text_vs_table_conflict,specific_disagreement,notes
+P002,no,,Formula and coefficient signs match; counts reconcile. No distinct paper text/table discrepancy is demonstrated.
+P029,no,,Formula coefficients match the extracted listings; sample counts reconcile. No qualifying text/table conflict is established.
+P030,no,,No comparable paper text and table/formula pair with a differing value is shown.
+P063,no,,The apparent death/sample figures occur in extraction commentary and do not establish a paper-text-to-table discrepancy.
+P066,no,,Repeated extracted coefficients and counts agree; no differing paper text/table values are established.
+P077,no,,No comparable differing paper text/table values are provided; sample counts describe different stages.
+P095,no,,Displayed Table 1 coefficients match the formula; commentary about HRs does not establish a qualifying conflict.
+P096,no,,Formula and repeated coefficient values agree; no distinct conflicting paper text/table pair is established.
+P133,no,,Formula and coefficient listing agree; counts refer to different analyses and are not shown as a paper-text/table conflict.
+P136,no,,Formula and coefficient table agree; initial and final counts are distinguished.
+P141,no,,The quoted text and Table S4 both report five lncRNAs. A direction label in extraction commentary is not an explicit paper-text conflict.
+P143,no,,Displayed formula and Table 1 coefficients agree; no qualifying discrepancy is shown.
+P174,no,,Formula and coefficient table match in signs and values; gene/sample counts agree.
+P175,no,,The block does not establish a comparable paper-text versus paper-table/formula discrepancy.
+P188,no,,Repeated formula coefficients agree; no conflicting paper text/table value is established.
+P211,yes,Formula text: “0.0538 × LINC01137”; Table 1: “+0.05375”.,Coefficient numeric value differs; the signs agree.
+P216,no,,No comparable paper text and table/formula pair establishes a disagreement.
+P224,no,,Formula and coefficient table match; sample splits and model counts are consistent.
+P243,no,,Displayed formula and coefficients agree; sample counts are distinguished by cohort/stage.
+P255,no,,Formula and coefficient table match; no qualifying conflict appears.
+P257,no,,The formula is generic and coefficients are unavailable; no comparable differing paper text/table pair is shown.
+P277,no,,No conflicting comparable paper-text/table values are established; counts describe distinct cohorts or subsets.
+P287,no,,The 14 listed coefficient values and signs match the formula.
+P353,no,,The 13 formula terms match the coefficient entries in sign and value.
+P367,no,,Formula coefficients match their listing; cohort counts reconcile.
+P385,no,,The Table 2 coefficients match the formula in signs and values.
+P392,no,,No paper-text versus paper-table/formula discrepancy is established; repeated extracted values agree.
+P401,no,,The 10-gene coefficient table matches the formula; repeated counts are internally consistent.
+P420,no,,"Formula and coefficient values agree. A noted gene-label typo is not a sign, numeric-value, or gene/sample-count disagreement."
+P424,no,,"Formula and coefficient entries agree; different gene lists concern identity, not the specified conflict categories."
+P428,no,,Repeated formula and coefficient values agree; no conflicting original paper table is shown.
+P442,yes,Table 2 for AC026355.1: β = “−0.290107880”; formula: coefficient “−0.417505811”.,Coefficient numeric value differs; the signs agree.
+P454,no,,The referenced supplementary coefficient table is not included; no comparable disagreement can be assessed.
+P500,no,,Table 2 coefficients match the displayed formula in sign and value.
+P528,no,,The block does not establish a directly comparable paper-text versus paper-table/formula discrepancy.
+P529,no,,Formula and coefficient table match; initial and filtered sample counts are distinguished.
+P570,no,,Table S4 coefficients match the displayed formula; no conflicting text value is established.
+P588,no,,AUC values attributed to different figures/methods are not established as a text-versus-table/formula conflict.
+P595,no,,Displayed formula coefficients match the Table 2 entries; no conflicting paper prose value is provided.
+P607,no,,Formula and coefficient table agree; HR/CI values and cohort counts are repeated consistently.
+P647,no,,Formula coefficients are consistent; initial and final sample counts are explicitly differentiated.
+P658,no,,Formula and coefficient table agree; differing numbers refer to different sample sets or analysis stages.
+P691,no,,No comparable paper narrative text and paper table/formula values establish a disagreement.
+P697,no,,"Table 2 coefficients match the displayed formula, including signs."
+P699,no,,The reproduced formula agrees with the extracted coefficient values and signs.
+P732,no,,The formula is generic; repeated cohort counts and HR values are internally consistent.
+P733,no,,Formula and coefficient table match; the six-gene validation subset is described separately from the seven-gene signature.
+P760,no,,Table 2 coefficients match the formula; the reported cohort splits reconcile.
+P784,no,,Formula and coefficient table agree. The noted gene-name difference does not meet the specified sign/value/count criteria.
+P796,no,,Repeated HR/CI/p-value entries agree; sample counts refer to distinct cohorts/subsets.
+P799,no,,"The text and Figure 4b values agree for HR, CI, and p-value; cohort/gene counts are consistent."
+P815,no,,The displayed formula matches the coefficient table for all eight lncRNAs.
+P816,yes,Formula for AC026355.1: “+ (0.3963 × expression AC026355.1)”; Table 2: “−0.3963”.,Coefficient sign differs between formula and table.
+P823,no,,No numeric coefficients or distinct comparable paper-text/table values establish a conflict.
+P824,no,,The 11-gene coefficient table matches the formula in signs and values.
+P839,no,,The block does not provide comparable paper text and paper table/formula values for conflict assessment.
+P846,no,,Formula and coefficient table agree. The noted gene-name typo is not among the specified disagreement types.
+P851,no,,Table 2 coefficients match the formula; no conflicting paper text value is shown.
+P862,no,,The text formula coefficients match Table 2 values.
+P878,no,,The formula and coefficient listing agree; sample counts reconcile.
+P882,no,,Formula signs/values match the coefficient listing; no conflicting paper text is shown.
+P890,no,,The 11 coefficients match between formula and table; no qualifying discrepancy is established.
+P894,no,,Coefficients are referenced to an unavailable supplement; no comparison is possible from this block.
+P939,no,,The displayed formula and extracted coefficient listing repeat the same values; no contradictory paper text is established.
+P952,no,,No comparable paper text and paper-table/formula discrepancy is shown in the block.
+P989,no,,Coefficient table and formula agree for the seven lncRNAs.
