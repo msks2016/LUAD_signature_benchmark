@@ -367,3 +367,19 @@ Effect on the reported distribution: the scaling category shifted
 from 27 stated / 2 implied / 47 not-stated to 27 stated / 38 implied
 / 11 not-stated. This is the distribution reported in the manuscript
 and Supplementary Table S22.
+
+## 2026-10-12 — Yao 2021 pooled estimate changed from raw log2 to z-scored
+
+An earlier internal version of the Yao 2021 analysis used raw log2
+expression for scoring, matching the original Yao 2021 publication.
+The primary specification, as registered on OSF (Indices §1), uses
+per-gene z-scored expression within each cohort.
+
+Recomputed pooled estimates:
+  Raw log2 scoring (earlier):  HR per SD 1.68 (95% CI 1.36-2.08)
+  Z-scored (registered):       HR per SD 1.592 (95% CI 1.294-1.957)
+
+The change from 1.68 to 1.592 is due to the scaling convention.
+No cohorts, signatures, or analysis decisions other than the scaling
+convention were changed. The z-scored estimate supersedes all earlier
+reported Yao pooled values.
