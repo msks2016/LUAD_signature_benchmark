@@ -434,3 +434,19 @@ Resolution: the primary coder's "no" is correct. The reported
 text-vs-table conflict count remains 5/76 (6.6%). The second coder's
 "yes" was based on a misreading of the TCGA sample-count structure,
 which uses three numbers for three different things.
+
+## 2026-10-12 — Blinded text-vs-table recheck dispatched
+
+A blinded second-coding pass of the text-versus-table conflict item
+was prepared for the 66 papers outside the original 10-paper dual-
+coding sample. Each block was stripped of title, DOI, PMID, PMCID,
+first-author name, paper record number, and cross-references to
+other papers before dispatch. The recheck form is blank; the second
+coder codes yes/no for text-vs-table conflict and quotes any
+specific disagreement. Results will be unblinded and any new
+conflicts verified manually before the reported rate (currently
+5/76, 6.6%) is updated.
+
+Recheck key (blind_id to real_id) is stored at
+docs/coding/recheck_key.csv and is not included in the package
+sent to the second coder.
