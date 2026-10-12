@@ -343,3 +343,27 @@ limitation is under active resolution via the second coder.
 Coding sheet:  docs/coding/reporting_completeness_76papers.csv
 Snapshot:      docs/coding/reporting_completeness_76papers_2026-10-12.csv
 OSF update:    filed 2026-10-12 (Update 2)
+
+## 2026-10-12 — Dual coding completed; scaling definition refined
+
+A second coder independently assessed 10 randomly drawn papers
+(IDs 90, 155, 169, 203, 213, 270, 273, 301, 347, 380) against the
+same five coding definitions.
+
+Initial agreement was 100% for coefficient tables, 100% for cutoff
+method, 60% for scaling convention, 100% for external validation,
+and 90% for text-versus-table conflicts.
+
+The scaling disagreements were resolved by discussion. The agreed
+refinement: 'implied' now means the paper mentions RNA-seq without
+naming a unit (FPKM, TPM, counts, or another quantifier); 'not_stated'
+is reserved for papers that give no scale information at all. The
+refined definition was applied consistently to all 76 papers.
+
+Final agreement after resolution: 100% on all five coded items
+across the 10 dual-coded papers.
+
+Effect on the reported distribution: the scaling category shifted
+from 27 stated / 2 implied / 47 not-stated to 27 stated / 38 implied
+/ 11 not-stated. This is the distribution reported in the manuscript
+and Supplementary Table S22.
