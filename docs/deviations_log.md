@@ -383,3 +383,33 @@ The change from 1.68 to 1.592 is due to the scaling convention.
 No cohorts, signatures, or analysis decisions other than the scaling
 convention were changed. The z-scored estimate supersedes all earlier
 reported Yao pooled values.
+
+## 2026-10-12 — GPL570 matrix row identifier convention verified
+
+The GSE31210, GSE50081, and GSE30219 matrices use gene-symbol row
+names rather than GPL570 probe IDs. Probe-level validation via
+hgu133plus2.db PROBEID mapping therefore returns empty, and is not
+the correct validation for these matrices.
+
+Rows carrying real signal for the renamed Yao 2021 genes in GSE31210
+were confirmed directly:
+  LINC01137 : mean 7.532, sd 0.687
+  MIR646HG  : mean 6.966, sd 1.114
+  C20orf197 : mean 6.430, sd 1.341
+  LOC729296 : mean 6.008, sd 0.943
+
+No coverage claim is affected. GSE31210 remains 7/7 for Yao 2021.
+
+## 2026-10-12 — Yao 2021 primary specification changed to k = 2; k = 4 retained as sensitivity
+
+The Yao 2021 cross-cohort analysis now reports two specifications:
+  Primary (100% coverage rule):     k = 2 (CPTAC-3, GSE31210)
+                                     HR per SD 1.592 (95% CI 1.294-1.957)
+  Sensitivity (80% coverage rule):  k = 4 (adds GSE50081, GSE30219)
+                                     HR per SD 1.442 (95% CI 1.249-1.664)
+
+The primary coverage rule requires all signature genes present. Under
+that rule only CPTAC-3 and GSE31210 qualify. The 80% rule was
+pre-specified as a sensitivity analysis and is now labeled as such
+throughout the manuscript. This relabel is distinct from the earlier
+raw log2 -> z-scored scaling change, which is logged separately above.
