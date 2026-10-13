@@ -480,3 +480,24 @@ Table S22 caption.
 The verification confirms the supervisor's concern that the text-vs-
 table item is the hardest to detect and that the primary coder's
 rate was an undercount.
+
+## 2026-10-13 — MGC32805 coverage corrected: present in CPTAC-3
+
+Re-verification of the cohort expression matrices shows that
+MGC32805 is present as a row name in TCGA-LUAD, CPTAC-3, and
+GSE31210, and is absent from GSE50081 and GSE30219. An earlier
+draft of the manuscript incorrectly stated that MGC32805 was
+absent from CPTAC-3; this was never verified in the pipeline and
+was wrong.
+
+Corrected coverage of Yao 2021:
+  TCGA-LUAD   7/7 (100%)   reference
+  CPTAC-3     7/7 (100%)   independent
+  GSE31210    7/7 (100%)   independent
+  GSE50081    6/7 (85.7%)  independent (sensitivity only)
+  GSE30219    6/7 (85.7%)  independent (sensitivity only)
+
+No analysis result changes. The Yao k = 2 primary pool under the
+100% coverage rule remains valid (CPTAC-3 + GSE31210, 73 events).
+Methods, Supplementary Table S24 caption, and Supplementary Table
+S6 caption are corrected to match the verified coverage.
