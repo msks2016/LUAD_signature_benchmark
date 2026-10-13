@@ -52,7 +52,7 @@ zexpr_stage <- zexpr[, colnames(zexpr) %in% surv_stage$patient, drop = FALSE]
 surv_stage <- surv_stage %>% filter(patient %in% colnames(zexpr_stage))
 zexpr_stage <- zexpr_stage[, surv_stage$patient, drop = FALSE]
 
-cat("Final cohort:", ncol(zexpr_stage), "patients,", sum(surv_stage$event), "events\n\n")
+cat("Final cohort:", ncol(zexpr_stage), "patients,", sum(surv_stage$OS), "events\n\n")
 
 # --- LRT per signature ---
 results <- list()
@@ -72,8 +72,8 @@ for (rid in unique(sigs$record_no)) {
   z_rs <- as.numeric(scale(rs))
   
   d <- data.frame(
-    time = surv_stage$time_months,
-    event = surv_stage$event,
+    time = surv_stage$OS_time,
+    event = surv_stage$OS,
     stage = surv_stage$stage_simple,
     z_rs = z_rs
   )

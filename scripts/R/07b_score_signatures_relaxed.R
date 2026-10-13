@@ -15,17 +15,23 @@ message("Expression: ", nrow(expr), " x ", ncol(expr))
 message("Survival: ", nrow(surv), " patients")
 
 expr <- expr[, substr(colnames(expr), 14, 15) == "01", drop = FALSE]
-colnames(expr) <- substr(colnames(expr), 1, 12)
-expr <- expr[, !duplicated(colnames(expr)), drop = FALSE]
+patient_id  <- substr(colnames(expr), 1, 12)
+aliquot_let <- substr(colnames(expr), 14, 14)
+ord <- order(patient_id, aliquot_let, colnames(expr))
+expr <- expr[, ord, drop = FALSE]
+patient_id <- patient_id[ord]
+keep <- !duplicated(patient_id)
+expr <- expr[, keep, drop = FALSE]
+colnames(expr) <- patient_id[keep]
 message("After filter: ", ncol(expr), " samples")
 
 common <- intersect(colnames(expr), surv$patient)
 expr <- expr[, common, drop = FALSE]
 surv <- surv[match(common, surv$patient), ]
 
-cat("Patients:", ncol(expr), "| Events:", sum(surv$event), "\n")
+cat("Patients:", ncol(expr), "| Events:", sum(surv$OS), "\n")
 
-lexpr <- log2(expr + 1)
+lexpr <- expr   # v3 is already log2(TPM + 1)
 sd_vec <- apply(lexpr, 1, sd, na.rm = TRUE)
 lexpr  <- lexpr[sd_vec > 0, , drop = FALSE]
 zexpr  <- t(scale(t(lexpr)))
@@ -68,7 +74,7 @@ for (rid in unique(sigs$record_no)) {
   }
   
   sc <- out$score
-  d <- data.frame(time = surv$time_months, event = surv$event,
+  d <- data.frame(time = surv$OS_time, event = surv$OS,
                   z = as.numeric(scale(sc)),
                   high = sc > median(sc))
   fit <- coxph(Surv(time, event) ~ z, data = d)
