@@ -1,0 +1,49 @@
+# Clinical field names for the GEO cohorts, confirmed against logs/geo_fields.txt
+# (show_geo_fields() output, 19 Oct 2026). time units: days, months or years.
+# event: values not listed as dead or alive (e.g. "NTL", "n/a") become missing, not alive.
+
+GSE31210:
+  # 226 primary lung adenocarcinomas (stage I-II) + 20 normal lung tissues
+  include: {field: "tissue:ch1", values: ["primary lung tumor"]}
+  time: {field: "days before death/censor:ch1", unit: "days"}
+  event: {field: "death:ch1", dead_values: ["dead"], alive_values: ["alive"]}
+  stage: "pathological stage:ch1"                        # IA / IB / II
+  age: ["age (years):ch1", "age:ch1"]                    # GEO splits age over two fields
+  sex: "gender:ch1"
+  sensitivity_exclude:                                   # 22 cases: incomplete resection or adjuvant therapy
+    field: "exclude for prognosis analysis due to incomplete resection or adjuvant therapy:ch1"
+    values: ["exclude"]
+
+GSE50081:
+  # 181 resected NSCLC; 127 histology "adenocarcinoma" (adenosquamous, large cell and
+  # "NSCLC-favor adenocarcinoma" are not included)
+  include: {field: "histology:ch1", values: ["adenocarcinoma"]}
+  time: {field: "survival time:ch1", unit: "years"}
+  event: {field: "status:ch1", dead_values: ["dead"], alive_values: ["alive"]}
+  stage: "Stage:ch1"
+  stage_recode: {"1A": "IA", "1B": "IB", "2A": "IIA", "2B": "IIB"}   # Arabic numerals in GEO
+  age: "age:ch1"
+  sex: "Sex:ch1"
+
+GSE30219:
+  # 307 samples: 293 lung tumours of several types (85 "ADC") + 14 normal lung ("NTL")
+  include: {field: "histology:ch1", values: ["ADC"]}
+  time: {field: "follow-up time (months):ch1", unit: "months"}
+  event: {field: "status:ch1", dead_values: ["DEAD"], alive_values: ["ALIVE"]}
+  stage_tnm: {tumour: "pt stage:ch1", node: "pn stage:ch1", metastasis: "pm stage:ch1"}   # no stage field: from pTNM
+  # (never use the bare keys y/n/yes/no/on/off in this file: YAML reads them as TRUE/FALSE)
+  age: "age at surgery:ch1"
+  sex: "gender:ch1"
+
+GSE81089:
+  # RNA-seq, Uppsala, surgery 2006-2010: 199 NSCLC + 19 paired normal lung. Codes from the series
+  # matrix header: histology 1 = squamous, 2 = adenocarcinoma, 3 = large cell/NOS; stage 1-7 =
+  # IA, IB, IIA, IIB, IIIA, IIIB, IV; dead 0 = no, 1 = yes. Only used after the OSF amendment.
+  include: {field: "histology:ch1", values: ["2"]}
+  time: {start_date: "surgery date:ch1", end_date: "vital date:ch1"}   # vital date = death or last contact
+  event: {field: "dead:ch1", dead_values: ["1"], alive_values: ["0"]}
+  stage: "stage tnm:ch1"
+  stage_recode: {"1": "IA", "2": "IB", "3": "IIA", "4": "IIB", "5": "IIIA", "6": "IIIB", "7": "IV"}
+  age: "age:ch1"
+  sex: "gender:ch1"
+  sample_name: "tumor (t) or normal (n):ch1"   # matches the column names of the FPKM file

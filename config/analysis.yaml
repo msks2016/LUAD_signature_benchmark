@@ -1,0 +1,51 @@
+# Frozen analysis decisions.
+# Copy each decision, as one sentence, into the OSF amendment BEFORE running scripts 30-34.
+# Change nothing here after the amendment is filed; a later change is a new, dated deviation.
+
+registration:
+  osf_url: "https://osf.io/qckvr"
+  registered: "2026-10-06"
+  rebuild_amendment_filed: "YYYY-MM-DD"   # fill in when filed
+
+cohorts:
+  reference: ["TCGA-LUAD"]                          # apparent performance only
+  independent: ["CPTAC-3", "GSE31210", "GSE50081", "GSE30219", "GSE81089"]
+  # GSE81089 restored (decided 20 Oct 2026): dropped in v0.3 only by an identifier bug (R9).
+  # It must be named in the OSF amendment, which is filed before scripts 30-34 run.
+  # candidate: ["..."]   # optional: built and checked (QC, coverage) but not analysed
+  coverage_only: ["GSE72094"]
+  min_events_h2: 30
+
+scoring:
+  scale: "zscore"            # registered: risk = sum(beta_i * z(expr_i)), z within cohort
+  sensitivity_scale: "raw"   # log2 expression without z-scoring
+
+sensitivity:
+  # RNA-seq cohorts only: TPM rescaled so that these gene types (GENCODE v36) sum to 1e6 per
+  # sample before log2(TPM + 1). Added for the amendment (CPTAC-3 uses total-RNA libraries).
+  tpm_rescale_gene_types: ["protein_coding", "lncRNA"]
+
+coverage:
+  primary_min_fraction: 0.80          # CHECK against the OSF wording (repo says <=20% missing)
+  sensitivity_min_fractions: [1.00, 0.70]
+
+presence:
+  min_sd: 0.000001
+  rnaseq_min_expressed_fraction: 0.10   # TPM > 0 in at least 10% of patients
+
+null_test:
+  draws: 2000
+  bins: 10
+  seed: 2026
+
+bootstrap:
+  resamples: 2000
+  cindex_resamples: 1000
+  seed: 2026
+
+transportability:
+  delta: 0.2231436   # log(1.25), registered
+
+survival:
+  uno_tau_months: 60
+  early_death_months: 3

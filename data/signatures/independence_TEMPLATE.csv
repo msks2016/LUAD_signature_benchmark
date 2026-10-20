@@ -1,0 +1,91 @@
+signature,cohort,used_by_authors,role,evidence
+Paper9_Zhang2021,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper9_Zhang2021,CPTAC-3,to_check,,
+Paper9_Zhang2021,GSE31210,to_check,,
+Paper9_Zhang2021,GSE50081,to_check,,
+Paper9_Zhang2021,GSE30219,to_check,,
+Paper9_Zhang2021,GSE81089,to_check,,
+Paper51_Song2021,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper51_Song2021,CPTAC-3,to_check,,
+Paper51_Song2021,GSE31210,to_check,,
+Paper51_Song2021,GSE50081,to_check,,
+Paper51_Song2021,GSE30219,to_check,,
+Paper51_Song2021,GSE81089,to_check,,
+Paper53_Yang2022,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper53_Yang2022,CPTAC-3,to_check,,
+Paper53_Yang2022,GSE31210,to_check,,
+Paper53_Yang2022,GSE50081,yes,validation,docs/cohort_overlap*.csv / old S22: confirm in the paper
+Paper53_Yang2022,GSE30219,to_check,,
+Paper53_Yang2022,GSE81089,to_check,,
+Paper62_Yao2021,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper62_Yao2021,CPTAC-3,to_check,,
+Paper62_Yao2021,GSE31210,to_check,,
+Paper62_Yao2021,GSE50081,to_check,,
+Paper62_Yao2021,GSE30219,to_check,,
+Paper62_Yao2021,GSE81089,to_check,,
+Paper91_Lin2024,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper91_Lin2024,CPTAC-3,to_check,,
+Paper91_Lin2024,GSE31210,to_check,,
+Paper91_Lin2024,GSE50081,to_check,,
+Paper91_Lin2024,GSE30219,to_check,,
+Paper91_Lin2024,GSE81089,to_check,,
+Paper141_Yang2023,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper141_Yang2023,CPTAC-3,to_check,,
+Paper141_Yang2023,GSE31210,to_check,,
+Paper141_Yang2023,GSE50081,to_check,,
+Paper141_Yang2023,GSE30219,to_check,,
+Paper141_Yang2023,GSE81089,to_check,,
+Paper151_Diao2022,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper151_Diao2022,CPTAC-3,to_check,,
+Paper151_Diao2022,GSE31210,to_check,,
+Paper151_Diao2022,GSE50081,to_check,,
+Paper151_Diao2022,GSE30219,to_check,,
+Paper151_Diao2022,GSE81089,to_check,,
+Paper159_He2021,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper159_He2021,CPTAC-3,to_check,,
+Paper159_He2021,GSE31210,to_check,,
+Paper159_He2021,GSE50081,to_check,,
+Paper159_He2021,GSE30219,to_check,,
+Paper159_He2021,GSE81089,to_check,,
+Paper165_Jin2020,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper165_Jin2020,CPTAC-3,to_check,,
+Paper165_Jin2020,GSE31210,to_check,,
+Paper165_Jin2020,GSE50081,to_check,,
+Paper165_Jin2020,GSE30219,to_check,,
+Paper165_Jin2020,GSE81089,to_check,,
+Paper192_Geng2021,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper192_Geng2021,CPTAC-3,to_check,,
+Paper192_Geng2021,GSE31210,yes,validation,docs/cohort_overlap*.csv / old S22: confirm in the paper
+Paper192_Geng2021,GSE50081,to_check,,
+Paper192_Geng2021,GSE30219,to_check,,
+Paper192_Geng2021,GSE81089,to_check,,
+Paper193_Zheng2021,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper193_Zheng2021,CPTAC-3,to_check,,
+Paper193_Zheng2021,GSE31210,to_check,,
+Paper193_Zheng2021,GSE50081,to_check,,
+Paper193_Zheng2021,GSE30219,to_check,,
+Paper193_Zheng2021,GSE81089,to_check,,
+Paper298_Li2023,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper298_Li2023,CPTAC-3,to_check,,
+Paper298_Li2023,GSE31210,to_check,,
+Paper298_Li2023,GSE50081,to_check,,
+Paper298_Li2023,GSE30219,to_check,,
+Paper298_Li2023,GSE81089,to_check,,
+Paper305_Yu2024,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper305_Yu2024,CPTAC-3,to_check,,
+Paper305_Yu2024,GSE31210,yes,validation,docs/cohort_overlap*.csv / old S22: confirm in the paper
+Paper305_Yu2024,GSE50081,yes,validation,docs/cohort_overlap*.csv / old S22: confirm in the paper
+Paper305_Yu2024,GSE30219,yes,validation,docs/cohort_overlap*.csv / old S22: confirm in the paper
+Paper305_Yu2024,GSE81089,to_check,,
+Paper352_Zhang2025,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper352_Zhang2025,CPTAC-3,to_check,,
+Paper352_Zhang2025,GSE31210,to_check,,
+Paper352_Zhang2025,GSE50081,to_check,,
+Paper352_Zhang2025,GSE30219,to_check,,
+Paper352_Zhang2025,GSE81089,to_check,,
+Paper369_Wu2022,TCGA-LUAD,yes,development,all 15 signatures were developed in TCGA-LUAD (docs/cohort_overlap.csv)
+Paper369_Wu2022,CPTAC-3,to_check,,
+Paper369_Wu2022,GSE31210,to_check,,
+Paper369_Wu2022,GSE50081,to_check,,
+Paper369_Wu2022,GSE30219,to_check,,
+Paper369_Wu2022,GSE81089,to_check,,

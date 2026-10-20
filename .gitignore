@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+renv/library/
+renv/staging/
+data/raw/
+data/processed/
+results/*.rds
+.DS_Store
+data/reference/*.gtf.gz

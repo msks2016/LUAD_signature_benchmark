@@ -1,0 +1,82 @@
+GSE81089 build summary
+Run: 2026-10-20 00:29
+
+== Histology code (1 squamous, 2 adenocarcinoma, 3 large cell/NOS) of all samples
+
+   1    2    3 <NA> 
+  67  108   24   19 
+
+== Event (1 = dead) by raw value
+  raw event  n
+1   0     0 59
+4   1     1 49
+
+== Stage: raw code -> group
+   raw  group  n
+1    1      I 44
+2    2      I 18
+9    3     II  8
+10   4     II 11
+17   5 III-IV 24
+18   7 III-IV  3
+
+== Follow-up in months (summary)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   27.94   36.27   39.33   52.49   86.28 
+
+== Latest contact dates (most common)
+
+2013-04-28 2013-04-10 2008-03-26 2007-07-13 2007-07-16 
+        41         18          2          1          1 
+
+== Age recorded / sex
+$age_recorded
+[1] 108
+
+$sex
+
+female   male 
+    69     39 
+
+
+== FPKM file: genes x samples
+[1] 63130   218
+
+== FPKM values coded -1 (not quantified) in the adenocarcinomas
+         cells genes_with_any 
+           579             75 
+
+== Missing FPKM values in the adenocarcinomas
+           cells   genes_with_any samples_with_any 
+             580               76              104 
+
+== Samples with the most missing FPKM values
+L791T L872T L603T L458T L773T 
+   13    13    12    11    11 
+
+== Missing values by gene ID prefix (first 4 characters)
+
+ENSG  TC% 
+  75    1 
+
+== Genes dropped for a missing or -1 value in any adenocarcinoma (listed in data/processed/GSE81089_genes_dropped_missing.csv)
+dropped    kept 
+     76   63054 
+
+== Sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                    108                     108                     107 
+
+== Cohort
+               patients                  deaths median_follow_up_months    max_follow_up_months 
+                  107.0                    48.0                    52.3                    86.3 
+                  genes 
+                63054.0 
+
+== Stage group
+
+     I     II III-IV 
+    61     19     27 
+
+== Expression range, log2(TPM + 1)
+[1]  0.00 17.62

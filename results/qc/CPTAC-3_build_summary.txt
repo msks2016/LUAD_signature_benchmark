@@ -1,0 +1,220 @@
+CPTAC-3 build summary
+Run: 2026-10-19 22:33
+GDC: Data Release 46.0 - August 10, 2026
+
+== CPTAC-3 cases: all / lung (any type) / lung adenocarcinoma
+                all                lung lung_adenocarcinoma 
+               1866                 339                 230 
+
+== Primary site of all CPTAC-3 cases
+
+                                             Base of tongue 
+                                                          1 
+                                                      Brain 
+                                                        220 
+                                                     Breast 
+                                                          1 
+                                          Bronchus and lung 
+                                                        339 
+                                                      Colon 
+                                                          1 
+                                             Floor of mouth 
+                                                         18 
+                                                        Gum 
+                                                          3 
+              Hematopoietic and reticuloendothelial systems 
+                                                        173 
+                                                     Kidney 
+                                                        261 
+                                                     Larynx 
+                                                         49 
+                                                        Lip 
+                                                          4 
+                                                 Oropharynx 
+                                                          4 
+                                Other and ill-defined sites 
+                                                          2 
+Other and ill-defined sites in lip, oral cavity and pharynx 
+                                                          5 
+                       Other and unspecified parts of mouth 
+                                                          2 
+                      Other and unspecified parts of tongue 
+                                                         21 
+                       Other and unspecified urinary organs 
+                                                          1 
+                                                   Pancreas 
+                                                        170 
+                                                       Skin 
+                                                        183 
+                                                    Stomach 
+                                                        165 
+                                                     Tonsil 
+                                                          1 
+                                                    Unknown 
+                                                          1 
+                                                Uterus, NOS 
+                                                        241 
+
+== Disease type of the lung cases
+
+Adenomas and Adenocarcinomas      Squamous Cell Neoplasms 
+                         230                          109 
+
+== Primary diagnosis (lung adenocarcinoma cases)
+
+Adenocarcinoma, NOS 
+                230 
+
+== Diagnoses per case
+
+  1 
+230 
+
+== Vital status
+
+       Alive         Dead Not Reported 
+         151           57           22 
+
+== Where the last follow-up came from
+
+follow_ups       <NA> 
+       206         24 
+
+== Dead but no days_to_death
+[1] 0
+
+== Where the age came from
+
+age_at_diagnosis     age_at_index             <NA> 
+             225                2                3 
+
+== Fields with a value, lung adenocarcinoma cases: demographic
+               field records_with_value
+1   created_datetime                230
+2     demographic_id                230
+3          ethnicity                230
+4               race                230
+5       sex_at_birth                230
+6              state                230
+7       submitter_id                230
+8   updated_datetime                230
+9       vital_status                230
+10 age_is_obfuscated                228
+11  country_of_birth                228
+12     year_of_birth                228
+13     days_to_birth                225
+14    cause_of_death                 57
+15     days_to_death                 57
+16     year_of_death                 54
+17      age_at_index                  2
+
+== Fields with a value, lung adenocarcinoma cases: diagnoses
+                               field records_with_value
+1                   created_datetime                230
+2                       diagnosis_id                230
+3       diagnosis_is_primary_disease                230
+4          last_known_disease_status                230
+5                         morphology                230
+6                  primary_diagnosis                230
+7          progression_or_recurrence                230
+8        site_of_resection_or_biopsy                230
+9                              state                230
+10                      submitter_id                230
+11         tissue_or_organ_of_origin                230
+12                       tumor_grade                230
+13                  updated_datetime                230
+14             ajcc_pathologic_stage                228
+15       ajcc_staging_system_edition                228
+16                    tumor_focality                227
+17                  age_at_diagnosis                225
+18                 ajcc_pathologic_n                225
+19                 ajcc_pathologic_t                225
+20                  residual_disease                225
+21                 year_of_diagnosis                225
+22                   ajcc_clinical_m                223
+23                 ajcc_pathologic_m                222
+24 days_to_last_known_disease_status                208
+25            days_to_last_follow_up                206
+26                days_to_recurrence                 14
+27           classification_of_tumor                  1
+28                  prior_malignancy                  1
+
+== Fields with a value, lung adenocarcinoma cases: follow_ups
+                          field records_with_value
+1                  follow_up_id                982
+2              created_datetime                757
+3                         state                757
+4                  submitter_id                757
+5              updated_datetime                757
+6       ecog_performance_status                739
+7             days_to_follow_up                738
+8  karnofsky_performance_status                738
+9              disease_response                719
+10           timepoint_category                532
+11           days_to_recurrence                 37
+12    progression_or_recurrence                 37
+
+== STAR-Counts files: all CPTAC-3 / lung adenocarcinoma (clinical record) / (file record)
+                    all luad_by_clinical_record     luad_by_file_record 
+                   2968                     446                     446 
+
+== Sample fields of the lung adenocarcinoma files
+           sample_type tissue_type tumor_descriptor          class rows
+9  Solid Tissue Normal      Normal   Not Applicable         normal  232
+22          Metastatic       Tumor       Metastatic   other_tumour    3
+53       Primary Tumor       Tumor          Primary primary_tumour  281
+
+== Preservation method
+
+Snap Frozen 
+        516 
+
+== Files by status (one row per file)
+
+           not_eligible:normal      not_eligible:other_tumour                 primary_tumour 
+                           215                              3                            178 
+primary_tumour_several_samples 
+                            50 
+
+== File selection
+                            files            pooled_across_patients                not_primary_tumour 
+                              446                                 0                               218 
+             primary_tumour_files          of_which_several_samples patients_with_primary_tumour_file 
+                              228                                50                               228 
+
+== Gene model
+[1] "GENCODE v36"
+
+== Sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                    228                     228                     205 
+
+== Cohort
+               patients                  deaths median_follow_up_months    max_follow_up_months 
+                  205.0                    55.0                    35.6                    72.0 
+                  genes 
+                60616.0 
+
+== Stage
+
+     I     II III-IV 
+   114     46     45 
+
+== Sex
+
+female   male 
+    74    131 
+
+== Age recorded
+[1] 205
+
+== Expression range, log2(TPM + 1)
+[1]  0.00 18.79
+
+== Five genes with the highest single values, log2(TPM + 1)
+          gene_id gene_name      gene_type median   max
+1 ENSG00000276168    RN7SL1       misc_RNA  17.81 18.79
+2 ENSG00000211592      IGKC      IG_C_gene  13.88 16.80
+3 ENSG00000164816     DEFA5 protein_coding   0.00 16.24
+4 ENSG00000161055   SCGB3A1 protein_coding   7.21 15.76
+5 ENSG00000210082   MT-RNR2        Mt_rRNA  12.63 15.72

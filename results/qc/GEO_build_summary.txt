@@ -1,0 +1,153 @@
+GEO (GPL570) build summary
+Run: 2026-10-20 00:18
+
+== GSE31210 - samples selected / all
+selected      all 
+     226      246 
+
+== GSE31210 - event (1 = dead) by raw value
+    raw event   n
+1 alive     0 191
+4  dead     1  35
+
+== GSE31210 - stage: raw value -> group
+  raw group   n
+1  IA     I 114
+2  IB     I  54
+6  II    II  58
+
+== GSE31210 - follow-up in months (summary)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  7.261  40.920  57.314  56.605  67.335 126.916 
+
+== GSE31210 - age recorded / sex
+$age_recorded
+[1] 226
+
+$sex
+
+female   male 
+   121    105 
+
+
+== GSE31210 - flagged for the sensitivity analysis
+[1] 22
+
+== GSE50081 - samples selected / all
+selected      all 
+     127      181 
+
+== GSE50081 - event (1 = dead) by raw value
+    raw event  n
+1 alive     0 76
+4  dead     1 51
+
+== GSE50081 - stage: raw value -> group
+  raw group  n
+1  1A     I 36
+2  1B     I 56
+7  2A    II  7
+8  2B    II 28
+
+== GSE50081 - follow-up in months (summary)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.08   22.92   52.44   48.40   68.94  130.56 
+
+== GSE50081 - age recorded / sex
+$age_recorded
+[1] 127
+
+$sex
+
+ F  M 
+62 65 
+
+
+== GSE30219 - samples selected / all
+selected      all 
+      85      307 
+
+== GSE30219 - event (1 = dead) by raw value
+    raw event  n
+1 ALIVE     0 40
+4  DEAD     1 45
+
+== GSE30219 - stage: raw value -> group
+        raw  group  n
+1  T1 N0 M0      I 71
+2  T2 N0 M0      I 10
+8  T2 N1 M0     II  2
+9  T3 N0 M0     II  1
+15 T3 N1 M0 III-IV  1
+
+== GSE30219 - follow-up in months (summary)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   25.00   68.00   77.84  113.00  221.00 
+
+== GSE30219 - age recorded / sex
+$age_recorded
+[1] 85
+
+$sex
+
+ F  M 
+19 66 
+
+
+== GSE31210 - sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                    226                     226                     226 
+
+== GSE31210 - cohort
+               patients                  deaths median_follow_up_months    max_follow_up_months 
+                  226.0                    35.0                    60.7                   126.9 
+                  genes 
+                20274.0 
+
+== GSE31210 - stage group
+
+     I     II III-IV 
+   168     58      0 
+
+== GSE31210 - expression range
+[1]  2.93 15.08
+
+== GSE50081 - sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                    127                     127                     127 
+
+== GSE50081 - cohort
+               patients                  deaths median_follow_up_months    max_follow_up_months 
+                  127.0                    51.0                    65.9                   130.6 
+                  genes 
+                20274.0 
+
+== GSE50081 - stage group
+
+     I     II III-IV 
+    92     35      0 
+
+== GSE50081 - expression range
+[1]  1.85 14.60
+
+== GSE30219 - sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                     85                      85                      83 
+
+== GSE30219 - cohort
+               patients                  deaths median_follow_up_months    max_follow_up_months 
+                     83                      43                     116                     221 
+                  genes 
+                  20274 
+
+== GSE30219 - stage group
+
+     I     II III-IV 
+    79      3      1 
+
+== GSE30219 - expression range
+[1]  2.26 14.72
+
+== GPL570 probes: on the array / mapped to one Ensembl gene / genes kept
+          probes probe_gene_pairs            genes 
+           54675            55420            20274 
