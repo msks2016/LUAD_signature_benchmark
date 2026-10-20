@@ -1,6 +1,7 @@
 CPTAC-3 build summary
-Run: 2026-10-19 22:33
-GDC: Data Release 46.0 - August 10, 2026
+Run: 2026-10-20 12:59
+GDC: Data Release 46.0 - August 10, 2026 - queried 2026-10-19
+GDC answers saved on the first run were reused (no new query)
 
 == CPTAC-3 cases: all / lung (any type) / lung adenocarcinoma
                 all                lung lung_adenocarcinoma 
@@ -197,8 +198,8 @@ samples_with_expression    with_clinical_record     with_valid_survival
 
 == Stage
 
-     I     II III-IV 
-   114     46     45 
+  I  II III  IV 
+114  46  43   2 
 
 == Sex
 

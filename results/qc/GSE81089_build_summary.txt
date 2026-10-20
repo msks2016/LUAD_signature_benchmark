@@ -1,5 +1,5 @@
 GSE81089 build summary
-Run: 2026-10-20 00:29
+Run: 2026-10-20 13:05
 
 == Histology code (1 squamous, 2 adenocarcinoma, 3 large cell/NOS) of all samples
 
@@ -12,13 +12,13 @@ Run: 2026-10-20 00:29
 4   1     1 49
 
 == Stage: raw code -> group
-   raw  group  n
-1    1      I 44
-2    2      I 18
-9    3     II  8
-10   4     II 11
-17   5 III-IV 24
-18   7 III-IV  3
+   raw group  n
+1    1     I 44
+2    2     I 18
+9    3    II  8
+10   4    II 11
+17   5   III 24
+24   7    IV  3
 
 == Follow-up in months (summary)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -75,8 +75,8 @@ samples_with_expression    with_clinical_record     with_valid_survival
 
 == Stage group
 
-     I     II III-IV 
-    61     19     27 
+  I  II III  IV 
+ 61  19  24   3 
 
 == Expression range, log2(TPM + 1)
 [1]  0.00 17.62

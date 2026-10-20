@@ -6,6 +6,9 @@
 # (log2(TPM + 1), Ensembl IDs without version, PAR_Y rows dropped); a unit test checks that
 # build_star_cohort() and build_gdc_cohort() give identical results from the same data.
 # If the script stops (network), run it again: files already downloaded are kept.
+# Re-runs reuse the GDC answers saved on the first run (cases_api.rds, files_api.rds), so the
+# cohort stays the one described in OSF Update 3 (GDC Data Release 46.0) even after a new GDC
+# release. Querying the GDC again (deleting those two files) would be a deviation to report.
 # Output to check: results/qc/CPTAC-3_build_summary.txt
 
 for (f in list.files("R", pattern = "\\.R$", full.names = TRUE)) source(f)
@@ -15,20 +18,37 @@ dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
 dir.create("results/qc", recursive = TRUE, showWarnings = FALSE)
 
 summary_file <- "results/qc/CPTAC-3_build_summary.txt"
-release <- gdc_release()
+cases_file <- file.path(raw_dir, "cases_api.rds")
+files_file <- file.path(raw_dir, "files_api.rds")
+release_file <- file.path(raw_dir, "gdc_release.txt")   # line 1 release, line 2 date of the query
+reuse <- file.exists(cases_file) && file.exists(files_file)
+if (!reuse) {
+  writeLines(c(gdc_release(), format(Sys.Date())), release_file)
+} else if (!file.exists(release_file)) {
+  old <- if (file.exists("data/processed/CPTAC-3.rds")) readRDS("data/processed/CPTAC-3.rds") else NULL
+  writeLines(if (is.null(old)) c("not recorded", "not recorded") else
+    c(as.character(old$meta$gdc_data_release), as.character(old$meta$downloaded)), release_file)
+}
+rel <- readLines(release_file)
+release <- rel[1]
 report <- c("CPTAC-3 build summary",
             paste("Run:", format(Sys.time(), "%Y-%m-%d %H:%M")),
-            paste("GDC:", release))
+            paste("GDC:", release, "- queried", rel[2]),
+            if (reuse) "GDC answers saved on the first run were reused (no new query)")
 add <- function(title, x) {       # add one block to the summary file (rewritten each time)
   report <<- c(report, "", paste("==", title), utils::capture.output(print(x)))
   writeLines(report, summary_file)
 }
 
 # 1. Clinical records of every CPTAC-3 case (several cancer types) -> lung adenocarcinoma ----
-message("Reading CPTAC-3 clinical records from the GDC ...")
-case_hits <- gdc_hits("cases", gdc_filter(list("cases.project.project_id" = "CPTAC-3")),
-                      expand = c("demographic", "diagnoses", "follow_ups"))
-saveRDS(case_hits, file.path(raw_dir, "cases_api.rds"))
+if (reuse) {
+  case_hits <- readRDS(cases_file)
+} else {
+  message("Reading CPTAC-3 clinical records from the GDC ...")
+  case_hits <- gdc_hits("cases", gdc_filter(list("cases.project.project_id" = "CPTAC-3")),
+                        expand = c("demographic", "diagnoses", "follow_ups"))
+  saveRDS(case_hits, cases_file)
+}
 clin_all <- flatten_gdc_cases(case_hits)
 lung <- clin_all$primary_site %in% "Bronchus and lung"
 clin_raw <- clin_all[lung & clin_all$disease_type %in% "Adenomas and Adenocarcinomas", , drop = FALSE]
@@ -55,13 +75,17 @@ add("Fields with a value, lung adenocarcinoma cases: follow_ups",
 if (!nrow(clin_raw)) stop("No lung adenocarcinoma case found: send ", summary_file)
 
 # 2. CPTAC-3 RNA-seq files (STAR - Counts) -> one primary-tumour file per patient ------------
-message("Reading the CPTAC-3 RNA-seq file list from the GDC ...")
-file_hits <- gdc_hits("files", gdc_filter(list("cases.project.project_id" = "CPTAC-3",
-                                               "files.data_type" = "Gene Expression Quantification",
-                                               "files.analysis.workflow_type" = "STAR - Counts",
-                                               "files.access" = "open")),
-                      expand = c("cases", "cases.samples"))
-saveRDS(file_hits, file.path(raw_dir, "files_api.rds"))
+if (reuse) {
+  file_hits <- readRDS(files_file)
+} else {
+  message("Reading the CPTAC-3 RNA-seq file list from the GDC ...")
+  file_hits <- gdc_hits("files", gdc_filter(list("cases.project.project_id" = "CPTAC-3",
+                                                 "files.data_type" = "Gene Expression Quantification",
+                                                 "files.analysis.workflow_type" = "STAR - Counts",
+                                                 "files.access" = "open")),
+                        expand = c("cases", "cases.samples"))
+  saveRDS(file_hits, files_file)
+}
 ft_all <- flatten_gdc_files(file_hits)
 sel <- choose_rna_files(ft_all[ft_all$patient %in% clin_raw$submitter_id, , drop = FALSE])
 utils::write.csv(sel$all, file.path(raw_dir, "rnaseq_files_luad.csv"), row.names = FALSE)
@@ -92,7 +116,7 @@ message("Reading the files ...")
 tpm <- read_star_tpm(paths, sel$chosen$patient)
 
 # 4. Cohort object -------------------------------------------------------------------------
-meta <- list(downloaded = format(Sys.Date()), gdc_data_release = release,
+meta <- list(downloaded = rel[2], gdc_data_release = release,
              cases_cptac3 = nrow(clin_all), cases_luad = nrow(clin_raw), file_selection = sel$flow,
              patient_rule = paste("one primary-tumour file per patient (one case; every sample a primary",
                                   "tumour): first by sample ID, then file ID"))

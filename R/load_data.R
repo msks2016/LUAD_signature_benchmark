@@ -22,12 +22,14 @@ make_clin_gdc <- function(clin_raw) {
 # SummarizedExperiment from TCGAbiolinks::GDCprepare() -> cohort object.
 # Primary tumours only; one sample per patient = first barcode alphabetically (outcome-blind).
 build_gdc_cohort <- function(se, clin_raw, name) {
-  cd <- as.data.frame(SummarizedExperiment::colData(se))
-  n_files <- nrow(cd)
-  cd <- cd[cd$sample_type == "Primary Tumor", , drop = FALSE]
-  n_tumour <- nrow(cd)
-  cd <- cd[order(cd$patient, cd$barcode), , drop = FALSE]
-  cd <- cd[!duplicated(cd$patient), , drop = FALSE]
+  cd_all <- as.data.frame(SummarizedExperiment::colData(se))
+  if (!"unstranded" %in% SummarizedExperiment::assayNames(se)) {
+    stop("The SummarizedExperiment has no 'unstranded' (read count) assay: rebuild it with GDCprepare()")
+  }
+  counts <- SummarizedExperiment::assay(se, "unstranded")
+  total_reads <- colSums(as.matrix(counts[grepl("^ENSG", rownames(counts)), , drop = FALSE]))
+  names(total_reads) <- colnames(se)
+  cd <- choose_tcga_samples(cd_all, total_reads)
   tpm <- SummarizedExperiment::assay(se, "tpm_unstrand")[, cd$barcode, drop = FALSE]
   ids <- rownames(tpm)
   keep <- grepl("^ENSG", ids) & !grepl("_PAR_Y$", ids)
@@ -36,8 +38,29 @@ build_gdc_cohort <- function(se, clin_raw, name) {
   colnames(expr) <- cd$patient
   meta <- list(source = "GDC STAR-Counts, tpm_unstranded, log2(TPM + 1)",
                gene_model = "GENCODE v36",
-               files = n_files, primary_tumour_samples = n_tumour, patients_with_rna = nrow(cd))
+               sample_rule = "one primary tumour per patient: largest total read count (OSF Update 3, D4)",
+               files = nrow(cd_all), primary_tumour_samples = sum(cd_all$sample_type == "Primary Tumor"),
+               patients_with_rna = nrow(cd), sample_choice = cd)
   finalise_cohort(expr, make_clin_gdc(clin_raw), name, platform = "RNA-seq", meta = meta)
+}
+
+# One primary-tumour sample per patient. Registered rule "highest total expression", applied
+# as the largest total read count (OSF Update 3, decision D4): TPM sums to 1e6 in every
+# sample, so only the read count can separate them. Ties: alphabetical barcode.
+# cd: colData as a data.frame (barcode, patient, sample_type); total_reads: named by barcode.
+choose_tcga_samples <- function(cd, total_reads) {
+  cd <- cd[cd$sample_type == "Primary Tumor", c("barcode", "patient", "sample_type"), drop = FALSE]
+  if (!all(cd$barcode %in% names(total_reads))) stop("total_reads is missing some barcodes")
+  cd$total_reads <- unname(total_reads[cd$barcode])
+  if (anyNA(cd$total_reads)) stop("Missing read counts for some primary tumour samples")
+  cd$n_primary_samples <- as.integer(table(cd$patient)[cd$patient])
+  first_barcode <- vapply(split(cd$barcode, cd$patient), function(b) sort(b)[1], "")   # old v2 rule
+  cd <- cd[order(cd$patient, -cd$total_reads, cd$barcode), , drop = FALSE]
+  chosen <- cd[!duplicated(cd$patient), , drop = FALSE]
+  chosen$first_barcode <- as.character(first_barcode[chosen$patient])
+  chosen$changed_by_rule <- chosen$barcode != chosen$first_barcode
+  rownames(chosen) <- NULL
+  chosen
 }
 
 # Share of TPM outside the genes in keep_ids, per sample (RNA-seq; expr = log2(TPM + 1)).
@@ -81,11 +104,11 @@ show_geo_fields <- function(gse) {
   invisible(pd)
 }
 
-# Stage group (I / II / III-IV) from pathological T, N and M categories, for series that give
+# Stage group (I / II / III / IV) from pathological T, N and M categories, for series that give
 # TNM but no stage. AJCC 6th-edition grouping, because such series do not split T into a/b:
-#   I = T1-2 N0 M0;  II = T1-2 N1 M0 or T3 N0 M0;  III-IV = T3 N1-2, T4, N2-3 or M1.
+#   I = T1-2 N0 M0;  II = T1-2 N1 M0 or T3 N0 M0;  III = T3 N1-2, T4 or N2-3 with M0;  IV = M1.
 # MX or a missing M counts as M0 (resected series); TX or NX gives NA unless the stage is
-# III-IV anyway (for example N2 with TX).
+# III or IV anyway (for example N2 with TX).
 stage_from_tnm <- function(t, n, m) {
   cat_num <- function(x, letter) {
     x <- toupper(trimws(as.character(x)))
@@ -99,8 +122,9 @@ stage_from_tnm <- function(t, n, m) {
   out <- rep(NA_character_, length(tt))
   out[m0 & tt %in% c(1, 2) & nn %in% 0] <- "I"
   out[m0 & ((tt %in% c(1, 2) & nn %in% 1) | (tt %in% 3 & nn %in% 0))] <- "II"
-  out[mm %in% 1 | nn %in% c(2, 3) | tt %in% 4 | (tt %in% 3 & nn %in% 1)] <- "III-IV"
-  factor(out, levels = c("I", "II", "III-IV"))
+  out[m0 & (nn %in% c(2, 3) | tt %in% 4 | (tt %in% 3 & nn %in% 1))] <- "III"
+  out[mm %in% 1] <- "IV"
+  factor(out, levels = c("I", "II", "III", "IV"))
 }
 
 # GEO phenotype table + one entry of config/cohorts.yaml -> standard clinical columns.

@@ -1,5 +1,5 @@
 GEO (GPL570) build summary
-Run: 2026-10-20 00:18
+Run: 2026-10-20 13:00
 
 == GSE31210 - samples selected / all
 selected      all 
@@ -73,12 +73,12 @@ selected      all
 4  DEAD     1 45
 
 == GSE30219 - stage: raw value -> group
-        raw  group  n
-1  T1 N0 M0      I 71
-2  T2 N0 M0      I 10
-8  T2 N1 M0     II  2
-9  T3 N0 M0     II  1
-15 T3 N1 M0 III-IV  1
+        raw group  n
+1  T1 N0 M0     I 71
+2  T2 N0 M0     I 10
+8  T2 N1 M0    II  2
+9  T3 N0 M0    II  1
+15 T3 N1 M0   III  1
 
 == GSE30219 - follow-up in months (summary)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -106,8 +106,8 @@ samples_with_expression    with_clinical_record     with_valid_survival
 
 == GSE31210 - stage group
 
-     I     II III-IV 
-   168     58      0 
+  I  II III  IV 
+168  58   0   0 
 
 == GSE31210 - expression range
 [1]  2.93 15.08
@@ -124,8 +124,8 @@ samples_with_expression    with_clinical_record     with_valid_survival
 
 == GSE50081 - stage group
 
-     I     II III-IV 
-    92     35      0 
+  I  II III  IV 
+ 92  35   0   0 
 
 == GSE50081 - expression range
 [1]  1.85 14.60
@@ -142,8 +142,8 @@ samples_with_expression    with_clinical_record     with_valid_survival
 
 == GSE30219 - stage group
 
-     I     II III-IV 
-    79      3      1 
+  I  II III  IV 
+ 79   3   1   0 
 
 == GSE30219 - expression range
 [1]  2.26 14.72

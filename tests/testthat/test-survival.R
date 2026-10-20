@@ -18,16 +18,17 @@ test_that("a constant score is refused", {
   expect_error(hr_per_sd(c(1, 2, 3), c(1, 0, 1), c(2, 2, 2)), "Constant")
 })
 
-test_that("stage text collapses to I / II / III-IV", {
-  x <- c("Stage IA1", "IB", "Stage IIB", "stage IIIA", "Stage IV", "IV", "Not Reported", NA)
+test_that("stage text collapses to I / II / III / IV (four levels, as registered)", {
+  x <- c("Stage IA1", "IB", "Stage IIB", "stage IIIA", "Stage IV", "IV", "Not Reported", NA, "IIIB")
   expect_equal(as.character(collapse_stage(x)),
-               c("I", "I", "II", "III-IV", "III-IV", "III-IV", NA, NA))
+               c("I", "I", "II", "III", "IV", "IV", NA, NA, "III"))
+  expect_identical(levels(collapse_stage(x)), c("I", "II", "III", "IV"))
 })
 
 test_that("H2 returns a likelihood-ratio test and an adjusted HR", {
   co <- sim_cohort(n = 400, beta = 0.6, seed = 31)
   set.seed(32)
-  stage <- sample(c("I", "II", "III-IV"), 400, replace = TRUE)
+  stage <- sample(c("I", "II", "III", "IV"), 400, replace = TRUE)
   s <- score_signature(co$expr, rownames(co$expr)[1:3], c(1, 1, 1))
   r <- h2_added_value(co$time, co$event, s, stage)
   expect_equal(r$n, 400)

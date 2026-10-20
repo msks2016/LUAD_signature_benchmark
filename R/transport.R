@@ -9,7 +9,8 @@ pair_log_hr <- function(cohort, genes, coefs, idx = NULL, scale = "zscore") {
   hr_per_sd(cohort$time[idx], cohort$event[idx], s)[["log_hr"]]
 }
 
-# Registered decision rule (amendment of 10 October 2026), delta = log(1.25).
+# Decision rule written in the v0.3 deviations log on 11 Oct 2026, never filed on OSF before
+# Update 3: an analysis added after registration (reported as not pre-registered). delta = log(1.25).
 classify_transport <- function(lo, hi, delta = log(1.25)) {
   if (lo > 0) return("Transportable")
   if (hi < 0) return("Contradicted")

@@ -1,0 +1,37 @@
+TCGA-LUAD build summary
+Run: 2026-10-20 12:59
+
+== GDC data release / download date
+[1] "Data Release 46.0 - August 10, 2026" "2026-10-19"                         
+
+== Sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                    517                     517                     504 
+
+== RNA-seq files / primary tumour samples / patients with a primary tumour sample
+                 files primary_tumour_samples               patients 
+                   601                    540                    517 
+
+== One sample per patient (largest total read count)
+   patients_with_several_primary_samples chosen_sample_differs_from_first_barcode 
+                                      12                                        1 
+
+== Patients whose chosen sample changed (listed in data/processed/TCGA-LUAD_sample_choice.csv)
+        patient                      barcode                first_barcode total_reads
+68 TCGA-44-5645 TCGA-44-5645-01A-01R-A278-07 TCGA-44-5645-01A-01R-1628-07    44642161
+
+== Cohort
+               patients                  deaths median_follow_up_months                   genes 
+                    504                     182                      29                   60616 
+
+== Stage group
+
+   I   II  III   IV <NA> 
+ 270  120   81   25    8 
+
+== Expression range, log2(TPM + 1)
+[1]  0.00 19.28
+
+== Compared with the previous build (first barcode per patient)
+previous_patients   previous_deaths     same_patients 
+              504               182                 1 

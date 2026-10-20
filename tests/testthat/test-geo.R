@@ -5,8 +5,8 @@ test_that("stage groups are derived from pathological TNM", {
   n <- c("N0", "N0", "N1", "N0", "N1", "N2", "N0", "N3", "N0", "N0", "NX", "NTL", "N2")
   m <- c("M0", "MX", "M0", "M0", "M0", "M0", "M0", "M0", "M1", "M0", "M0", "NTL", "M0")
   expect_identical(as.character(stage_from_tnm(t, n, m)),
-                   c("I", "I", "II", "II", "III-IV", "III-IV", "III-IV", "III-IV", "III-IV",
-                     NA, NA, NA, "III-IV"))
+                   c("I", "I", "II", "II", "III", "III", "III", "III", "IV",
+                     NA, NA, NA, "III"))
 })
 
 pd_toy <- data.frame(geo_accession = paste0("GSM", 1:5),
@@ -43,7 +43,7 @@ test_that("GEO stage can come from TNM fields", {
   f$stage_recode <- NULL
   f$stage_tnm <- list(tumour = "pt:ch1", node = "pn:ch1", metastasis = "pm:ch1")
   cl <- make_clin_geo(pd_toy, f)
-  expect_identical(as.character(cl$stage), c("I", "II", "II", "III-IV", NA))
+  expect_identical(as.character(cl$stage), c("I", "II", "II", "III", NA))
   expect_identical(cl$stage_raw[1], "T1 N0 M0")
   f$stage_tnm <- list(t = "pt:ch1", "FALSE" = "pn:ch1", m = "pm:ch1")   # what YAML made of {t, n, m}
   expect_error(make_clin_geo(pd_toy, f), "tumour, node and metastasis")
@@ -63,7 +63,7 @@ test_that("follow-up can be computed from two dates; numeric codes map to stage"
   cl <- make_clin_geo(pd, f)
   expect_equal(cl$os_months, c(as.numeric(as.Date("2013-04-28") - as.Date("2008-12-18")), 365, 0, NA) / 30.4375)
   expect_equal(cl$os_event, c(0L, 1L, NA, 1L))
-  expect_identical(as.character(cl$stage), c("I", "III-IV", "III-IV", "II"))
+  expect_identical(as.character(cl$stage), c("I", "III", "IV", "II"))
 })
 
 test_that("FPKM becomes log2(TPM + 1) with TPM summing to 1e6 per sample", {

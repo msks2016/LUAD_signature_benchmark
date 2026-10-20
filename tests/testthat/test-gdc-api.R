@@ -116,7 +116,7 @@ test_that("clinical records give follow-up, stage and sex the way TCGAbiolinks d
   mc <- make_clin_gdc(cl)
   expect_equal(mc$os_months, c(300, 400, 250, NA, NA) / 30.4375)
   expect_equal(mc$os_event, c(1L, 0L, 0L, NA, NA))
-  expect_identical(as.character(mc$stage), c("I", "III-IV", "I", "II", NA))
+  expect_identical(as.character(mc$stage), c("I", "III", "I", "II", NA))
 })
 
 write_star <- function(path, tpm) {
@@ -170,13 +170,33 @@ test_that("build_star_cohort() and build_gdc_cohort() give identical cohorts fro
   colnames(tpm_bc) <- c("B1", "B2", "B3")
   cd <- S4Vectors::DataFrame(barcode = c("B1", "B2", "B3"), patient = c("C1", "C2", "C3"),
                              sample_type = rep("Primary Tumor", 3), row.names = c("B1", "B2", "B3"))
-  se <- SummarizedExperiment::SummarizedExperiment(assays = list(tpm_unstrand = tpm_bc), colData = cd)
+  counts_bc <- tpm_bc * 10
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(unstranded = counts_bc, tpm_unstrand = tpm_bc), colData = cd)
   a <- build_gdc_cohort(se, clin_toy, name = "toy")
   b <- build_star_cohort(tpm_toy, clin_toy, name = "toy")
   expect_identical(a$expr, b$expr)
   expect_identical(a$clin, b$clin)
   expect_identical(a$time, b$time)
   expect_identical(a$event, b$event)
+  se_old <- SummarizedExperiment::SummarizedExperiment(assays = list(tpm_unstrand = tpm_bc), colData = cd)
+  expect_error(build_gdc_cohort(se_old, clin_toy, name = "toy"), "unstranded")
+})
+
+test_that("one primary tumour per patient: the sample with the largest total read count (D4)", {
+  cd <- data.frame(barcode = c("P1-01A", "P1-01B", "P2-01A", "P2-11A", "P3-01A", "P3-01B", "P4-01A"),
+                   patient = c("P1", "P1", "P2", "P2", "P3", "P3", "P4"),
+                   sample_type = c("Primary Tumor", "Primary Tumor", "Primary Tumor",
+                                   "Solid Tissue Normal", "Primary Tumor", "Primary Tumor",
+                                   "Primary Tumor"), stringsAsFactors = FALSE)
+  reads <- c("P1-01A" = 4e7, "P1-01B" = 6e7, "P2-01A" = 5e7, "P2-11A" = 9e7,
+             "P3-01A" = 5e7, "P3-01B" = 5e7, "P4-01A" = 3e7)
+  ch <- choose_tcga_samples(cd, reads)
+  expect_identical(ch$patient, c("P1", "P2", "P3", "P4"))
+  expect_identical(ch$barcode, c("P1-01B", "P2-01A", "P3-01A", "P4-01A"))   # tie: alphabetical
+  expect_identical(ch$n_primary_samples, c(2L, 1L, 2L, 1L))                # the normal is not counted
+  expect_identical(ch$changed_by_rule, c(TRUE, FALSE, FALSE, FALSE))
+  expect_error(choose_tcga_samples(cd, reads[-1]), "missing some barcodes")
 })
 
 test_that("GDC filters keep single values as JSON arrays", {

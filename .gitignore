@@ -8,3 +8,4 @@ data/processed/
 results/*.rds
 .DS_Store
 data/reference/*.gtf.gz
+data/reference/*.gtf.gz

@@ -33,16 +33,17 @@ fmt_hr <- function(hr, lo, hi, digits = 2) {
   sprintf("%s (95%% CI %s-%s)", fmt_num(hr, digits), fmt_num(lo, digits), fmt_num(hi, digits))
 }
 
-# Collapse AJCC stage text ("Stage IA1", "IIB", "stage IIIA", "IV") to I / II / III-IV.
+# Collapse AJCC stage text ("Stage IA1", "IIB", "stage IIIA", "IV") to I / II / III / IV:
+# four levels, as registered (OSF Update 3, decision D2).
 collapse_stage <- function(x) {
   s <- toupper(trimws(as.character(x)))
   s <- sub("^STAGE[[:space:]]*", "", s)
   out <- rep(NA_character_, length(s))
-  out[grepl("^IV", s)] <- "III-IV"
-  out[is.na(out) & grepl("^III", s)] <- "III-IV"
+  out[grepl("^IV", s)] <- "IV"
+  out[is.na(out) & grepl("^III", s)] <- "III"
   out[is.na(out) & grepl("^II", s)] <- "II"
   out[is.na(out) & grepl("^I", s)] <- "I"
-  factor(out, levels = c("I", "II", "III-IV"))
+  factor(out, levels = c("I", "II", "III", "IV"))
 }
 
 # Median follow-up by the reverse Kaplan-Meier method (censoring treated as the event).
