@@ -1,0 +1,4 @@
+"query","source","ensembl_id","name_in_source","type_in_source","entrez_id","location","name_in_v22","name_in_v36","type_in_v36"
+"AL034397.3","GENCODE v32","ENSG00000274536","AL034397.3","lncRNA",NA,"chrX:66015461-66020422(+)","RP6-159A1.4","MIR223HG","lncRNA"
+"HSPC324","GENCODE v29","ENSG00000228401","HSPC324","antisense",NA,"chr9:136648610-136660421(-)","RP11-251M1.1","AL590226.1","lncRNA"
+"HSPC324","NCBI Gene (alias)","ENSG00000228401","LNCEGFL7OS","ncRNA","101928612",NA,"RP11-251M1.1","AL590226.1","lncRNA"
