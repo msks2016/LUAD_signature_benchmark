@@ -1,5 +1,5 @@
 GEO (GPL570) build summary
-Run: 2026-10-20 13:00
+Run: 2026-10-20 13:48
 
 == GSE31210 - samples selected / all
 selected      all 
@@ -102,7 +102,7 @@ samples_with_expression    with_clinical_record     with_valid_survival
                patients                  deaths median_follow_up_months    max_follow_up_months 
                   226.0                    35.0                    60.7                   126.9 
                   genes 
-                20274.0 
+                21407.0 
 
 == GSE31210 - stage group
 
@@ -120,7 +120,7 @@ samples_with_expression    with_clinical_record     with_valid_survival
                patients                  deaths median_follow_up_months    max_follow_up_months 
                   127.0                    51.0                    65.9                   130.6 
                   genes 
-                20274.0 
+                21407.0 
 
 == GSE50081 - stage group
 
@@ -138,7 +138,7 @@ samples_with_expression    with_clinical_record     with_valid_survival
                patients                  deaths median_follow_up_months    max_follow_up_months 
                      83                      43                     116                     221 
                   genes 
-                  20274 
+                  21407 
 
 == GSE30219 - stage group
 
@@ -146,8 +146,8 @@ samples_with_expression    with_clinical_record     with_valid_survival
  79   3   1   0 
 
 == GSE30219 - expression range
-[1]  2.26 14.72
+[1]  2.13 14.72
 
 == GPL570 probes: on the array / mapped to one Ensembl gene / genes kept
           probes probe_gene_pairs            genes 
-           54675            55420            20274 
+           54675            49996            21407 

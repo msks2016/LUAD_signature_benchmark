@@ -265,10 +265,19 @@ rma_from_cel <- function(gse, gsm_ids, destdir = "data/raw/GEO") {
   expr
 }
 
-# GPL570 probe -> Ensembl gene map from a pinned Ensembl release, saved once and reused.
-# BioMart can be slow or drop connections, so every request is tried up to three times.
+# Genes on the primary assembly only (chromosomes 1-22, X, Y, MT), as in the GENCODE tables the
+# signature genes are mapped with. Ensembl also lists copies of some genes on alternative
+# haplotypes and patches (e.g. the MHC region); without this filter a probe or Entrez ID that
+# hits such a copy would count as "several genes" and be dropped.
+primary_chromosomes <- c(as.character(1:22), "X", "Y", "MT")
+keep_primary <- function(d, chrom_col = "chromosome_name") {
+  d[as.character(d[[chrom_col]]) %in% primary_chromosomes, , drop = FALSE]
+}
+
+# GPL570 probe -> Ensembl gene map from a pinned Ensembl release (primary-assembly genes),
+# saved once and reused. BioMart can be slow or drop connections: each request is tried 3 times.
 gpl570_probe_map <- function(probes, ensembl_version = 114,
-                             file = "data/reference/gpl570_probe_map_ensembl.csv") {
+                             file = "data/reference/gpl570_probe_map_ensembl_primary.csv") {
   if (file.exists(file)) return(utils::read.csv(file, stringsAsFactors = FALSE))
   retry <- function(what, expr_fun) {
     for (t in 1:3) {
@@ -285,11 +294,12 @@ gpl570_probe_map <- function(probes, ensembl_version = 114,
   chunks <- split(probes, ceiling(seq_along(probes) / 5000))
   pm <- do.call(rbind, lapply(seq_along(chunks), function(k) {
     retry(paste("chunk", k, "of", length(chunks)), function() {
-      biomaRt::getBM(attributes = c("affy_hg_u133_plus_2", "ensembl_gene_id"),
+      biomaRt::getBM(attributes = c("affy_hg_u133_plus_2", "ensembl_gene_id", "chromosome_name"),
                      filters = "affy_hg_u133_plus_2", values = chunks[[k]], mart = mart)
     })
   }))
-  names(pm) <- c("probe_id", "ensembl_id")
+  names(pm) <- c("probe_id", "ensembl_id", "chromosome_name")
+  pm <- unique(keep_primary(pm)[, c("probe_id", "ensembl_id")])
   dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
   utils::write.csv(pm, file, row.names = FALSE)
   pm
@@ -297,14 +307,14 @@ gpl570_probe_map <- function(probes, ensembl_version = 114,
 
 # Entrez Gene ID -> Ensembl gene map from a pinned Ensembl release (whole table, saved once).
 entrez_ensembl_map <- function(ensembl_version = 114,
-                               file = "data/reference/entrez_to_ensembl_e114.csv") {
+                               file = "data/reference/entrez_to_ensembl_e114_primary.csv") {
   if (!file.exists(file)) {
     em <- NULL
     for (t in 1:3) {
       em <- tryCatch({
         mart <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl",
                                     version = ensembl_version)
-        biomaRt::getBM(attributes = c("entrezgene_id", "ensembl_gene_id"), mart = mart)
+        biomaRt::getBM(attributes = c("entrezgene_id", "ensembl_gene_id", "chromosome_name"), mart = mart)
       }, error = function(e) {
         message("  Ensembl BioMart: ", conditionMessage(e), " - trying again")
         Sys.sleep(20 * t)
@@ -313,7 +323,7 @@ entrez_ensembl_map <- function(ensembl_version = 114,
       if (!is.null(em)) break
     }
     if (is.null(em)) stop("Ensembl BioMart did not answer. Run the script again later.")
-    em <- em[!is.na(em$entrezgene_id), , drop = FALSE]
+    em <- keep_primary(em[!is.na(em$entrezgene_id), , drop = FALSE])
     out <- data.frame(entrez_id = format(em$entrezgene_id, scientific = FALSE, trim = TRUE),
                       ensembl_id = em$ensembl_gene_id, stringsAsFactors = FALSE)
     dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)

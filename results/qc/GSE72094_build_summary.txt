@@ -1,5 +1,5 @@
 GSE72094 build summary
-Run: 2026-10-20 13:42
+Run: 2026-10-20 13:59
 
 == Event (1 = dead) by raw value
     raw event   n
@@ -43,11 +43,11 @@ one_gene  several     none
 
 == Entrez IDs on the array: mapped to one Ensembl gene / to several (dropped) / to none
     one several    none 
-  18158    1390    2595 
+  19468      70    2605 
 
 == Probes mapped to one Ensembl gene / genes kept (one probe per gene, highest mean)
 probes  genes 
- 35420  18136 
+ 37665  19445 
 
 == Sample flow (patients)
 samples_with_expression    with_clinical_record     with_valid_survival 
@@ -57,7 +57,7 @@ samples_with_expression    with_clinical_record     with_valid_survival
                patients                  deaths median_follow_up_months    max_follow_up_months 
                   398.0                   113.0                    29.9                    68.2 
                   genes 
-                18136.0 
+                19445.0 
 
 == Stage group
 

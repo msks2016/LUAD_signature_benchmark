@@ -57,7 +57,7 @@ shared_means <- rowMeans(sapply(probe_level, function(m) rowMeans(m[probes, , dr
 for (gse in gses) {
   col <- collapse_probes(probe_level[[gse]][probes, , drop = FALSE], pm, shared_means)
   meta <- list(source = "GEO CEL files; affy::justRMA on the selected samples of this cohort",
-               probe_map = "data/reference/gpl570_probe_map_ensembl.csv (Ensembl BioMart, release 114)",
+               probe_map = "data/reference/gpl570_probe_map_ensembl_primary.csv (Ensembl BioMart, release 114, primary-assembly genes)",
                probe_choice = col$probe_choice, downloaded = format(Sys.Date()))
   co <- finalise_cohort(col$expr, clin[[gse]], gse, platform = "GPL570", meta = meta)
   check_cohort(co)

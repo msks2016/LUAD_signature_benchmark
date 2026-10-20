@@ -138,3 +138,12 @@ test_that("GSE72094 settings: Entrez probe map and stage codes", {
   expect_identical(as.character(cl$stage), c("I", "IV", NA, "III"))
   expect_equal(cl$age, c(70, NA, 66, 81))
 })
+
+test_that("probe and Entrez maps keep primary-assembly genes only", {
+  d <- data.frame(probe_id = c("p1", "p1", "p2", "p3"),
+                  ensembl_id = c("ENSG01", "ENSG91", "ENSG02", "ENSG03"),
+                  chromosome_name = c("6", "CHR_HSCHR6_MHC_COX_CTG1", "X", "MT"), stringsAsFactors = FALSE)
+  k <- keep_primary(d)
+  expect_identical(k$ensembl_id, c("ENSG01", "ENSG02", "ENSG03"))
+  expect_false(anyDuplicated(k$probe_id) > 0)    # p1 now maps to one gene and is kept
+})
