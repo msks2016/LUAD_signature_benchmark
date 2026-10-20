@@ -63,3 +63,12 @@ build_pairs <- function(sig_map, measurable, independence, cohort_names, min_fra
   if (!is.null(pairs)) rownames(pairs) <- NULL
   list(pairs = pairs, genes = genes)
 }
+
+# Measurable genes of every cohort in a list, with the presence rule of config/analysis.yaml
+# (used again on subsets in the sensitivity analyses, where a gene can become constant).
+measurable_by_cohort <- function(cohorts, cfg) {
+  lapply(cohorts, function(co) {
+    frac <- if (identical(co$meta$platform, "RNA-seq")) cfg$presence$rnaseq_min_expressed_fraction else 0
+    measurable_rows(co$expr, min_sd = cfg$presence$min_sd, min_expressed_frac = frac)
+  })
+}

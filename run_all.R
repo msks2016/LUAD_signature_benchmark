@@ -9,15 +9,19 @@ steps <- c(
   "scripts/10_cohort_tcga.R",       # Step 2: cohorts (downloads; slow the first time)
   "scripts/11_cohort_cptac3.R",
   "scripts/12_cohort_gpl570.R",
-  "scripts/13_cohort_gse81089.R",   # restored in the OSF amendment
+  "scripts/13_cohort_gse81089.R",
+  if (!is.null(yaml::read_yaml("config/cohorts.yaml")$GSE72094)) "scripts/14_cohort_gse72094.R",
   "scripts/19_cohort_qc.R",         # Step 2 gate
-  "scripts/21_gene_tables.R",       # Step 3: gene identifiers
+  "scripts/21_gene_tables.R",       # Step 3: gene identifiers and coverage
   "scripts/22_gene_map.R",
   "scripts/23_coverage.R",
-  "scripts/30_h1_null.R",           # Step 5: analyses
+  "scripts/29_positive_control.R",  # Step 4: stage positive control (gates scripts 30-32)
+  "scripts/30_h1_null.R",           # Step 5: registered analyses
   "scripts/31_h2_stage.R",
   "scripts/32_h3_cross_cohort.R",
-  "scripts/33_transportability.R",
+  "scripts/35_direction_genes.R",
+  "scripts/36_power.R",
+  "scripts/33_transportability.R",  # added after registration (not pre-registered)
   "scripts/34_sensitivity.R"
 )
 for (s in steps) {

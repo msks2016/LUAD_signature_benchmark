@@ -1,0 +1,68 @@
+GSE72094 build summary
+Run: 2026-10-20 13:42
+
+== Event (1 = dead) by raw value
+    raw event   n
+1 Alive     0 298
+5  Dead     1 122
+9    NA  <NA>  22
+
+== Stage: raw value -> group
+   raw group   n
+1    1     I   6
+2   1A     I 158
+3   1B     I 101
+14  2A    II  18
+15  2B    II  51
+26   3   III   1
+27  3A   III  43
+28  3B   III  19
+39   4    IV  17
+50  NA  <NA>  28
+
+== Follow-up in months (summary)
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.      NAs 
+ 0.09856 17.74949 27.07187 26.01748 33.24025 68.23819       44 
+
+== Age recorded / sex
+$age_recorded
+[1] 421
+
+$sex
+
+  F   M 
+240 202 
+
+
+== Probes with a missing value (dropped)
+[1] 0
+
+== Probes: annotated with one gene / with several genes (dropped) / none
+one_gene  several     none 
+   41090        0    19517 
+
+== Entrez IDs on the array: mapped to one Ensembl gene / to several (dropped) / to none
+    one several    none 
+  18158    1390    2595 
+
+== Probes mapped to one Ensembl gene / genes kept (one probe per gene, highest mean)
+probes  genes 
+ 35420  18136 
+
+== Sample flow (patients)
+samples_with_expression    with_clinical_record     with_valid_survival 
+                    442                     442                     398 
+
+== Cohort
+               patients                  deaths median_follow_up_months    max_follow_up_months 
+                  398.0                   113.0                    29.9                    68.2 
+                  genes 
+                18136.0 
+
+== Stage group
+
+   I   II  III   IV <NA> 
+ 254   67   57   15    5 
+
+== Expression range
+[1]  0.37 14.51

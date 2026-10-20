@@ -47,3 +47,15 @@ GSE81089:
   age: "age:ch1"
   sex: "gender:ch1"
   sample_name: "tumor (t) or normal (n):ch1"   # matches the column names of the FPKM file
+
+GSE72094:
+  # 442 lung adenocarcinomas (Moffitt Cancer Center; Rosetta/Merck custom array GPL15048), one
+  # sample per patient (patient_id K001...). Fields confirmed against logs/gse72094_fields.txt
+  # (20 Oct 2026). "NA" in a field means not recorded. Expression is already on a log2 scale.
+  time: {field: "survival_time_in_days:ch1", unit: "days"}
+  event: {field: "vital_status:ch1", dead_values: ["Dead"], alive_values: ["Alive"]}
+  stage: "Stage:ch1"
+  stage_recode: {"1": "I", "1A": "IA", "1B": "IB", "2A": "IIA", "2B": "IIB", "3": "III", "3A": "IIIA", "3B": "IIIB", "4": "IV"}
+  age: "age_at_diagnosis:ch1"
+  sex: "gender:ch1"
+  probe_annotation: {column: "EntrezGeneID", id_type: "entrez"}   # Entrez -> Ensembl 114, one-to-one only

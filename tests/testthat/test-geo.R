@@ -115,3 +115,26 @@ test_that("an interrupted CEL download is never kept; a finished one is reused",
   expect_identical(geo_download_raw("GSE1", dest, tries = 1, base = base), p)
   expect_error(geo_download_raw("GSE2", dest, tries = 1, base = base), "failed")
 })
+
+test_that("platform gene IDs are read as text without scientific notation", {
+  expect_identical(annotation_ids(c(10000, NA, 1, 100130000)), c("10000", NA, "1", "100130000"))
+  expect_identical(annotation_ids(c(" 7157 ", "", "1 /// 2", NA)), c("7157", NA, "1 /// 2", NA))
+})
+
+test_that("GSE72094 settings: Entrez probe map and stage codes", {
+  skip_if_not_installed("yaml")
+  g <- yaml::read_yaml(file.path(find_project_root(), "config", "cohorts.yaml"))$GSE72094
+  expect_identical(g$probe_annotation$id_type, "entrez")
+  expect_identical(unname(unlist(g$stage_recode)[c("1", "1A", "3", "4")]), c("I", "IA", "III", "IV"))
+  pd <- data.frame(geo_accession = paste0("GSM", 1:4),
+                   "survival_time_in_days:ch1" = c("365", "NA", "730", "100"),
+                   "vital_status:ch1" = c("Dead", "Alive", "NA", "Alive"),
+                   "Stage:ch1" = c("1A", "4", "NA", "3"),
+                   "age_at_diagnosis:ch1" = c("70", "NA", "66", "81"),
+                   "gender:ch1" = c("F", "M", "F", "M"), check.names = FALSE, stringsAsFactors = FALSE)
+  cl <- make_clin_geo(pd, g)
+  expect_equal(cl$os_months, c(365, NA, 730, 100) / 30.4375)
+  expect_equal(cl$os_event, c(1L, 0L, NA, 0L))
+  expect_identical(as.character(cl$stage), c("I", "IV", NA, "III"))
+  expect_equal(cl$age, c(70, NA, 66, 81))
+})

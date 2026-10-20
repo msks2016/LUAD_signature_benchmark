@@ -1,20 +1,21 @@
-# Frozen analysis decisions.
-# Copy each decision, as one sentence, into the OSF amendment BEFORE running scripts 30-34.
-# Change nothing here after the amendment is filed; a later change is a new, dated deviation.
+# Frozen analysis decisions, as filed on OSF (registration of 2026-10-06 and its Updates 1-3).
+# Change nothing here after Update 3; a later change is a new, dated deviation (deviations log
+# and, if it changes a result, a further OSF update).
+# YAML: never use bare y/n/yes/no/on/off as keys or values (they are read as TRUE/FALSE).
 
 registration:
   osf_url: "https://osf.io/qckvr"
   registered: "2026-10-06"
-  rebuild_amendment_filed: "YYYY-MM-DD"   # fill in when filed
+  rebuild_amendment_filed: "2026-10-20"   # OSF Update 3
 
 cohorts:
   reference: ["TCGA-LUAD"]                          # apparent performance only
-  independent: ["CPTAC-3", "GSE31210", "GSE50081", "GSE30219", "GSE81089"]
-  # GSE81089 restored (decided 20 Oct 2026): dropped in v0.3 only by an identifier bug (R9).
-  # It must be named in the OSF amendment, which is filed before scripts 30-34 run.
-  # candidate: ["..."]   # optional: built and checked (QC, coverage) but not analysed
-  coverage_only: ["GSE72094"]
-  min_events_h2: 30
+  independent: ["CPTAC-3", "GSE31210", "GSE50081", "GSE30219", "GSE81089", "GSE72094"]
+  # GSE81089 restored in Update 3 (dropped in v0.3 only by an identifier bug).
+  # GSE72094: independent (Update 3: analysed for any signature reaching 80% coverage);
+  # built by scripts/14_cohort_gse72094.R.
+
+alpha: 0.05                  # two-sided, every test
 
 scoring:
   scale: "zscore"            # registered: risk = sum(beta_i * z(expr_i)), z within cohort
@@ -22,11 +23,11 @@ scoring:
 
 sensitivity:
   # RNA-seq cohorts only: TPM rescaled so that these gene types (GENCODE v36) sum to 1e6 per
-  # sample before log2(TPM + 1). Added for the amendment (CPTAC-3 uses total-RNA libraries).
+  # sample before log2(TPM + 1) (Update 3; CPTAC-3 uses total-RNA libraries).
   tpm_rescale_gene_types: ["protein_coding", "lncRNA"]
 
 coverage:
-  primary_min_fraction: 0.80          # CHECK against the OSF wording (repo says <=20% missing)
+  primary_min_fraction: 0.80          # registered: evaluable when >= 80% of genes are present
   sensitivity_min_fractions: [1.00, 0.70]
 
 presence:
@@ -37,14 +38,35 @@ null_test:
   draws: 2000
   bins: 10
   seed: 2026
+  pool_gene_types: ["protein_coding", "lncRNA"]   # D3: registered gene-type restriction (GENCODE v36)
+
+h2:
+  age_min_recorded: 0.80     # age enters the H2 model where recorded for >= 80% of patients
+  multiple_testing: "holm"   # D5: Holm within cohort, as registered
+
+positive_control:
+  min_stage_iii_iv: 10       # D1: fewer stage III-IV patients -> HR(II vs I) instead of HR(III vs I)
+
+pooling:
+  min_independent_cohorts: 3   # D6: registered; TCGA-LUAD never pooled; pooled estimates exploratory
+
+secondary:
+  tdauc_months: [12, 36]       # time-dependent AUC (Update 3: 1 and 3 years)
+  ph_alpha: 0.05               # cox.zph p below this -> RMST reported
+  jaccard_cluster: 0.3         # signatures with Jaccard > 0.3 share a cluster
+
+power:
+  target_c: [0.60, 0.65, 0.70]
+  replicates: 1000
+  seed: 2026
 
 bootstrap:
-  resamples: 2000
-  cindex_resamples: 1000
+  resamples: 2000            # aggregate transportability (cluster bootstrap)
+  cindex_resamples: 1000     # C-index, time-dependent AUC and delta C-index CIs
   seed: 2026
 
 transportability:
-  delta: 0.2231436   # log(1.25), registered
+  delta: 0.2231436   # log(1.25); not pre-registered (declared in OSF Update 3)
 
 survival:
   uno_tau_months: 60

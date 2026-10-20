@@ -1,5 +1,7 @@
-# 33_transportability.R - aggregate transportability (amendment of 10 October 2026):
-# mean log-HR per SD over independent pairs, patient-level cluster bootstrap, decision rule.
+# 33_transportability.R - aggregate transportability: mean log-HR per SD over independent pairs,
+# patient-level cluster bootstrap, decision rule with delta = log(1.25). Added after registration
+# (rules written in the v0.3 deviations log on 11 Oct 2026, declared in OSF Update 3): report it
+# as NOT pre-registered, separately from H1-H3.
 
 for (f in list.files("R", pattern = "\\.R$", full.names = TRUE)) source(f)
 cfg <- load_config()

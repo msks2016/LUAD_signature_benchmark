@@ -295,6 +295,41 @@ gpl570_probe_map <- function(probes, ensembl_version = 114,
   pm
 }
 
+# Entrez Gene ID -> Ensembl gene map from a pinned Ensembl release (whole table, saved once).
+entrez_ensembl_map <- function(ensembl_version = 114,
+                               file = "data/reference/entrez_to_ensembl_e114.csv") {
+  if (!file.exists(file)) {
+    em <- NULL
+    for (t in 1:3) {
+      em <- tryCatch({
+        mart <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl",
+                                    version = ensembl_version)
+        biomaRt::getBM(attributes = c("entrezgene_id", "ensembl_gene_id"), mart = mart)
+      }, error = function(e) {
+        message("  Ensembl BioMart: ", conditionMessage(e), " - trying again")
+        Sys.sleep(20 * t)
+        NULL
+      })
+      if (!is.null(em)) break
+    }
+    if (is.null(em)) stop("Ensembl BioMart did not answer. Run the script again later.")
+    em <- em[!is.na(em$entrezgene_id), , drop = FALSE]
+    out <- data.frame(entrez_id = format(em$entrezgene_id, scientific = FALSE, trim = TRUE),
+                      ensembl_id = em$ensembl_gene_id, stringsAsFactors = FALSE)
+    dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
+    utils::write.csv(out, file, row.names = FALSE)
+  }
+  utils::read.csv(file, colClasses = "character")
+}
+
+# Gene IDs of a platform annotation column as text, without scientific notation
+# (as.character(10000) would give "1e+04"); empty values become NA.
+annotation_ids <- function(x) {
+  out <- if (is.numeric(x)) format(x, scientific = FALSE, trim = TRUE) else trimws(as.character(x))
+  out[is.na(x) | out %in% c("", "NA")] <- NA_character_
+  out
+}
+
 # Keep a subset of patients in a cohort object (sensitivity analyses).
 subset_cohort <- function(co, keep) {
   co$expr <- co$expr[, keep, drop = FALSE]

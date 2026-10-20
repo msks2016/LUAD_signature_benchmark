@@ -1,0 +1,153 @@
+GSE72094 fields - 2026-10-20 13:31
+Samples: 442  Probes in the series matrix: 60607
+Expression range: -0.31 to 15
+Missing expression values: 0
+
+age_at_diagnosis:ch1  (48 distinct values)
+
+70 72 NA 66 77 67 76 69 75 78 
+25 22 21 20 20 18 18 17 17 16 
+
+barcode_microarray:ch1  (442 distinct values)
+
+@52070900778263100909406332059157 @52070900778263100909406332059199 @52070900778264100909406332059229 
+                                1                                 1                                 1 
+@52070900778513031510407113246252 @52070900778513031510407113246258 @52070900778513031510407113246261 
+                                1                                 1                                 1 
+@52070900778513031510407113246271 @52070900778513031510407113246277 @52070900778514031510407113246321 
+                                1                                 1                                 1 
+@52070900778514031510407113246323 
+                                1 
+
+egfr_aa_mut:ch1  (14 distinct values)
+
+                   <NA>                  L858LR            delE746-A750         delL747-A750inP 
+                    395                      23                      12                       2 
+        delI744inKIPVAI         delL747-S752inQ            delL747-T751 delP741-R748inQGIKRSNIS 
+                      1                       1                       1                       1 
+           delT747-S752         delT751-I759inN 
+                      1                       1 
+
+egfr_status:ch1  (2 distinct values)
+
+ WT Mut 
+395  47 
+
+filename_microarray:ch1  (442 distinct values)
+
+@52070900778263100909406332059157_1_1.CEL @52070900778263100909406332059199_1_1.CEL 
+                                        1                                         1 
+@52070900778264100909406332059229_1_1.CEL @52070900778513031510407113246252_1_1.CEL 
+                                        1                                         1 
+@52070900778513031510407113246258_1_1.CEL @52070900778513031510407113246261_1_1.CEL 
+                                        1                                         1 
+@52070900778513031510407113246271_1_1.CEL @52070900778513031510407113246277_1_1.CEL 
+                                        1                                         1 
+@52070900778514031510407113246321_1_1.CEL @52070900778514031510407113246323_1_1.CEL 
+                                        1                                         1 
+
+gender:ch1  (2 distinct values)
+
+  F   M 
+240 202 
+
+kras_aa_mut:ch1  (21 distinct values)
+
+       <NA>       G12GC       G12GV       G12GD       G12GA       G13GD       G13GC       G12GR       G12GS 
+        288          58          31          26           8           7           5           3           2 
+G12GV;G12GC 
+          2 
+
+kras_status:ch1  (2 distinct values)
+
+ WT Mut 
+288 154 
+
+patient_id:ch1  (442 distinct values)
+
+K001 K002 K003 K004 K006 K007 K008 K009 K010 K011 
+   1    1    1    1    1    1    1    1    1    1 
+
+race:ch1  (8 distinct values)
+
+                    WHITE                        NA                     BLACK                   UNKNOWN 
+                      399                        22                        13                         3 
+                    OTHER ASIAN INDIAN OR PAKISTANI                      THAI                VIETNAMESE 
+                        2                         1                         1                         1 
+
+rna_barin:ch1  (43 distinct values)
+
+  9 8.8 8.6 9.3 8.9 8.7 7.3 8.5 8.2 9.2 
+ 29  28  22  22  21  20  19  19  16  16 
+
+smoking_status:ch1  (3 distinct values)
+
+   Ever Missing   Never 
+    335      74      33 
+
+spanish_hispanic:ch1  (3 distinct values)
+
+Non Spanish/Hispanic                   NA     Spanish/Hispanic 
+                 402                   30                   10 
+
+Stage:ch1  (10 distinct values)
+
+ 1A  1B  2B  3A  NA  3B  2A   4   1   3 
+158 101  51  43  28  19  18  17   6   1 
+
+stk11_aa_inherited:ch1  (7 distinct values)
+
+       <NA>       F354L       H168L K178M;E223K       M289K       N226S       R147P 
+        432           5           1           1           1           1           1 
+
+stk11_aa_mut:ch1  (50 distinct values)
+
+      <NA>   P281fs*6 SpliceSite   D53fs*11      D194Y   L282fs*3  D53fs*110      E293*  G188fs*99       K84* 
+       374          5          5          4          3          3          2          2          2          2 
+
+stk11_status:ch1  (2 distinct values)
+
+ WT Mut 
+374  68 
+
+survival_time_in_days:ch1  (331 distinct values)
+
+  NA  489  539  807  830  917 1025 1029 1033 1053 
+  44    3    3    3    3    3    2    2    2    2 
+
+tp53_aa_inherited:ch1  (7 distinct values)
+
+ <NA>  P72R  D28V G216L H178P  P27H R283C 
+  435     2     1     1     1     1     1 
+
+tp53_aa_mut:ch1  (87 distinct values)
+
+       <NA>  SpliceSite       C277F       E180*       E298*       R273L       Y220C       C275F       G105C 
+        331           6           3           3           3           3           3           2           2 
+MA161_162IS 
+          2 
+
+tp53_status:ch1  (2 distinct values)
+
+ WT Mut 
+331 111 
+
+vital_status:ch1  (3 distinct values)
+
+Alive  Dead    NA 
+  298   122    22 
+
+Platform GPL15048 annotation columns:
+ID | GB_LIST | EntrezGeneID | GeneSymbol | SPOT_ID
+
+First rows:
+              ID GB_LIST EntrezGeneID GeneSymbol        SPOT_ID
+1 AFFX-BioB-3_at                                 AFFX-BioB-3_at
+2 AFFX-BioB-5_at                                 AFFX-BioB-5_at
+3 AFFX-BioB-M_at                                 AFFX-BioB-M_at
+4 AFFX-BioC-3_at                                 AFFX-BioC-3_at
+5 AFFX-BioC-5_at                                 AFFX-BioC-5_at
+
+Non-empty values per column:
+          ID      GB_LIST EntrezGeneID   GeneSymbol      SPOT_ID 
+       60607        51476        41090        41024         9131 
