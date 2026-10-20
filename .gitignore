@@ -9,3 +9,5 @@ results/*.rds
 .DS_Store
 data/reference/*.gtf.gz
 data/reference/*.gtf.gz
+v2-update-*/
+*.zip
