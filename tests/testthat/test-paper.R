@@ -6,3 +6,10 @@ test_that("manuscript formatting helpers", {
   expect_identical(fmt_ci(0.018, -0.003, 0.061, 3, " to "), "0.018 (-0.003 to 0.061)")
   expect_identical(fmt_ci(NA, NA, NA), "")
 })
+
+test_that("Table 2 age and sex summaries", {
+  expect_identical(age_summary(c(50, 60, 70, NA, "unknown")), "60 (55-65)")
+  expect_identical(age_summary(c(NA, NA)), "")
+  expect_identical(male_summary(c("male", "Female", "M", NA, "not reported")), "2 (67%)")
+  expect_identical(male_summary(c(NA, "")), "")
+})

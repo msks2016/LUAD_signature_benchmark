@@ -1,0 +1,325 @@
+* 474ae11 Add pooling interval sensitivity (script 37)
+* 1833625 Add completed bootstrap and sensitivity results
+* ffc8cea Faster Cox fit in bootstrap, progress messages; results unchanged
+* 869461c Speed up transportability bootstrap; results unchanged
+* 320d617 Speed up transportability bootstrap; results unchanged
+*   ef1a8ac Resolved merge conflicts by keeping local files
+|\  
+| * 229fc8f Add pre-log2-fix snapshot for comparison
+| * cb24fb5 Fix TCGA-LUAD scale and script bugs: log2(TPM+1), survival columns, deterministic aliquot selection
+| * 020cad0 Add PENDING.md with prioritized handover to-do list
+| * 5707413 Add HANDOVER.md documenting current state and outstanding work
+| * e31d848 Correct MGC32805 coverage: present in CPTAC-3; k=2 primary stands
+| * a027783 Ignore submission-package files and blinded recheck scratch
+| * 271cf5f Add dual-coding data and blinded recheck results
+| * 6e647c0 Blinded text-vs-table recheck: 3 confirmed new conflicts; rate 5/76 -> 8/76
+| * d465eea Log blinded text-vs-table recheck dispatch (66 papers)
+----
+ BenchMark3.Rproj                                   |   13 +
+ HANDOVER.md                                        |   71 +
+ PENDING.md                                         |   37 +
+ R/meta.R                                           |   25 +
+ R/secondary.R                                      |    5 +-
+ R/survival_metrics.R                               |   17 +
+ R/transport.R                                      |   17 +-
+ STATUS.md                                          |  253 ++
+ cohort-build-log.md.pdf                            |  Bin 306204 -> 324215 bytes
+ data/processed/all_signatures_combined.csv         |  103 +
+ data/processed/signature_coefficients.csv          |  103 +
+ data/processed/tcga_luad_survival.csv              |  510 ++++
+ data/processed/tcga_luad_survival.rds              |  Bin 0 -> 6221 bytes
+ data/raw/.gitkeep                                  |    0
+ docs/OSF_update_2026-10-10_correction.md           |   23 +
+ docs/PROTOCOL_DEVIATIONS.md                        |   40 +
+ docs/coding/dual_coding_blank.csv                  |   11 +
+ docs/coding/dual_coding_filled.csv                 |   11 +
+ docs/coding/dual_coding_input.txt                  | 2233 +++++++++++++++
+ docs/coding/dual_coding_merged.csv                 |   11 +
+ docs/coding/dual_coding_moinul_original.csv        |   11 +
+ .../\360\237\223\213 Complete Data Extraction.txt" | 2910 ++++++++++++++++++++
+ ...\360\237\223\213 Complete Data Extraction1.txt" | 1711 ++++++++++++
+ ...360\237\223\213 Complete Data Extraction10.txt" | 1501 ++++++++++
+ ...360\237\223\213 Complete Data Extraction11.txt" | 2026 ++++++++++++++
+ ...\360\237\223\213 Complete Data Extraction2.txt" | 1551 +++++++++++
+ ...\360\237\223\213 Complete Data Extraction3.txt" | 1523 ++++++++++
+ ...\360\237\223\213 Complete Data Extraction4.txt" | 1515 ++++++++++
+ ...\360\237\223\213 Complete Data Extraction5.txt" | 1868 +++++++++++++
+ ...\360\237\223\213 Complete Data Extraction6.txt" |    1 +
+ ...\360\237\223\213 Complete Data Extraction7.txt" | 1859 +++++++++++++
+ ...\360\237\223\213 Complete Data Extraction8.txt" | 1693 ++++++++++++
+ ...\360\237\223\213 Complete Data Extraction9.txt" |    1 +
+ docs/coding/paper_blocks.rds                       |  Bin 0 -> 155975 bytes
+ docs/coding/paper_ids_from_extractions.txt         |   76 +
+ docs/coding/recheck_form_moinul_filled.csv         |   67 +
+ docs/coding/recheck_key.csv                        |   67 +
+ docs/coding/reporting_completeness_76papers.csv    |   77 +
+ .../reporting_completeness_76papers_2026-10-12.csv |   77 +
+ ...porting_completeness_76papers_2026-10-12_v2.csv |   77 +
+ .../reporting_completeness_76papers_autocoded.csv  |   77 +
+ docs/cohort_overlap.csv                            |   16 +
+ docs/cohort_overlap_verified.csv                   |    3 +
+ docs/deviations_log.md                             |  503 ++++
+ docs/gene_mapping.csv                              |    9 +
+ docs/prereg/GPL570_reprocessing_memo_2026-10-12.md |  163 ++
+ docs/reporting_checklist.md                        |   50 +
+ logs/.gitkeep                                      |    0
+ run_all.R                                          |    1 +
+ scripts/08_prepare_CPTAC3.R                        |   17 +
+ scripts/09_score_CPTAC3.R                          |   57 +
+ scripts/10_geo_coverage.R                          |   80 +
+ scripts/10_metrics_CPTAC3.R                        |  177 ++
+ scripts/11_null_matched_CPTAC3.R                   |  101 +
+ scripts/11_null_matched_CPTAC3_settingB.R          |  105 +
+ scripts/11_null_matched_CPTAC3_settingC.R          |  101 +
+ scripts/11b_sensitivity_80pct_CPTAC3.R             |  101 +
+ scripts/12_check_GSE81089.R                        |   67 +
+ scripts/12_paired_TCGA_CPTAC3.R                    |   71 +
+ scripts/12b_load_GSE81089.R                        |   75 +
+ scripts/13_gene_reason_table.R                     |  736 +++++
+ scripts/13_power_simulation.R                      |   47 +
+ scripts/14_load_GSE31210.R                         |   92 +
+ scripts/15_score_GSE31210.R                        |   88 +
+ scripts/16_H2_added_value.R                        |   94 +
+ scripts/17_H3_cross_cohort.R                       |  215 ++
+ scripts/18_both_Cindexes.R                         |  111 +
+ scripts/19_robustness.R                            |  166 ++
+ scripts/20_master_tables.R                         |  113 +
+ scripts/21_prisma_diagram.R                        |   76 +
+ scripts/22_extra_tables.R                          |  111 +
+ scripts/23_transportability.R                      |  232 ++
+ scripts/25_restructure_Table3.R                    |   65 +
+ scripts/34_sensitivity.R                           |    5 +-
+ scripts/37_pooling_sensitivity.R                   |   33 +
+ scripts/R/00_setup.R                               |   35 +
+ scripts/R/01_parse_signatures.R                    |   63 +
+ scripts/R/03_prisma_diagram.R                      |   52 +
+ scripts/R/04_supplementary_table1.R                |   59 +
+ scripts/R/06_prepare_TCGA.R                        |   76 +
+ scripts/R/06b_prepare_TCGA_v3.R                    |   12 +
+ scripts/R/06c_add_aliases.R                        |   27 +
+ scripts/R/07_score_signatures.R                    |  110 +
+ scripts/R/07b_score_signatures_relaxed.R           |  104 +
+ scripts/R/09_stage_lrt.R                           |  126 +
+ scripts/R/10_geo_coverage.R                        |   80 +
+ .../11_null_matched_CPTAC3.R                       |  100 +
+ .../09_score_CPTAC3.R                              |   57 +
+ .../15_score_GSE31210.R                            |   87 +
+ .../backup_before_reverse_fix/10_metrics_CPTAC3.R  |  177 ++
+ .../11_null_matched_CPTAC3.R                       |  100 +
+ .../backup_before_reverse_fix/15_score_GSE31210.R  |   89 +
+ .../backup_before_reverse_fix/18_both_Cindexes.R   |  111 +
+ scripts/backup_before_reverse_fix/19_robustness.R  |  166 ++
+ .../23_transportability.R                          |  232 ++
+ .../23_transportability.R                          |  231 ++
+ scripts/bash/run_all.sh                            |   41 +
+ scripts/build_CPTAC3_matrix.R                      |   43 +
+ signatures/Paper141_Yang2023.tsv                   |   12 +
+ signatures/Paper151_Diao2022.tsv                   |    5 +
+ signatures/Paper159_He2021.tsv                     |    8 +
+ signatures/Paper165_Jin2020.tsv                    |    8 +
+ signatures/Paper192_Geng2021.tsv                   |    8 +
+ signatures/Paper193_Zheng2021.tsv                  |   11 +
+ signatures/Paper298_Li2023.tsv                     |    8 +
+ signatures/Paper305_Yu2024.tsv                     |   10 +
+ signatures/Paper352_Zhang2025.tsv                  |    9 +
+ signatures/Paper369_Wu2022.tsv                     |    7 +
+ signatures/Paper51_Song2021.tsv                    |    6 +
+ signatures/Paper53_Yang2022.tsv                    |    6 +
+ signatures/Paper62_Yao2021.tsv                     |    8 +
+ signatures/Paper91_Lin2024.tsv                     |    6 +
+ signatures/Paper9_Zhang2021.tsv                    |    5 +
+ tests/testthat/test-meta-and-ids.R                 |   15 +
+ tests/testthat/test-null-and-transport.R           |   18 +-
+ tests/testthat/test-secondary.R                    |   14 +
+ v2-results-review.md.pdf                           |  Bin 0 -> 140108 bytes
+ 117 files changed, 28387 insertions(+), 7 deletions(-)
+----
+.Rprofile
+.gitignore
+BenchMark3.Rproj
+HANDOVER.md
+MANIFEST.txt
+PENDING.md
+R/added_value.R
+R/coverage.R
+R/gdc_api.R
+R/ids.R
+R/load_data.R
+R/meta.R
+R/null_test.R
+R/scoring.R
+R/secondary.R
+R/survival_metrics.R
+R/transport.R
+R/utils.R
+README.md
+STATUS.md
+cohort-build-log.md.pdf
+config/analysis.yaml
+config/cohorts.yaml
+config/gene_id_alternatives.csv
+config/gene_overrides.csv
+data/processed/all_signatures_combined.csv
+data/processed/signature_coefficients.csv
+data/processed/tcga_luad_survival.csv
+data/processed/tcga_luad_survival.rds
+data/raw/.gitkeep
+data/reference/.gitkeep
+data/reference/entrez_to_ensembl_e114_primary.csv
+data/reference/gene_tables.rds
+data/reference/gpl570_probe_choice.csv
+data/reference/gpl570_probe_map_ensembl_primary.csv
+data/reference/gse81089_ensembl_archive.rds
+data/signatures/blind_sheet_extractor2_completed.csv
+data/signatures/gene_map.csv
+data/signatures/independence.csv
+data/signatures/independence_TEMPLATE.csv
+data/signatures/signature_master.csv
+data/signatures/signature_master_TEMPLATE.csv
+df.rds
+docs/OSF_update_2026-10-10_correction.md
+docs/PROTOCOL_DEVIATIONS.md
+docs/coding/dual_coding_blank.csv
+docs/coding/dual_coding_filled.csv
+docs/coding/dual_coding_input.txt
+docs/coding/dual_coding_merged.csv
+docs/coding/dual_coding_moinul_original.csv
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction1.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction10.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction11.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction2.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction3.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction4.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction5.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction6.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction7.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction8.txt"
+"docs/coding/extractions_txt/\360\237\223\213 Complete Data Extraction9.txt"
+docs/coding/paper_blocks.rds
+docs/coding/paper_ids_from_extractions.txt
+docs/coding/recheck_form_moinul_filled.csv
+docs/coding/recheck_key.csv
+docs/coding/reporting_completeness_76papers.csv
+docs/coding/reporting_completeness_76papers_2026-10-12.csv
+docs/coding/reporting_completeness_76papers_2026-10-12_v2.csv
+docs/coding/reporting_completeness_76papers_autocoded.csv
+docs/cohort-build-log.pdf
+docs/cohort_overlap.csv
+docs/cohort_overlap_verified.csv
+docs/deviations_log.md
+docs/gene_mapping.csv
+docs/prereg/GPL570_reprocessing_memo_2026-10-12.md
+docs/reporting_checklist.md
+logs/.gitkeep
+logs/geo_fields.txt
+logs/gse72094_fields.txt
+luad-lncrna-benchmark-v2.Rproj
+renv.lock
+renv/.gitignore
+renv/activate.R
+renv/settings.json
+results.rds
+run_all.R
+scripts/00_setup(1).R
+scripts/00_setup.R
+scripts/01_signatures.R
+scripts/08_prepare_CPTAC3.R
+scripts/09_score_CPTAC3.R
+scripts/10_cohort_tcga.R
+scripts/10_geo_coverage.R
+scripts/10_metrics_CPTAC3.R
+scripts/11_cohort_cptac3.R
+scripts/11_null_matched_CPTAC3.R
+scripts/11_null_matched_CPTAC3_settingB.R
+scripts/11_null_matched_CPTAC3_settingC.R
+scripts/11b_sensitivity_80pct_CPTAC3.R
+scripts/12_check_GSE81089.R
+scripts/12_cohort_gpl570.R
+scripts/12_paired_TCGA_CPTAC3.R
+scripts/12b_load_GSE81089.R
+scripts/13_cohort_gse81089.R
+scripts/13_gene_reason_table.R
+scripts/13_power_simulation.R
+scripts/14_cohort_gse72094.R
+scripts/14_load_GSE31210.R
+scripts/15_score_GSE31210.R
+scripts/16_H2_added_value.R
+scripts/17_H3_cross_cohort.R
+scripts/18_both_Cindexes.R
+scripts/19_cohort_qc.R
+scripts/19_robustness.R
+scripts/20_master_tables.R
+scripts/21_gene_tables.R
+scripts/21_prisma_diagram.R
+scripts/22_extra_tables.R
+scripts/22_gene_map.R
+scripts/22b_name_history.R
+scripts/22c_name_audit.R
+scripts/23_coverage.R
+scripts/23_transportability.R
+scripts/23b_presence_check.R
+scripts/23c_predecessor_check.R
+scripts/25_restructure_Table3.R
+scripts/29_positive_control.R
+scripts/30_h1_null.R
+scripts/31_h2_stage.R
+scripts/32_h3_cross_cohort.R
+scripts/33_transportability.R
+scripts/34_sensitivity.R
+scripts/35_direction_genes.R
+scripts/36_power.R
+scripts/37_pooling_sensitivity.R
+scripts/R/00_setup.R
+scripts/R/01_parse_signatures.R
+scripts/R/03_prisma_diagram.R
+scripts/R/04_supplementary_table1.R
+scripts/R/06_prepare_TCGA.R
+scripts/R/06b_prepare_TCGA_v3.R
+scripts/R/06c_add_aliases.R
+scripts/R/07_score_signatures.R
+scripts/R/07b_score_signatures_relaxed.R
+scripts/R/09_stage_lrt.R
+scripts/R/10_geo_coverage.R
+scripts/backup_before_null_coverage_fix/11_null_matched_CPTAC3.R
+scripts/backup_before_raw_expression_fix/09_score_CPTAC3.R
+scripts/backup_before_raw_expression_fix/15_score_GSE31210.R
+scripts/backup_before_reverse_fix/10_metrics_CPTAC3.R
+scripts/backup_before_reverse_fix/11_null_matched_CPTAC3.R
+scripts/backup_before_reverse_fix/15_score_GSE31210.R
+scripts/backup_before_reverse_fix/18_both_Cindexes.R
+scripts/backup_before_reverse_fix/19_robustness.R
+scripts/backup_before_score_refit/23_transportability.R
+scripts/backup_before_transport_raw_fix/23_transportability.R
+scripts/bash/run_all.sh
+scripts/build_CPTAC3_matrix.R
+scripts/gdc_api.R
+scripts/meta.R
+scripts/scripts.Rproj
+scripts/test-gdc-api.R
+signatures/Paper141_Yang2023.tsv
+signatures/Paper151_Diao2022.tsv
+signatures/Paper159_He2021.tsv
+signatures/Paper165_Jin2020.tsv
+signatures/Paper192_Geng2021.tsv
+signatures/Paper193_Zheng2021.tsv
+signatures/Paper298_Li2023.tsv
+signatures/Paper305_Yu2024.tsv
+signatures/Paper352_Zhang2025.tsv
+signatures/Paper369_Wu2022.tsv
+signatures/Paper51_Song2021.tsv
+signatures/Paper53_Yang2022.tsv
+signatures/Paper62_Yao2021.tsv
+signatures/Paper91_Lin2024.tsv
+signatures/Paper9_Zhang2021.tsv
+tests/testthat/helper-setup.R
+tests/testthat/test-coverage.R
+tests/testthat/test-gdc-api.R
+tests/testthat/test-geo.R
+tests/testthat/test-meta-and-ids.R
+tests/testthat/test-null-and-transport.R
+tests/testthat/test-scoring.R
+tests/testthat/test-secondary.R
+tests/testthat/test-survival.R
+tests/testthat/test-tpm-rescale.R
+v2-results-review.md.pdf

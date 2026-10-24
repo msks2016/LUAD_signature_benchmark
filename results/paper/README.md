@@ -8,4 +8,4 @@ Main figures: 1 PRISMA flow (literature search; not built here); 2 fig_coverage_
 3 fig_cindex_tcga_vs_independent; 4 fig_hr_by_signature; 5 fig_yao2021_forest; 6 fig_transportability_settings.
 Supplementary: figS_h1_null, figS_km_independent_pairs, and every supp_*.csv table.
 
-Built: 2026-10-24 19:35
+Built: 2026-10-24 22:26

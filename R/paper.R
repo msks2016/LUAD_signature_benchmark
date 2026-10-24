@@ -93,3 +93,19 @@ km_median_split <- function(time, event, score, main = "", col = c("#0072B2", "#
   graphics::legend("topright", bty = "n", cex = 0.7, legend = paste("log-rank p =", fmt_p(p)))
   invisible(p)
 }
+
+# Table 2 demographics: "64 (58-70)" (median and quartiles, whole years) and "240 (48%)" (share of
+# patients with recorded sex); empty if nothing is recorded. Sex coded as in H2 (sex_factor).
+age_summary <- function(age) {
+  a <- suppressWarnings(as.numeric(age))
+  a <- a[!is.na(a)]
+  if (!length(a)) return("")
+  q <- stats::quantile(a, c(0.25, 0.5, 0.75), names = FALSE)
+  sprintf("%.0f (%.0f-%.0f)", q[2], q[1], q[3])
+}
+male_summary <- function(sex) {
+  s <- sex_factor(sex)
+  k <- sum(s == "male", na.rm = TRUE); n <- sum(!is.na(s))
+  if (!n) return("")
+  sprintf("%d (%.0f%%)", k, 100 * k / n)
+}

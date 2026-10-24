@@ -1,0 +1,35 @@
+CHANGES TO COPY INTO YOUR EDITED DRAFT 5
+
+These six paragraphs changed after you filled the placeholders. In your own copy of Draft 5, find the paragraph that starts with the words shown, select the whole paragraph, and paste the new text over it. Citation numbers are the same as in your copy (no reference was added or removed).
+What changed: registration paragraph (freeze tag; Update 4, 24 October 2026); reporting completeness in Methods and Results (2/76, coder agreement, PubMed records); software versions; supplementary material (Supplementary Files 1 and 2, Figures S1-S2, Tables S1-S19 as one workbook).
+If you have already edited one of these paragraphs yourself, copy only the changed sentences.
+
+1. Methods > Study design and registration
+Starts with (in your copy): "This is a computational validation study..."
+New text:
+This is a computational validation study of public data. The protocol was registered on the Open Science Framework (osf.io/qckvr) on 6 October 2026 and updated three times before the analyses reported here: Update 1 (10 October 2026) added CPTAC-3 and the secondary direction-consistency outcome; Update 2 (12 October 2026) widened the reporting-completeness analysis to 76 papers; and Update 3 (20 October 2026) was filed after an audit found coding errors in an earlier version of the analysis code (v0.3). All code was then rebuilt from raw public data (v2). Update 3 lists the v0.3 results that had been seen, every change to data sources and data preparation with its reason, and the analyses added after registration. Hypotheses H1–H3, the scoring formula, the 80% coverage rule and the registered tests were not changed. The v2 inputs (signatures, gene mapping, cohorts, coverage) were frozen in version control (tag v2-preanalysis) before any v2 outcome analysis was run. Update 3 had stated that any further change at the gene-mapping or coverage step would be filed before the outcome analysis; the changes made at that step were instead fixed in the version-controlled freeze and were filed after the analysis in Update 4 (24 October 2026), together with the changes made after the freeze. All deviations are listed in Supplementary File 1. The study is reported following REMARK and TRIPOD+AI [9,10,14].
+
+2. Methods > Reporting completeness of the literature
+Starts with (in your copy): "Five items were coded from the 76 papers..."
+New text:
+Five items were coded from the 76 papers, among the 90 full texts reviewed, for which detailed extraction records were available: a full coefficient table; whether the numeric risk cutoff was stated; whether the expression scale was stated (named unit), implied (RNA-seq mentioned without a unit) or not stated; independent external validation; and a conflict between the text (including the risk-score formula) and the tables in a coefficient's sign, a coefficient's value beyond rounding of the same value, or the number of genes or samples. The primary investigator coded all papers. A second investigator independently coded 10 randomly drawn papers on all items and blindly re-coded the text–table item in the other 66 papers; disagreements were resolved by re-reading the papers together (Updates 2 and 3; Supplementary File 1). Each paper was matched to its PubMed record, and the bibliographic details and codes of every paper are given in Supplementary Table S19.
+
+3. Methods > Software and reproducibility
+Starts with (in your copy): "Analyses used R 4.6.1..."
+New text:
+Analyses used R 4.6.1 with survival 3.8-12 [50], metafor 5.2-1 [46], clubSandwich 0.7.0, GEOquery 2.80.0 [38], affy 1.90.0 with hgu133plus2cdf 2.18.0, TCGAbiolinks 2.40.0 [36] and biomaRt 2.68.0; all package versions are recorded with renv 1.3.1. The pipeline is covered by more than 250 unit tests, all random draws use fixed seeds (base seed 2026), and every number reported here is written by the code to a log file. Code, gene mappings and the deviations log will be released on publication at [repository URL and release tag].
+
+4. Results > Reporting completeness
+Starts with (in your copy): "Of the 76 reviewed papers..."
+New text:
+Of the 76 reviewed papers, 63 (82.9%) gave a full coefficient table. All described how the risk cutoff was chosen, but only 6 (7.9%) stated its value. The expression scale was stated with a named unit in 27 (35.5%), implied by a reference to RNA-seq in 38 (50.0%) and not stated in 11 (14.5%). Independent external validation was reported in 24 (31.6%), and the text and tables conflicted in 2 (2.6%), once in a coefficient's sign and once in its value (Supplementary Table S19). Before discussion, the two coders agreed on all 10 dual-coded papers for coefficient tables, cutoffs and external validation, on 9 for text–table conflicts and on 6 for the expression scale (κ = 0.43); the scale categories were then clarified and applied to all papers. In the blinded second coding of the text–table item, the coders agreed on 64 of 66 papers (κ = 0.73). After re-reading, three papers first coded as conflicts were recoded: one difference was rounding of the same value, one concerned AUC values rather than coefficients or counts, and one was not confirmed.
+
+5. Supplementary material (end of the manuscript), first paragraph
+Starts with (in your copy): "Supplementary File 1:..."
+New text:
+Supplementary File 1: literature search, registration and updates, and all deviations from the registered protocol. Supplementary File 2: reporting checklist for lncRNA prognostic signature studies. Supplementary Figures S1 and S2.
+
+6. Supplementary material (end of the manuscript), second paragraph
+Starts with (in your copy): "Supplementary tables (results/paper/tables)..."
+New text:
+Supplementary Tables S1–S19 (one Excel workbook): S1, stage positive control; S2, coverage matrix; S3, coverage by signature and cohort with missing genes; S4, gene identity, manual mappings and successor identifiers; S5, missing genes and reasons; S6, H1 comparison with random gene sets; S7, H2 added value; S8, per-pair metrics in all cohorts (C-indexes, time-dependent AUC, log-rank, proportional-hazards tests, restricted mean survival time); S9, power simulation; S10, Yao 2021 pooling intervals and leave-one-cohort-out estimates; S11, H1 sensitivity analyses; S12, direction-consistency observations; S13 and S14, gene-level concordance by pair and by gene; S15, Jaccard overlap; S16, signature clusters; S17, agreement of the two coefficient extractions; S18, independence of signature–cohort pairs; S19, reporting completeness of the 76 reviewed papers, with the PubMed ID and DOI of each paper.

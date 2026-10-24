@@ -66,6 +66,8 @@ t_coh <- do.call(rbind, lapply(cohort_order, function(cn) {
   data.frame(Cohort = cn, Role = if (cn %in% cfg$cohorts$reference) "reference (apparent performance)" else "independent",
              Platform = paste(c(co$meta$platform, co$meta$source), collapse = "; "),
              Patients = length(co$time), Deaths = sum(co$event),
+             `Age, median (IQR), years` = age_summary(co$clin$age), `Age missing` = sum(is.na(suppressWarnings(as.numeric(co$clin$age)))),
+             `Male, n (%)` = male_summary(co$clin$sex), `Sex missing` = sum(is.na(sex_factor(co$clin$sex))),
              `Median follow-up, months (reverse KM)` = round(reverse_km_median(co$time, co$event), 1),
              `Stage I` = sum(st %in% "I"), `Stage II` = sum(st %in% "II"), `Stage III` = sum(st %in% "III"),
              `Stage IV` = sum(st %in% "IV"), `Stage missing` = sum(is.na(st)),

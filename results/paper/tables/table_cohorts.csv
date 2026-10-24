@@ -1,8 +1,8 @@
-"Cohort","Role","Platform","Patients","Deaths","Median follow-up, months (reverse KM)","Stage I","Stage II","Stage III","Stage IV","Stage missing","Stage I-II, %","Positive control","Signatures with >= 80% of genes","Signatures with 100% of genes","Independent evaluable pairs"
-"TCGA-LUAD","reference (apparent performance)","RNA-seq; GDC STAR-Counts, tpm_unstranded, log2(TPM + 1)",504,182,29,270,120,81,25,8,78.6,"pass (HR III vs I)",15,14,0
-"CPTAC-3","independent","RNA-seq; GDC STAR-Counts, tpm_unstranded, log2(TPM + 1)",205,55,35.6,114,46,43,2,0,78,"pass (HR III vs I)",15,14,15
-"GSE31210","independent","GPL570; GEO CEL files; affy::justRMA on the selected samples of this cohort",226,35,60.7,168,58,0,0,0,100,"pass (HR II vs I)",2,1,1
-"GSE50081","independent","GPL570; GEO CEL files; affy::justRMA on the selected samples of this cohort",127,51,65.9,92,35,0,0,0,100,"pass (HR II vs I)",2,1,1
-"GSE30219","independent","GPL570; GEO CEL files; affy::justRMA on the selected samples of this cohort",83,43,116,79,3,1,0,0,98.8,"pass (HR II vs I)",2,1,1
-"GSE81089","independent","RNA-seq; GEO GSE81089_FPKM_cufflinks.tsv.gz; TPM from FPKM; log2(TPM + 1)",107,48,52.3,61,19,24,3,0,74.8,"pass (HR III vs I)",8,6,8
-"GSE72094","independent","GPL15048; GEO series matrix (submitter's normalised values)",398,113,29.9,254,67,57,15,5,81.7,"pass (HR III vs I)",0,0,0
+"Cohort","Role","Platform","Patients","Deaths","Age, median (IQR), years","Age missing","Male, n (%)","Sex missing","Median follow-up, months (reverse KM)","Stage I","Stage II","Stage III","Stage IV","Stage missing","Stage I-II, %","Positive control","Signatures with >= 80% of genes","Signatures with 100% of genes","Independent evaluable pairs"
+"TCGA-LUAD","reference (apparent performance)","RNA-seq; GDC STAR-Counts, tpm_unstranded, log2(TPM + 1)",504,182,"66 (59-73)",10,"232 (46%)",0,29,270,120,81,25,8,78.6,"pass (HR III vs I)",15,14,0
+"CPTAC-3","independent","RNA-seq; GDC STAR-Counts, tpm_unstranded, log2(TPM + 1)",205,55,"63 (57-69)",0,"131 (64%)",0,35.6,114,46,43,2,0,78,"pass (HR III vs I)",15,14,15
+"GSE31210","independent","GPL570; GEO CEL files; affy::justRMA on the selected samples of this cohort",226,35,"61 (55-65)",0,"105 (46%)",0,60.7,168,58,0,0,0,100,"pass (HR II vs I)",2,1,1
+"GSE50081","independent","GPL570; GEO CEL files; affy::justRMA on the selected samples of this cohort",127,51,"70 (63-76)",0,"65 (51%)",0,65.9,92,35,0,0,0,100,"pass (HR II vs I)",2,1,1
+"GSE30219","independent","GPL570; GEO CEL files; affy::justRMA on the selected samples of this cohort",83,43,"60 (55-69)",0,"65 (78%)",0,116,79,3,1,0,0,98.8,"pass (HR II vs I)",2,1,1
+"GSE81089","independent","RNA-seq; GEO GSE81089_FPKM_cufflinks.tsv.gz; TPM from FPKM; log2(TPM + 1)",107,48,"68 (62-74)",0,"38 (36%)",0,52.3,61,19,24,3,0,74.8,"pass (HR III vs I)",8,6,8
+"GSE72094","independent","GPL15048; GEO series matrix (submitter's normalised values)",398,113,"70 (64-76)",0,"176 (44%)",0,29.9,254,67,57,15,5,81.7,"pass (HR III vs I)",0,0,0
