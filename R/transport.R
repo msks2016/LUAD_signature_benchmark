@@ -3,9 +3,14 @@
 
 # log-HR per SD of the published score for one pair, optionally on resampled patients.
 # The pair's own cohort object is passed in, so no global variable can leak in (bug R1).
+# The signature genes are taken before the resampled patients: the same numbers as subsetting
+# patients first, without copying the whole expression matrix in every bootstrap replicate
+# (which made scripts 33 and 34 run for hours).
 pair_log_hr <- function(cohort, genes, coefs, idx = NULL, scale = "zscore") {
   if (is.null(idx)) idx <- seq_along(cohort$time)
-  s <- score_signature(cohort$expr[, idx, drop = FALSE], genes, coefs, scale)
+  absent <- setdiff(genes, rownames(cohort$expr))
+  if (length(absent)) stop("Not in matrix: ", paste(absent, collapse = ", "))
+  s <- score_signature(cohort$expr[genes, idx, drop = FALSE], genes, coefs, scale)
   hr_per_sd(cohort$time[idx], cohort$event[idx], s)[["log_hr"]]
 }
 

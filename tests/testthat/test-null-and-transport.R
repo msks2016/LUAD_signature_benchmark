@@ -20,6 +20,11 @@ test_that("a pair is scored with its own cohort (guards against bug R1)", {
   coefs <- c(0.4, 0.3, 0.2)
   direct <- hr_per_sd(a$time, a$event, score_signature(a$expr, genes, coefs))[["log_hr"]]
   expect_equal(pair_log_hr(a, genes, coefs), direct)
+  idx <- sample.int(length(a$time), replace = TRUE)            # resampled patients, as in the bootstrap
+  full <- hr_per_sd(a$time[idx], a$event[idx],
+                    score_signature(a$expr[, idx, drop = FALSE], genes, coefs))[["log_hr"]]
+  expect_identical(pair_log_hr(a, genes, coefs, idx), full)    # genes-first subsetting changes nothing
+  expect_error(pair_log_hr(a, c(genes[1:2], "ENSG_NOT_THERE"), coefs), "Not in matrix")
 })
 
 test_that("the bootstrap CI describes the pooled mean, not the spread of pairs (bug R2)", {
