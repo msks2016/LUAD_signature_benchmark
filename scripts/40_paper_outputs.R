@@ -48,6 +48,7 @@ t_sig <- do.call(rbind, lapply(sig_ids, function(s) {
              `Risk coefficients (>0)` = sum(d$coefficient > 0),
              `Protective coefficients (<0)` = sum(d$coefficient < 0),
              `Gene-name release` = paste("GENCODE", unique(d$annotation), collapse = "/"),
+             `Expression scale stated in the paper` = if ("scale_stated" %in% names(d)) d$scale_stated[1] else "",
              `Genes with a documented manual ID` = sum(ovr$signature == s),
              `Cohorts used by the authors` = paste(used, collapse = ", "),
              `Independent cohorts evaluable` = paste(indep_pairs$cohort[indep_pairs$signature == s], collapse = ", "),
