@@ -14,7 +14,7 @@
 82,"none","method_only","implied","yes","no","primary",NA
 90,"full","method_only","implied","no","no","primary",NA
 91,"full","method_only","implied","no","no","primary",NA
-93,"full","explicit_value","implied","no","yes","primary",NA
+93,"full","explicit_value","implied","no","no","primary","Recoded to no on 2026-10-24 after re-reading by both coders: the formula prints 0.0538 and Table 1 prints 0.05375 for the same coefficient (rounding of the same value), which is not a conflict under the definition. Blinded recheck had coded yes."
 96,"full","method_only","implied","no","no","primary",NA
 105,"full","method_only","implied","no","no","primary",NA
 109,"none","method_only","implied","yes","no","primary",NA
@@ -33,7 +33,7 @@
 179,"none","method_only","implied","no","no","primary",NA
 180,"full","method_only","not_stated","no","yes","primary",NA
 181,"full","method_only","implied","no","no","primary",NA
-183,"full","method_only","not_stated","no","yes","primary",NA
+183,"full","method_only","not_stated","no","no","primary","Recoded to no on 2026-10-24 after re-reading by both coders: the formula coefficients match the Table 2 entries and no conflicting text value was found; the blinded recheck had also coded no."
 190,"none","method_only","implied","yes","no","primary",NA
 192,"full","explicit_value","stated","yes","no","primary",NA
 193,"full","method_only","not_stated","no","no","primary",NA
@@ -51,7 +51,7 @@
 270,"full","method_only","stated","no","no","primary",NA
 273,"none","method_only","not_stated","yes","no","primary",NA
 285,"none","method_only","implied","no","no","primary",NA
-289,"full","method_only","not_stated","yes","yes","primary",NA
+289,"full","method_only","not_stated","yes","no","primary","Recoded to no on 2026-10-24 after re-reading by both coders: the discrepancy concerns AUC values reported for different figures or methods, not a coefficient sign or value or a gene or sample count; the blinded recheck had also coded no."
 294,"full","method_only","stated","no","no","primary",NA
 295,"full","method_only","implied","no","no","primary",NA
 298,"full","method_only","stated","yes","no","primary",NA

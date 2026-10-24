@@ -1,50 +1,33 @@
-# Reporting checklist for future LUAD lncRNA prognostic signature studies
+# Reporting checklist for lncRNA prognostic signature studies in lung adenocarcinoma
 
-Based on the findings of this benchmark and Supplementary Table S22, we
-recommend that future studies reporting lncRNA prognostic signatures for
-lung adenocarcinoma (LUAD) include the following items in their main text
-or supplementary material.
+Supplementary File 2. Items that a reader needs to apply a published signature to new data, and that a validation study needs to report so that its result can be interpreted. Derived from the reporting-completeness analysis of 76 published papers (Supplementary Table S19) and from the problems met when applying 15 signatures to seven cohorts in this benchmark.
 
 ## Signature reporting
 
-- [ ] Full gene list with HGNC symbols (or unambiguous stable identifiers)
-- [ ] Complete coefficient table (β value for every gene, with sign)
-- [ ] Expression platform used in development (RNA-seq vs microarray,
-      with GEO/GDC accession)
-- [ ] Explicit statement of the scaling convention applied to expression
-      values before coefficient multiplication (raw log2, per-gene z-scoring,
-      TPM, or another transformation)
-- [ ] Risk-score cutoff or the rule used to define high- vs low-risk groups
+- [ ] Every signature gene with a stable identifier: Ensembl gene ID with version, plus the gene symbol
+- [ ] The gene annotation release used (e.g. GENCODE v36), because clone-based lncRNA names are reassigned between releases
+- [ ] The coefficient of every gene, with sign, to the precision used in the risk score; the same values in text, formula and tables
+- [ ] The expression scale to which the coefficients apply (e.g. log2(TPM + 1), log2 FPKM, z-scored within cohort) and the quantification pipeline
+- [ ] The numeric risk-score cutoff, if risk groups are reported, and the rule used to choose it
+- [ ] The development cohort, with its accession, platform and library type (poly(A) or total RNA)
 
 ## Validation reporting
 
-- [ ] At least one external validation cohort, distinct from the development
-      cohort
-- [ ] Event count in each validation cohort, alongside sample size
-- [ ] lncRNA coverage of the validation platform: fraction of signature
-      genes present in the cohort's expression matrix
-- [ ] If the coverage rule excludes any signature, state it explicitly
-- [ ] C-index and log-HR per SD reported for each validation cohort
-- [ ] If pooling across cohorts, state whether fixed- or random-effects
-      and report I² with the number of cohorts (k)
+- [ ] Every validation cohort, with its accession, and whether it was used for gene selection or tuning
+- [ ] The number of patients and of events in each validation cohort
+- [ ] Gene coverage in each cohort: how many signature genes were measurable, and how missing genes were handled
+- [ ] Discrimination (C-index with 95% CI) and the hazard ratio per SD of the score in each cohort
+- [ ] A comparison with random gene sets of the same size, scored with the same coefficients, in addition to a test against no association
+- [ ] Added value beyond stage and other clinical predictors
+- [ ] If cohorts are pooled: the model, the number of cohorts (k), heterogeneity, and the interval method
 
 ## Reporting hygiene
 
-- [ ] Text and table values for coefficients and HRs agree
-- [ ] Any post-hoc analysis decisions are disclosed (with date and reason)
-- [ ] Pre-registration of the analysis plan, if any, is cited
+- [ ] Pre-registration of the analysis plan, if any, with its updates
+- [ ] Deviations from the plan, with dates and reasons
+- [ ] Code and gene mappings available, so that the score can be recomputed
 
-## Minimal abstract requirements
+## Abstract
 
-- [ ] Report the lncRNA coverage of each validation platform
-- [ ] Report the event count of each validation cohort
-- [ ] Report the scaling convention applied to expression values
-
----
-
-Source: this checklist is derived directly from the findings of the
-reporting-completeness analysis (Supplementary Table S22). Fifteen published
-LUAD lncRNA prognostic signatures were assessed. Full coefficients and
-gene identifiers were present in 15/15 (100%), a risk cutoff was defined in
-15/15 (100%), an independent validation cohort was reported in 7/15 (47%),
-and the scaling convention was stated in 0/15 (0%).
+- [ ] Number of events and gene coverage in each validation cohort
+- [ ] The expression scale of the coefficients

@@ -1,0 +1,7 @@
+"item","papers","agree","agreement","kappa","disagreeing_papers","stage"
+"coef_table",10,10,1,1,"","10 dual-coded papers, before discussion"
+"cutoff",10,10,1,NA,"","10 dual-coded papers, before discussion"
+"scaling",10,6,0.6,0.428571428571428,"169;213;301;90","10 dual-coded papers, before discussion"
+"external_validation",10,10,1,1,"","10 dual-coded papers, before discussion"
+"text_table_conflict",10,9,0.9,0,"203","10 dual-coded papers, before discussion"
+"text_table_conflict",66,64,0.96969696969697,0.734939759036145,"183;289","66 papers, blinded recheck (primary code before resolution vs second coder)"

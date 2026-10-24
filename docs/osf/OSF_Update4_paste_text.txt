@@ -1,0 +1,195 @@
+OSF UPDATE 4: TEXT TO PASTE, FIELD BY FIELD
+Registration osf.io/qckvr. Prepared 2026-10-24. Post-analysis disclosure.
+
+HOW TO USE THIS FILE
+- Open the registration on OSF and start a new update ("Update" button).
+- Only the four fields below change. Leave every other field as it is (UNCHANGED).
+- PASTE: select everything in the field on OSF, delete it, then paste the text between the two lines of dashes (do not copy the dashes or the FIELD/ACTION lines). Each replacement keeps the Update 3 text of that field word for word and adds the Update 4 text.
+- The filing date 2026-10-24 appears in two places, each written "Update 4 (2026-10-24)": at the end of "Explanation of foreknowledge" and at the start of the Update 4 section in "Context and additional information". If you file on another day, change those two only. Every other 2026-10-24 is the date of the freeze or of a change, and stays.
+- "List of updated registration questions" is filled in by OSF itself.
+- Leave every "File upload" box as it is.
+
+
+############################################################
+FIELD: Justification for update
+ACTION: PASTE
+------------------------------------------------------------
+Update 4 is a post-analysis disclosure, filed after the outcome analyses of the rebuilt pipeline (v2) were run. It (1) records the decisions made after Update 3 and before any v2 outcome analysis, when the v2 inputs (signatures, gene mapping, cohorts and coverage) were frozen in version control (git tag v2-preanalysis, commit 871d199, 2026-10-24); Update 3 said that any further change at the gene-mapping or coverage step would be filed before the outcome analysis, and these changes are filed only now; (2) records the changes made after the freeze: two code changes that left every number that could already be computed unchanged, one interval-method sensitivity analysis added after a result was seen (reported as post hoc), descriptive outputs for the manuscript and a reorganisation of the code repository; and (3) corrects the text-versus-table conflict rate given in Update 3 (8/76) to 2/76. The hypotheses, the scoring formula, the 80% coverage rule, the registered tests and the decision rules are unchanged.
+------------------------------------------------------------
+
+
+############################################################
+FIELD: Explanation of foreknowledge and managing unintended influences
+ACTION: PASTE (replaces the whole field; the Update 3 text is kept word for word, with one paragraph added at the end)
+------------------------------------------------------------
+All cohorts are public, pre-existing data that were openly accessible throughout. The answer given at registration ("Data exists but the authors cannot observe it yet") did not fit public data and is corrected in Update 3.
+
+Before Update 3, the authors had accessed every cohort and had analysed part of them with an earlier version of the analysis code (v0.3). Results seen (all superseded; listed in the v0.3 deviations log):
+- TCGA-LUAD: apparent performance of 13 signatures (C-index 0.61–0.70).
+- CPTAC-3 (150 patients, 38 deaths): H1–H3 for the 15 signatures, including the stage positive control (HR stage III vs I 2.65) and the per-signature classifications before and after the C-index direction error was corrected (see the correction under Update 1 in "Context and additional information").
+- GSE31210: two signatures, and H2 for Yao 2021 (stage-only C-index 0.678).
+- GSE50081 and GSE30219: Yao 2021 only, and pooled Yao 2021 estimates across cohorts.
+- An aggregate transportability analysis (Inconclusive), and a comparison of raw-score with refitted-model C-indices.
+
+No survival analysis had ever been run in GSE81089 or GSE72094. In the rebuilt pipeline (v2), only the cohorts had been built and described (patients, deaths, stage, follow-up) when Update 3 was filed; no signature score, C-index, hazard ratio or test had been computed.
+
+Unintended influence is managed in five ways:
+1. The hypotheses, the scoring formula, the 80% coverage rule and the registered tests are unchanged.
+2. Every v2 change is listed in Update 3 with its reason, stating where an earlier result was known.
+3. Where earlier code departed from a registered rule, v2 follows the registered rule: one sample per patient by highest total expression, four-level stage, sex in H2, Holm correction in H2, at least three cohorts for pooling, and protein-coding and lncRNA genes in the random-gene pool.
+4. Analyses added after registration are reported as not pre-registered.
+5. v2 outcome analyses are run only after Update 3 is filed, with unit-tested code that writes every reported number to a log.
+
+Addition in Update 4 (2026-10-24): the v2 outcome analyses (H1–H3, the secondary analyses and the sensitivity analyses) were run after the v2 inputs (signatures, gene mapping, cohorts and coverage) were frozen in version control (git tag v2-preanalysis, commit 871d199, 2026-10-24). The tag was created in the local repository and pushed to GitHub later the same day. The changes made between Update 3 and the freeze, none of them after any v2 outcome had been computed, and the changes made after the freeze are listed under Update 4 in "Context and additional information".
+------------------------------------------------------------
+
+
+############################################################
+FIELD: Additional blinding during research or analysis
+ACTION: PASTE (replaces the whole field; the Update 3 text is kept word for word, with item 5 added)
+------------------------------------------------------------
+Not applicable to this design. However, four procedures reduce analyst bias:
+
+1. Signature genes and coefficients are taken verbatim from the original publications and extracted twice, independently; the two extractions are compared and any discrepancy is resolved against the source paper. No coefficient is refitted.
+
+2. All analysis decisions (coverage rule, null distribution, multiple-testing correction, three-way classification) are pre-specified in this registration and its updates: Update 1 (amendment of 2026-10-10), Update 2 (2026-10-12) and Update 3 (2026-10-20).
+
+3. The primary hypotheses (H1–H3), the exploratory direction-consistency outcome and the analyses added after registration are reported separately and labelled as such.
+
+4. The rebuilt analysis code (v2) is unit-tested; outcome analyses are run only after Update 3 is filed, and every number reported in the manuscript is written by the code to a log file.
+
+5. The v2 inputs (signatures, gene mapping, cohorts and coverage) were frozen in version control (git tag v2-preanalysis) before any v2 outcome analysis was run; every change after the freeze is listed in Update 4.
+------------------------------------------------------------
+
+
+############################################################
+FIELD: Context and additional information
+ACTION: PASTE (replaces the whole field; the Update 3 text is kept word for word, with four changes: a correction under Update 2, the Update 4 section, 'Current progress at the time of Update 4', and a correction in 'Materials and code')
+------------------------------------------------------------
+Scientific context.
+
+Lung cancer is the leading cause of cancer-related mortality worldwide, and lung adenocarcinoma (LUAD) is its most common histological subtype. Over the past decade, hundreds of prognostic signatures built from long non-coding RNA (lncRNA) expression have been published, each reporting promising performance in the cohort on which it was developed (often TCGA-LUAD). Few of these signatures have been independently validated, and there is no systematic benchmark quantifying how well they generalize to unrelated cohorts.
+
+This study addresses that gap by evaluating 15 published LUAD lncRNA prognostic signatures across multiple independent cohorts using a single pre-specified pipeline. Signatures are applied with their published coefficients — no refitting — so that performance reflects genuine out-of-sample transport rather than internal replication.
+
+
+Update history.
+
+Update 1 (2026-10-10): CPTAC-3 and the direction-consistency outcome.
+
+The original registration (filed 2026-10-06) specified three primary hypotheses: H1 (signatures outperform chance), H2 (signatures add prognostic value beyond stage), and H3 (signatures generalize across cohorts). During analysis of the CPTAC-3 LUAD cohort (150 patients, 38 deaths), an unplanned observation emerged: several signatures had higher C-index values when directionally reversed. A coefficient-matched, expression-matched null test with Holm correction identified only one signature (Yao 2021, 7 lncRNAs) as significantly different from the null distribution (observed C-index 0.323; null 2.5%–97.5% range 0.363–0.601; p_holm = 0.045). This finding was identified post hoc and is reported as hypothesis-generating.
+
+An amendment filed on 2026-10-10 (a) discloses the CPTAC-3 addition, (b) discloses the post hoc Yao 2021 observation, and (c) pre-specifies a secondary exploratory outcome ("direction consistency") to be tested in the remaining GEO cohorts before those cohorts are analyzed. H1–H3 remain the primary hypotheses; the direction outcome will only influence the paper's framing if it replicates in at least two additional independent cohorts.
+
+Correction added in Update 3: the CPTAC-3 C-indices reported above had been computed with the concordance direction inverted (survival::concordance without reverse = TRUE). Corrected, the C-index of Yao 2021 in CPTAC-3 is above 0.5 (1 − 0.323 = 0.677), i.e. in the published direction, so the reversal observation does not stand. The direction-consistency outcome is kept as a secondary exploratory analysis.
+
+Update 2 (2026-10-12): Reporting-completeness denominator expanded from 15 to 76 papers, with independent second-coder verification.
+
+The reporting-completeness analysis was originally restricted to the 15 signatures included in the benchmark. Because full coefficient reporting was an inclusion criterion, that denominator was circular. The analysis has been rebuilt on a broader set of 76 reviewed papers for which detailed extraction records were available.
+
+Five reporting items were coded from each paper's extraction record:
+
+Full coefficient tables with numeric values: 63/76 (82.9%)
+Cutoff method defined: 76/76 (100%); numeric cutoff value stated: 6/76 (7.9%)
+Scaling convention stated explicitly with a named unit: 27/76 (35.5%); implied by reference to RNA-seq without naming a unit: 38/76 (50.0%); not stated at all: 11/76 (14.5%)
+Independent external validation performed: 24/76 (31.6%)
+Text-versus-table conflict identified: 5/76 (6.6%)
+Coding was performed by the primary investigator. A second coder independently assessed 10 randomly drawn papers (IDs 90, 155, 169, 203, 213, 270, 273, 301, 347, 380) against the same five definitions. Initial agreement was 100% for full coefficient tables, 100% for cutoff method, 60% for scaling convention, 100% for external validation, and 90% for text-versus-table conflicts. The scaling disagreements were resolved by discussion; the agreed refinement — "implied" now means the paper mentions RNA-seq without naming a unit, while "not_stated" is reserved for papers that give no scale information at all — was applied consistently across all 76 papers. Final agreement after resolution was 100% on all five coded items.
+
+The 76-paper denominator replaces the original 15-signature denominator in the Results, Discussion, and Supplementary Table S22. Coding files, dual-coding sheets, and the agreement results are archived at docs/coding/. This update does not affect any other pre-registered analysis, decision rule, or primary result.
+
+Correction added in Update 3: a blinded second-coding pass of the text-versus-table item in the 66 papers outside the dual-coded sample found three further conflicts (records 93, 180 and 194) that were documented in the extraction notes but had not been carried into the coded item. The text-versus-table conflict rate is therefore 8/76 (10.5%), not 5/76 (6.6%).
+
+Correction added in Update 4: recomputing this item from the coding files (script 41_reporting_completeness.R) showed that records 93, 180 and 194 were already among the five conflicts coded before the blinded recheck. The recheck therefore found no new conflict (the two coders agreed on 64 of the 66 rechecked papers; κ = 0.73), and the rate of 8/76 given in Update 3 was wrong. Both coders then re-read the five coded conflicts, and three were recoded as no conflict, with the reason recorded in the coding file: record 93 (rounding of the same value, 0.0538 vs 0.05375), record 183 (conflict not confirmed) and record 289 (AUC values, outside the item definition). The text-versus-table conflict rate is 2/76 (2.6%). The definition was clarified: a coefficient value counts as conflicting only beyond rounding of the same value. The other four items are unchanged. The per-paper coding, with each paper's PubMed record, is Supplementary Table S19 of the manuscript (called Supplementary Table S22 in an earlier draft).
+
+Update 3 (2026-10-20): rebuilt analysis pipeline (v2), filed before any v2 outcome analysis.
+
+An audit of the v0.3 code found coding errors that affected several reported results. All analysis code was therefore rebuilt from raw public data (v2). The v0.3 results that had been seen are listed under "Explanation of foreknowledge"; they are superseded. When this update was filed, no v2 outcome analysis had been run, and no survival result had ever been computed in GSE81089 or GSE72094. The foreknowledge answer of the original registration is corrected.
+
+Unchanged: hypotheses H1–H3 and the exploratory direction-consistency outcome; verbatim coefficients; risk score = Σ β × within-cohort z-scored expression; evaluability at ≥ 80% of genes present; all registered tests, Holm correction within cohort and the three-way classification.
+
+Changes, each with its reason:
+1. Gene identifiers: genes are matched by Ensembl gene ID, mapped with the annotation each paper used (GENCODE v22 or v36), because renamed symbols made genes that were present look absent.
+2. Gene presence and gene types: a gene counts as present if it has no missing values, is not constant, and (RNA-seq) has TPM > 0 in ≥ 10% of patients, because a gene without signal cannot be z-scored meaningfully. All genes are kept for scoring, because some published lncRNAs carry other gene types in current annotations; the random-gene pool of the null test keeps the registered restriction to protein-coding and lncRNA genes.
+3. CPTAC-3: retrieved through the GDC API (Data Release 46.0), because TCGAbiolinks can no longer query CPTAC-3. RNA-seq files made from several pieces of the same primary tumour are eligible. Result: 205 evaluable patients and 55 deaths (registered: 150 and 38). Age at diagnosis is available from the GDC diagnosis records, so under the registered 80% rule age now enters the CPTAC-3 H2 model.
+4. GPL570 cohorts (GSE31210, GSE50081, GSE30219): normalised by RMA from raw CEL files, as frozen in the pre-analysis memo of 2026-10-12; probes mapped with Ensembl release 114, one probe per gene, the same probe in all three cohorts. As registered, GSE50081 and GSE30219 are restricted to adenocarcinomas.
+5. GSE81089 (Uppsala RNA-seq; 107 adenocarcinomas, 48 deaths) is added as an independent cohort. It had been planned and was dropped in v0.3 only because of an identifier bug; its survival data had never been analysed. FPKM values coded −1 (not quantified) are treated as missing. GSE72094 remains an independent cohort and is analysed for any signature reaching 80% coverage.
+6. Power simulation: run at each independent cohort's own numbers of patients and deaths (registered: 150 and 38, the v0.3 CPTAC-3 numbers).
+7. Stage positive control: in cohorts with fewer than 10 stage III–IV patients (GSE31210, GSE50081, GSE30219), the registered criterion HR(III vs I) cannot be evaluated; HR(II vs I) > 1 with p < 0.05 is used instead, and a cohort that fails is flagged exploratory.
+8. Calibration: not assessed, because the original papers do not report baseline survival and scores are computed on within-cohort z-scored expression; discrimination and the HR per SD are reported.
+
+Clarifications of registered wording:
+9. One sample per patient: "highest total expression" is applied as the largest total read count (TPM sums to the same total in every sample, so it cannot separate samples).
+10. C-index: the primary C-index is that of the published score (higher score = higher risk); the Cox-model C-index is reported beside it.
+11. Holm correction "across the 15 signatures" means across the signatures evaluable in that cohort, in H1 and in H2.
+12. Independence: a signature × cohort pair counts as independent only if the signature's authors did not use that cohort for development, feature selection or validation; other pairs are reported separately.
+13. The log-rank test uses the within-cohort median score; time-dependent AUC is reported at 12 and 36 months; the adjusted HR is that of the H2 model (stage, sex, age).
+14. Pooling: TCGA-LUAD never enters a pooled estimate; pooled estimates need at least three independent cohorts and, because all 15 signatures were developed in TCGA-LUAD, are labelled exploratory.
+
+Added analyses, reported as not pre-registered: (a) aggregate transportability: mean log-HR per SD over independent pairs with a patient-level cluster bootstrap and decision rules at δ = log(1.25), written in the v0.3 deviations log on 2026-10-11 but never filed on OSF; its v0.3 result (Inconclusive) had been seen; (b) sensitivity analyses: coverage at 100% and 70%; raw log2 scoring; RNA-seq TPM rescaled to protein-coding and lncRNA genes; Uno's C-index at 60 months; GSE31210 without the 22 flagged cases; lncRNA-only and all-gene null pools; stage I–II only and early deaths excluded, in every cohort.
+
+
+Update 4 (2026-10-24): post-analysis disclosure.
+
+All v2 outcome analyses have been run. The v2 inputs were frozen in version control (git tag v2-preanalysis, commit 871d199, 2026-10-24) after the gene mapping and coverage were final and before any outcome analysis. Update 3 said that any further change at the gene-mapping or coverage step would be filed as an update before any outcome analysis; changes A2–A7 below were instead fixed in the tagged commit and are filed here, after the analysis. This is a deviation from Update 3. None of these changes was made after any v2 outcome had been computed.
+
+A. Decisions after Update 3 and before any v2 outcome analysis (2026-10-20 to 2026-10-24):
+A1. Independent double extraction of all 102 coefficients (two extractors, blind; planned in Update 3): 86 identical, 16 differing only by rounding, no real disagreement. The full-precision printed value is used.
+A2. Gene-name release per signature (Update 3, change 1): chosen as the GENCODE release that knows the most of each paper's gene names: v22 for Yu 2024 and Yao 2021, v36 for the other 13.
+A3. Six gene–signature rows mapped by documented manual override: AL034397.3 (Jin 2020, Song 2021) to ENSG00000274536; HSPC324 (Jin 2020) to ENSG00000228401; AC026355.1 (Zheng 2021, Zhang 2025) to ENSG00000228561; AC010980.2 (Song 2021) to ENSG00000267034. Reason: a name audit across GENCODE v22, v29, v31, v32 and v36 found clone-based names that point to different genes in different releases; two of the overrides correct matches to a snoRNA and a pseudogene. Evidence for each row (GENCODE name history, NCBI Gene aliases) is kept with the code.
+A4. Successor Ensembl IDs from the official Ensembl ID history (7 genes), used in a cohort only where the original ID is not measurable there and the successor is. Reason: retired or merged IDs made present genes look absent. Not in the registration.
+A5. Predecessor check for GSE81089 (Ensembl 73), the same rule in the other direction, fixed before any outcome: an older ID is accepted only if it is measurable, its history passes through the signature gene's own ID and ends in one current gene, and it is the only such ID. Result: 63,054 IDs queried, 10,024 retired, none accepted.
+A6. Probe and Entrez maps restricted to primary-assembly genes (chromosomes 1–22, X, Y, MT), because alternative-haplotype copies made probes look multi-mapping.
+A7. GSE72094 built from the GEO series matrix, Entrez IDs mapped to Ensembl (release 114): 398 patients, 113 deaths. No signature reached 80% coverage, so, as stated in Update 3, no signature was analysed in GSE72094.
+A8. Independence table completed by two extractors from the full texts (Update 3, clarification 12): Geng 2021 used GSE31210; Yu 2024 used GSE31210, GSE30219 and GSE50081 (with GSE37745); Yang 2022 used GSE50081 (single-gene validation; classed as used). No paper used Kaplan–Meier Plotter or a similar portal for survival validation (Yao 2021 used GEPIA for expression correlation only).
+
+B. After the freeze (2026-10-24):
+B1. Code correction in the power simulation: exp(βx) overflowed inside the numerical integration at a true C-index of 0.70; rewritten as plogis(βx − log μ), the same quantity. Results at C-index 0.60 and 0.65 are identical; 0.70 could not be computed before.
+B2. Speed changes in the transportability bootstrap (signature genes taken before resampled patients; Cox fits with the same inputs as coxph()). Point estimates identical (difference 0).
+B3. Pooling-interval sensitivity analysis, post hoc: common-effect, REML Wald and modified Hartung–Knapp (q* = max(1, q)) intervals beside the registered REML + Hartung–Knapp interval, added after the registered interval for Yao 2021 was seen to be narrower than the common-effect interval (q = 0.19). The registered interval stays primary. Yao 2021: HR 1.41 per SD; registered 95% CI 1.30–1.52; modified Hartung–Knapp 1.17–1.68; common effect 1.24–1.60.
+B4. Descriptive outputs for the manuscript: median follow-up by the reverse Kaplan–Meier method; Kaplan–Meier curves split at the median score.
+B5. Repository: the v2 code was pushed to the GitHub repository that held the v0.3 code; the v0.3 files were moved to the folder archive_v1/. No v0.3 file was used by any v2 analysis.
+B6. Reporting completeness, text-versus-table item: corrected from 8/76 to 2/76 (see the correction under Update 2).
+
+Unchanged: hypotheses H1–H3 and the direction-consistency outcome; verbatim coefficients; risk score = Σ β × within-cohort z-scored expression; the 80% coverage rule; all registered tests, Holm correction within cohort and the three-way classification; the analyses declared as not pre-registered in Update 3.
+
+
+Current progress at the time of Update 3.
+
+Completed (v2): six cohorts built from raw public data and quality-checked: TCGA-LUAD 504 patients and 182 deaths; CPTAC-3 205 and 55; GSE31210 226 and 35; GSE50081 127 and 51; GSE30219 83 and 43; GSE81089 107 and 48. No v2 signature score, C-index, hazard ratio or test had been computed.
+
+Planned: independent second extraction of all signature genes and coefficients; gene mapping and coverage (including GSE72094); H1–H3, the secondary analyses and the sensitivity analyses; manuscript preparation. If the gene-mapping or coverage step requires any further change, it will be filed as a further update before any outcome analysis.
+
+
+Current progress at the time of Update 4.
+
+Completed (v2): seven cohorts built and quality-checked (the six above and GSE72094, 398 patients and 113 deaths); double extraction of the coefficients; gene mapping and coverage (26 independent evaluable signature × cohort pairs); H1–H3, the direction-consistency outcome, the sensitivity analyses and the power simulation; reporting completeness of the 76 papers.
+
+Planned: submission of the manuscript, which reports every registered outcome whatever its result, with the code released on publication.
+
+
+Materials and code.
+
+The v2 analysis code is kept under version control (git), with package versions in renv.lock, unit tests and a log of every reported number; it will be made public on publication. Correction in Update 4: Update 3 said that the v0.3 repository (github.com/msks2016/LUAD_signature_benchmark) would be kept unchanged. The v2 code was later pushed to that repository; the v0.3 code is kept, unchanged, at commit 229fc8f and in the folder archive_v1/. Raw data are not redistributed; the scripts download them from the GDC and GEO.
+
+
+Reporting guidelines.
+
+- REMARK: prognostic marker validation.
+- PRISMA 2020: signature selection (literature search).
+- TRIPOD+AI (2024): evaluation of the prediction models.
+
+
+Constraints and known limitations.
+
+- The six built independent cohorts have 35–55 deaths each, which limits power; "Inconclusive" may mean underpowered rather than not prognostic.
+- RNA-seq library types differ: TCGA-LUAD and GSE81089 used poly(A) selection, CPTAC-3 total RNA; many lncRNAs are not polyadenylated, so they are captured differently.
+- Microarrays (GPL570, GPL15048) measure only part of the lncRNA space; coverage is reported for every signature × cohort pair.
+- GSE81089 uses an older gene annotation (Ensembl 73), so recently annotated lncRNAs may be absent there.
+- GSE31210 and GSE50081 include stage I–II only by design and GSE30219 is almost entirely stage I, so stage adjustment in H2 carries little information there, and the positive control is adapted.
+- All 15 signatures were developed in TCGA-LUAD, so TCGA-LUAD shows apparent performance only and pooled estimates are exploratory.
+- No functional experiments are performed; this is a computational benchmarking study.
+------------------------------------------------------------
+
+
+END OF FILE
