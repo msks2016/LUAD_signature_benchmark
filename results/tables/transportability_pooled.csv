@@ -1,0 +1,2 @@
+"n_pairs","n_cohorts","pooled_log_hr","ci_low","ci_high","verdict","failed_replicates","resamples"
+26,5,0.242936533318175,0.126619443636366,0.369932490240118,"Transportable",0,2000
