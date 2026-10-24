@@ -23,7 +23,7 @@ test_that("a pair is scored with its own cohort (guards against bug R1)", {
   idx <- sample.int(length(a$time), replace = TRUE)            # resampled patients, as in the bootstrap
   full <- hr_per_sd(a$time[idx], a$event[idx],
                     score_signature(a$expr[, idx, drop = FALSE], genes, coefs))[["log_hr"]]
-  expect_identical(pair_log_hr(a, genes, coefs, idx), full)    # genes-first subsetting changes nothing
+  expect_equal(pair_log_hr(a, genes, coefs, idx), full, tolerance = 1e-10)   # genes first + coxph.fit: same number
   expect_error(pair_log_hr(a, c(genes[1:2], "ENSG_NOT_THERE"), coefs), "Not in matrix")
 })
 
@@ -34,7 +34,7 @@ test_that("the bootstrap CI describes the pooled mean, not the spread of pairs (
                   stringsAsFactors = FALSE)
   pairs <- data.frame(pair_id = c("s1__A", "s1__B"), signature = "s1", cohort = c("A", "B"),
                       stringsAsFactors = FALSE)
-  res <- transport_bootstrap(co, pairs, list(s1__A = g, s1__B = g), B = 300, seed = 5)
+  res <- transport_bootstrap(co, pairs, list(s1__A = g, s1__B = g), B = 300, seed = 5, progress = FALSE)
   spread <- diff(range(res$per_pair$log_hr))
   expect_true(res$ci_low < res$pooled && res$pooled < res$ci_high)
   expect_true(res$ci_high - res$ci_low < 0.5 * spread)
@@ -47,4 +47,15 @@ test_that("transportability decision rule follows the registration", {
   expect_equal(classify_transport(-0.40, -0.05, d), "Contradicted")
   expect_equal(classify_transport(-0.10, 0.20, d), "Informative null")
   expect_equal(classify_transport(-0.10, 0.50, d), "Inconclusive")
+})
+
+test_that("the fast Cox fit gives the same log-HR as coxph(), with and without ties", {
+  for (sd in 1:4) {
+    a <- sim_cohort(seed = 20 + sd)
+    sc <- score_signature(a$expr, rownames(a$expr)[1:4], c(0.5, -0.3, 0.2, 0.1))
+    tm <- if (sd > 2) round(a$time) + 1 else a$time            # integer times give ties
+    if (sd == 2) tm[2] <- tm[1] * (1 + 1e-12)                  # near-tie, merged by coxph's time fix
+    expect_equal(log_hr_per_sd_fast(tm, a$event, sc), hr_per_sd(tm, a$event, sc)[["log_hr"]],
+                 tolerance = 1e-10)
+  }
 })

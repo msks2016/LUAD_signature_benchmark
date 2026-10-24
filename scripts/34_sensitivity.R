@@ -6,7 +6,7 @@
 #         settings and the cohort-composition settings (stage I-II only; early deaths
 #         excluded; GSE31210 without the 22 flagged cases).
 # Measurable genes are recomputed in every setting, because a gene can become constant in a
-# subset of patients. Slow: allow 15-30 minutes.
+# subset of patients. Slow: allow 30-60 minutes; progress is printed.
 # Output: results/tables/sensitivity_transportability.csv, sensitivity_h1.csv
 
 for (f in list.files("R", pattern = "\\.R$", full.names = TRUE)) source(f)
@@ -32,6 +32,7 @@ if ("GSE31210" %in% names(base_cohorts) && !is.null(base_cohorts$GSE31210$clin$s
 # ---- Part A: aggregate transportability ---------------------------------------------------
 run_transport <- function(label, cohorts = base_cohorts, min_fraction = cfg$coverage$primary_min_fraction,
                           scale = cfg$scoring$scale) {
+  message("Transportability, setting: ", label)
   meas <- measurable_by_cohort(cohorts, cfg)
   P <- build_pairs(gm, meas, ind, names(cohorts), min_fraction)
   if (is.null(P$pairs)) return(data.frame(setting = label, n_pairs = 0, pooled_log_hr = NA, ci_low = NA,
@@ -65,7 +66,9 @@ run_h1 <- function(label, cohorts = base_cohorts, pool_types = cfg$null_test$poo
   meas <- measurable_by_cohort(cohorts, cfg)
   P <- build_pairs(gm, meas, ind, names(cohorts), cfg$coverage$primary_min_fraction)
   if (is.null(P$pairs)) return(NULL)
+  message("H1, setting: ", label, " (", nrow(P$pairs), " pairs)")
   out <- do.call(rbind, lapply(seq_len(nrow(P$pairs)), function(k) {
+    message("  pair ", k, " of ", nrow(P$pairs))
     p <- P$pairs[k, ]
     co <- cohorts[[p$cohort]]
     g <- P$genes[[p$pair_id]]

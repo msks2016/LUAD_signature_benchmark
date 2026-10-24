@@ -11,7 +11,7 @@ pair_log_hr <- function(cohort, genes, coefs, idx = NULL, scale = "zscore") {
   absent <- setdiff(genes, rownames(cohort$expr))
   if (length(absent)) stop("Not in matrix: ", paste(absent, collapse = ", "))
   s <- score_signature(cohort$expr[genes, idx, drop = FALSE], genes, coefs, scale)
-  hr_per_sd(cohort$time[idx], cohort$event[idx], s)[["log_hr"]]
+  log_hr_per_sd_fast(cohort$time[idx], cohort$event[idx], s)
 }
 
 # Decision rule written in the v0.3 deviations log on 11 Oct 2026, never filed on OSF before
@@ -27,7 +27,7 @@ classify_transport <- function(lo, hi, delta = log(1.25)) {
 # pairs:   data.frame with pair_id, signature, cohort
 # genes_by_pair: named list (by pair_id) of data.frames with ensembl_id and coefficient
 transport_bootstrap <- function(cohorts, pairs, genes_by_pair, B = 2000, scale = "zscore",
-                                delta = log(1.25), seed = NULL) {
+                                delta = log(1.25), seed = NULL, progress = TRUE) {
   if (!is.null(seed)) set.seed(seed)
   K <- nrow(pairs)
   one_pair <- function(k, idx = NULL) {
@@ -39,10 +39,16 @@ transport_bootstrap <- function(cohorts, pairs, genes_by_pair, B = 2000, scale =
   # One resample of patients per cohort, shared by every pair in that cohort,
   # so the correlation between pairs that share patients is kept.
   boot <- matrix(NA_real_, nrow = B, ncol = K, dimnames = list(NULL, pairs$pair_id))
+  t0 <- Sys.time()
   for (b in seq_len(B)) {
     idx <- lapply(cohorts, function(co) sample.int(length(co$time), replace = TRUE))
     for (k in seq_len(K)) {
       boot[b, k] <- tryCatch(one_pair(k, idx[[pairs$cohort[k]]]), error = function(e) NA_real_)
+    }
+    if (progress && (b %% 100 == 0 || b == B)) {
+      el <- as.numeric(difftime(Sys.time(), t0, units = "mins"))
+      message(sprintf("  bootstrap %d of %d (%d pairs): %.1f min so far, about %.1f min left",
+                      b, B, K, el, el / b * (B - b)))
     }
   }
   # Rows are replicates: rowMeans gives ONE pooled mean per replicate (bug R2 averaged pairs).
