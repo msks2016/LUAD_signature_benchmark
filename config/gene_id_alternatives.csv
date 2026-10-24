@@ -1,0 +1,8 @@
+ensembl_id,alternative_id,published_symbol,evidence
+ENSG00000235884,ENSG00000285517,LINC00941,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 111, possible replacement ENSG00000285517. In GDC STAR-Counts (GENCODE v36) ENSG00000235884 has zero counts in every TCGA-LUAD and CPTAC-3 sample, consistent with its reads being assigned to the overlapping ENSG00000285517."
+ENSG00000238266,ENSG00000223784,LINC00707,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 112, possible replacement ENSG00000223784."
+ENSG00000228561,ENSG00000228221,AC026355.2,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 112, possible replacement ENSG00000228221."
+ENSG00000233818,ENSG00000230479,AP000695.2,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 112, possible replacement ENSG00000230479 (AP000695.1 in GENCODE v36)."
+ENSG00000275216,ENSG00000223617,AL161431.1,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 111, possible replacement ENSG00000223617."
+ENSG00000273888,ENSG00000258537,FRMD6-AS1,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 106, possible replacement ENSG00000258537."
+ENSG00000176659,ENSG00000228340,C20orf197,"Ensembl REST ID history (rest.ensembl.org/archive/id, queried 20 Oct 2026 by scripts/23b_presence_check.R): last in release 112, possible replacement ENSG00000228340 (MIR646HG)."

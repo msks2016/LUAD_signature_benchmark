@@ -51,7 +51,8 @@ P_ind <- build_pairs(gm, meas, ind, cfg$cohorts$independent, cfg$coverage$primar
 evaluable <- if (is.null(P_ind$pairs)) character(0) else P_ind$pairs$pair_id
 long <- do.call(rbind, lapply(cohort_names, function(cn) {
   co <- cohorts[[cn]]
-  d <- gm[!is.na(gm$ensembl_id) & gm$ensembl_id %in% meas[[cn]], , drop = FALSE]
+  sm <- cohort_gene_map(gm, meas[[cn]])   # alternative IDs where the original is not measurable
+  d <- sm[!is.na(sm$ensembl_id) & sm$ensembl_id %in% meas[[cn]], , drop = FALSE]
   if (!nrow(d)) return(NULL)
   gc <- gene_cox(co$expr, unique(d$ensembl_id), co$time, co$event)
   d <- merge(d[, c("signature", "published_symbol", "ensembl_id", "coefficient")], gc, by = "ensembl_id")
