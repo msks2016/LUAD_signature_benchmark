@@ -107,6 +107,20 @@ test_that("power simulation: beta gives the target C-index and censoring the sha
   expect_equal(r$replicates, c(20, 20))
 })
 
+test_that("censoring rate is finite for every registered target C and cohort share of deaths", {
+  for (tc in c(0.60, 0.65, 0.70, 0.80)) {                # 0.70 overflowed exp() before
+    b <- beta_for_c(tc)
+    for (f in c(0.15, 0.27, 0.40, 0.52)) {
+      mu <- censoring_rate_for(b, f)
+      expect_true(is.finite(mu) && mu > 0)
+    }
+  }
+  set.seed(7)
+  b <- beta_for_c(0.70)
+  d <- simulate_ph_cohort(20000, b, censoring_rate_for(b, 0.155))
+  expect_lt(abs(mean(d$event) - 0.155), 0.012)
+})
+
 test_that("the random-gene pool keeps the chosen gene types plus the signature genes", {
   gt <- data.frame(gene_id = c("E1", "E2", "E3", "E4"),
                    gene_type = c("protein_coding", "lncRNA", "snRNA", "lncRNA"), stringsAsFactors = FALSE)

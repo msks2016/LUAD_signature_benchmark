@@ -268,11 +268,12 @@ beta_for_c <- function(target_c) {
 }
 
 # Exponential censoring rate giving the wanted share of deaths (event hazard exp(beta * x)).
+# P(death | x) = exp(beta x) / (exp(beta x) + mu) = plogis(beta x - log mu), written with plogis
+# so that large x cannot overflow exp() (which stopped integrate() for C = 0.70).
 censoring_rate_for <- function(beta, event_fraction) {
   if (event_fraction <= 0 || event_fraction >= 1) stop("event_fraction must be between 0 and 1")
   ef <- function(log_mu) {
-    mu <- exp(log_mu)
-    stats::integrate(function(x) exp(beta * x) / (exp(beta * x) + mu) * stats::dnorm(x),
+    stats::integrate(function(x) stats::plogis(beta * x - log_mu) * stats::dnorm(x),
                      -Inf, Inf)$value
   }
   exp(stats::uniroot(function(l) ef(l) - event_fraction, c(-15, 15), tol = 1e-10)$root)

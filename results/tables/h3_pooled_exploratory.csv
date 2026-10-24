@@ -1,0 +1,2 @@
+"signature","k","model","log_hr","ci_low","ci_high","hr","hr_low","hr_high","i2","tau2","deaths","cohorts","label"
+"Paper62_Yao2021",5,"REML + Hartung-Knapp",0.340810369381667,0.262544695872941,0.419076042890393,1.40608657851198,1.30023458198943,1.52055597786555,0,0,232,"CPTAC-3;GSE31210;GSE50081;GSE30219;GSE81089","exploratory"
