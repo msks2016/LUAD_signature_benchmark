@@ -23,7 +23,8 @@ steps <- c(
   "scripts/35_direction_genes.R",
   "scripts/36_power.R",
   "scripts/33_transportability.R",  # added after registration (not pre-registered)
-  "scripts/34_sensitivity.R"
+  "scripts/34_sensitivity.R",
+  "scripts/40_paper_outputs.R"      # manuscript tables and figures (results/paper)
 )
 for (s in steps) {
   message("\n==== ", s, " ====")
