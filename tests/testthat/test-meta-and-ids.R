@@ -48,3 +48,18 @@ test_that("probe collapse drops multi-gene probes and prefers _at probes", {
   expect_equal(sort(rownames(out$expr)), c("G1", "G2"))
   expect_equal(out$probe_choice$probe_id[out$probe_choice$ensembl_id == "G1"], "p1_at")
 })
+
+test_that("interval variants: modified Hartung-Knapp is never narrower than common effect", {
+  # Yao 2021, five independent cohorts (v2 results, 24 Oct 2026): q < 1, tau2 = 0
+  y <- c(0.39209, 0.38873, 0.35901, 0.29865, 0.24645)
+  se <- c(0.12601, 0.15655, 0.14897, 0.15467, 0.14912)
+  v <- pool_ci_variants(y, se, tau2 = 0)
+  hk <- v[v$interval == "reml_hk", ]
+  ce <- v[v$interval == "common_effect", ]
+  mhk <- v[v$interval == "reml_hk_modified", ]
+  expect_true(hk$q < 1)
+  expect_lt(hk$ci_high - hk$ci_low, ce$ci_high - ce$ci_low)      # the registered HK is narrower here
+  expect_gte(mhk$ci_high - mhk$ci_low, ce$ci_high - ce$ci_low)
+  expect_equal(ce$log_hr, hk$log_hr)                              # tau2 = 0: same centre
+  expect_true(abs(mhk$hr_low - 1.173) < 0.003 && abs(mhk$hr_high - 1.685) < 0.003)
+})

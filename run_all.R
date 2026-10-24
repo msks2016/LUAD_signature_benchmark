@@ -19,6 +19,7 @@ steps <- c(
   "scripts/30_h1_null.R",           # Step 5: registered analyses
   "scripts/31_h2_stage.R",
   "scripts/32_h3_cross_cohort.R",
+  "scripts/37_pooling_sensitivity.R", # interval-method sensitivity for the pooled estimates
   "scripts/35_direction_genes.R",
   "scripts/36_power.R",
   "scripts/33_transportability.R",  # added after registration (not pre-registered)
