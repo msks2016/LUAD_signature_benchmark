@@ -1,0 +1,25 @@
+"signature","cohorts","interval","k","tau2","q","hr","hr_low","hr_high"
+"Yao 2021","all","common_effect",5,0,0.187,1.406,1.238,1.598
+"Yao 2021","all","reml_wald",5,0,0.187,1.406,1.238,1.598
+"Yao 2021","all","reml_hk",5,0,0.187,1.406,1.3,1.521
+"Yao 2021","all","reml_hk_modified",5,0,0.187,1.406,1.173,1.685
+"Yao 2021","without CPTAC-3","common_effect",4,0,0.174,1.38,1.189,1.602
+"Yao 2021","without CPTAC-3","reml_wald",4,0,0.174,1.38,1.189,1.602
+"Yao 2021","without CPTAC-3","reml_hk",4,0,0.174,1.38,1.247,1.527
+"Yao 2021","without CPTAC-3","reml_hk_modified",4,0,0.174,1.38,1.083,1.758
+"Yao 2021","without GSE31210","common_effect",4,0,0.212,1.392,1.21,1.602
+"Yao 2021","without GSE31210","reml_wald",4,0,0.212,1.392,1.21,1.602
+"Yao 2021","without GSE31210","reml_hk",4,0,0.212,1.392,1.253,1.546
+"Yao 2021","without GSE31210","reml_hk_modified",4,0,0.212,1.392,1.108,1.749
+"Yao 2021","without GSE50081","common_effect",4,0,0.243,1.4,1.215,1.614
+"Yao 2021","without GSE50081","reml_wald",4,0,0.243,1.4,1.215,1.614
+"Yao 2021","without GSE50081","reml_hk",4,0,0.243,1.4,1.25,1.569
+"Yao 2021","without GSE50081","reml_hk_modified",4,0,0.243,1.4,1.112,1.763
+"Yao 2021","without GSE30219","common_effect",4,0,0.22,1.419,1.233,1.633
+"Yao 2021","without GSE30219","reml_wald",4,0,0.22,1.419,1.233,1.633
+"Yao 2021","without GSE30219","reml_hk",4,0,0.22,1.419,1.275,1.579
+"Yao 2021","without GSE30219","reml_hk_modified",4,0,0.22,1.419,1.129,1.783
+"Yao 2021","without GSE81089","common_effect",4,0,0.085,1.438,1.247,1.657
+"Yao 2021","without GSE81089","reml_wald",4,0,0.085,1.438,1.247,1.657
+"Yao 2021","without GSE81089","reml_hk",4,0,0.085,1.438,1.344,1.537
+"Yao 2021","without GSE81089","reml_hk_modified",4,0,0.085,1.438,1.142,1.81

@@ -1,0 +1,7 @@
+"Setting","Pairs","Replicated","Contradicted","Inconclusive","Replicated pairs"
+"primary (registered)",26,0,0,26,""
+"null pool: lncRNA genes only",26,1,0,25,"Yu 2024 GSE81089"
+"null pool: all measurable genes",26,1,0,25,"Yao 2021 CPTAC-3"
+"stage I-II only",26,0,0,26,""
+"deaths within 3 months excluded",26,0,0,26,""
+"GSE31210 without the 22 flagged cases",1,0,0,1,""

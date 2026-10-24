@@ -1,0 +1,8 @@
+"Cohort","Role","Patients","Deaths","Stages","Stage III-IV patients","Rule","HR II vs I","p II","HR III vs I","p III","HR IV vs I","p IV","Stage C-index","Monotonic","Pass","Note"
+"TCGA-LUAD","reference",496,180,"I:270 II:120 III:81 IV:25",106,"registered: HR(III vs I) > 1, p < 0.05, monotonic HR across stages",2.43,"<0.001",3.49,"<0.001",3.85,"<0.001",0.664,TRUE,TRUE,""
+"CPTAC-3","independent",205,55,"I:114 II:46 III:43 IV:2",45,"registered: HR(III vs I) > 1, p < 0.05, monotonic HR across stages",1.88,"0.058",2.47,"0.008",4.64,"0.039",0.625,TRUE,TRUE,""
+"GSE31210","independent",226,35,"I:168 II:58",0,"adapted (Update 3, D1): fewer than 10 stage III-IV patients; HR(II vs I) > 1, p < 0.05",4.23,"<0.001",,"",,"",0.678,TRUE,TRUE,""
+"GSE50081","independent",127,51,"I:92 II:35",0,"adapted (Update 3, D1): fewer than 10 stage III-IV patients; HR(II vs I) > 1, p < 0.05",2.44,"0.002",,"",,"",0.591,TRUE,TRUE,""
+"GSE30219","independent",83,43,"I:79 II:3 III:1",1,"adapted (Update 3, D1): fewer than 10 stage III-IV patients; HR(II vs I) > 1, p < 0.05",4.45,"0.015",0,"1.00",,"",0.541,TRUE,TRUE,"Loglik converged before variable  2 ; coefficient may be infinite. "
+"GSE81089","independent",107,48,"I:61 II:19 III:24 IV:3",27,"registered: HR(III vs I) > 1, p < 0.05, monotonic HR across stages",2.74,"0.010",4.22,"<0.001",8.51,"<0.001",0.677,TRUE,TRUE,""
+"GSE72094","independent",393,111,"I:254 II:67 III:57 IV:15",72,"registered: HR(III vs I) > 1, p < 0.05, monotonic HR across stages",2.13,"0.002",3.09,"<0.001",3.35,"0.001",0.634,TRUE,TRUE,""
