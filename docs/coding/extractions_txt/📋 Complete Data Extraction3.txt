@@ -1,0 +1,1523 @@
+## Paper #151: Necroptosis-Related lncRNA Signature (NRLSig)
+
+### ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 4 necroptosis-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — NRLSig |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ⚠️ **Internal TCGA split only** — GEO validation attempted but insufficient lncRNA data |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 3-year and 5-year reported for training, validation, and entire sets |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **experimental validation** (qRT-PCR in 12 paired LUAD tissues and cell lines A549, H1299, PC9 vs BEAS-2B), **nomogram construction with calibration and DCA**, **immune infiltration analysis** (CIBERSORT, TIMER), **functional enrichment** (GO/KEGG), **co-expression network**, **PCA**, and **Sankey diagram**.
+
+**Limitation:** **No independent external validation** — The authors attempted to use GEO datasets (GSE3141, GSE37745) but could not acquire sufficient lncRNA information: "we could not acquire sufficient information of lncRNAs in the GEO cohort because the scale of commercial sequencing data from the GEO dataset was much smaller compared to the size of RNA sequencing data from the TCGA dataset." The validation set (n=239) is an internal TCGA split. The authors acknowledge: "whether the performance of the model in an external cohort would be similarly satisfactory still require further validation." No C-index reported. No HR with 95% CI for the risk score itself (only p-values in Figures 5A,B).
+
+---
+
+## Data Extraction — Paper #151
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 4 lncRNAs: LINC00941, AP001453.2, AC026368.1, AC236972.3 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 4 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(coefficient × expression), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not explicitly stated |
+| Annotation version | ✅ **Yes** | **GENCODE** (annotation file obtained from GENCODE) |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=238) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=238) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 535 patients (TCGA); training n=238; validation n=239; entire set n=477 |
+| Events | ✅ **Yes** | **157 dead / 320 alive** (from Table 1) |
+| Patients removed | ✅ **Yes** | OS < 30 days excluded; patients without clear survival time/status excluded |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA validation set (n=239) — **NOT independent**; GEO attempted but insufficient lncRNA data |
+| Population limits | ✅ **Yes** | Age, gender, stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 4 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ✅ **Yes** | Training: 3-year 0.682, 5-year 0.696; Validation: 3-year 0.654, 5-year 0.646; Entire: 3-year 0.662, 5-year 0.648; Nomogram: 3-year 0.756, 5-year 0.740 |
+| HR with 95% CI | ✅ **Yes** | Figure 5A,B provides HR, 95% CI for risk score in univariate and multivariate analyses |
+
+---
+
+### Gene Symbols + Coefficients (from Formula in Text)
+
+| **lncRNA** | **Coefficient** | **Direction** | **Notes** |
+|---|---|---|---|
+| LINC00941 | **+0.0286** | Risk | Overexpression accelerates tumor progression in NSCLC via miR-877-3p/VEGFA axis |
+| AP001453.2 | **+0.0226** | Risk | Correlated with PPIA (peptidylprolyl isomerase A), a biomarker for necroptosis |
+| AC026368.1 | **+0.0328** | Risk | Correlated with DNM1L (dynamin 1-like), a regulator of necroptosis |
+| AC236972.3 | **−0.0499** | Protective | Correlated with SIRT3, which can inhibit proliferation of lung cancer cells |
+
+### Formula Form
+
+**Risk score = (0.0286 × LINC00941) + (0.0226 × AP001453.2) + (0.0328 × AC026368.1) + (−0.0499 × AC236972.3)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) not explicitly stated
+- **Annotation:** GENCODE (14,128 lncRNAs acquired)
+- 204 NRGs (159 from KEGG necroptosis pathway hsa04217 + 67 from literature)
+- 88 NRLRs identified through Pearson correlation analysis (|Cor| > 0.3, p < 0.001)
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=238)
+- High-risk and low-risk groups divided based on median
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=238)
+- **Validation set** (n=239) for internal validation
+- **Entire TCGA-LUAD set** (n=477) for further validation
+- **Univariate Cox regression** → 7 NRLRs associated with OS
+- **LASSO regression** (10-fold cross-validation) → 4 lncRNAs
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=477 after filtering) |
+| **Accession numbers** | TCGA-LUAD; GEO GSE3141 and GSE37745 (attempted but insufficient lncRNA data) |
+| **Sample size (initial)** | 535 LUAD patients (TCGA) |
+| **Sample size (final)** | 477 patients (after excluding OS < 30 days and missing survival data) |
+| **Number of events** | **157 dead / 320 alive** (from Table 1) |
+| **Patients removed** | OS < 30 days excluded; patients without clear survival time/status excluded |
+| **Endpoint** | OS |
+| **Validation cohorts** | TCGA validation set (n=239) — **NOT independent**; GEO attempted but insufficient lncRNA data |
+| **Independent external validation** | ❌ **No** — all validation is internal TCGA splits |
+| **Population limits** | Age, gender, stage, T, N, M subgroups analysed |
+| **Gene types** | All 4 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **3-year AUC** | **5-year AUC** |
+|---|---|---|
+| Training Set | **0.682** | **0.696** |
+| Validation Set | **0.654** | **0.646** |
+| Entire TCGA Set | **0.662** | **0.648** |
+| Nomogram (Entire Set) | **0.756** | **0.740** |
+
+*Note: The paper reports AUC values for 3- and 5-year survival in training, validation, and entire sets (Figures 4D-F, 6C). The nomogram AUC was 0.756 at 3 years and 0.740 at 5 years (Figure 6C).*
+
+#### HR with 95% CI (from Figure 5A,B)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| Entire TCGA | Univariate (Risk Score) | **7.863** | 3.78–16.36 | <0.001 |
+| Entire TCGA | Multivariate (Risk Score) | **7.343** | 3.19–16.91 | <0.001 |
+
+*Note: The HR values are extracted from Figure 5A,B. The numerical values are approximate from the figure.*
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ✅ The nomogram showed higher discriminatory accuracy than models constructed in previous studies (Liu and Yang, 2021; Yao et al., 2021).
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 151 |
+| First_Author | Diao X |
+| Year | 2022 |
+| Title | Necroptosis-Related lncRNA Signature Predicts Prognosis and Immune Infiltration in Lung Adenocarcinoma |
+| Journal | Frontiers in Genetics |
+| DOI | 10.3389/fgene.2022.833362 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Necroptosis-related |
+| Data_Source | TCGA-LUAD only (GEO attempted but insufficient lncRNA data) |
+| Expression_Data_Type | RNA-seq (specific scale not stated) |
+| Annotation_Version | **GENCODE** |
+| Sample_Size | 535 (TCGA); training n=238; validation n=239; entire n=477 |
+| No_of_lncRNAs | 4 |
+| lncRNA_Names | LINC00941, AP001453.2, AC026368.1, AC236972.3 |
+| Coefficients | +0.0286, +0.0226, +0.0328, −0.0499 |
+| Risk_Score_Formula | Risk score = (0.0286 × LINC00941) + (0.0226 × AP001453.2) + (0.0328 × AC026368.1) + (−0.0499 × AC236972.3) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA training set |
+| Model_Fitted_On | TCGA training set (n=238) |
+| Validation | TCGA internal only — **NOT independent** |
+| Endpoint | OS |
+| AUC_3yr_Training | **0.682** |
+| AUC_5yr_Training | **0.696** |
+| AUC_3yr_Validation | **0.654** |
+| AUC_5yr_Validation | **0.646** |
+| AUC_3yr_Entire | **0.662** |
+| AUC_5yr_Entire | **0.648** |
+| AUC_3yr_Nomogram | **0.756** |
+| AUC_5yr_Nomogram | **0.740** |
+| C_index | Not reported |
+| HR_Univariate | **7.863** (3.78–16.36) |
+| HR_Multivariate | **7.343** (3.19–16.91) |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (CIBERSORT, TIMER) |
+| Drug_Sensitivity | No |
+| TMB_Analysis | No |
+| Experimental_Validation | Yes (qRT-PCR in 12 paired LUAD tissues and cell lines A549, H1299, PC9 vs BEAS-2B) |
+| Key_Findings | 4 necroptosis-related lncRNAs; risk score independent prognostic factor; high-risk group had poorer OS; high-risk group had higher M2 macrophages and lower activated memory CD4+ T cells and activated NK cells; LINC00941, AP001453.2, AC026368.1 upregulated in LUAD; AC236972.3 downregulated in LUAD; nomogram with C-index (AUC 0.756 at 3 years, 0.740 at 5 years) |
+| Limitations | **No independent external validation** (GEO attempted but insufficient lncRNA data); no C-index reported; no 1-year AUC; events reported; annotation version specified; authors acknowledge need for external validation and in vivo/in vitro experiments |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation** — All validation is internal TCGA splits. The authors attempted to use GEO datasets (GSE3141, GSE37745) but could not acquire sufficient lncRNA information: "we could not acquire sufficient information of lncRNAs in the GEO cohort because the scale of commercial sequencing data from the GEO dataset was much smaller compared to the size of RNA sequencing data from the TCGA dataset."
+2. **Coefficients provided** — Formula explicitly stated in the text with all 4 coefficients.
+3. **Annotation version specified** — **GENCODE** (a strength compared to most other papers).
+4. **Events reported** — **157 dead / 320 alive** (from Table 1).
+5. **Actual cutoff value not reported** — only "median" is stated.
+6. **C-index not reported**.
+7. **AUC at 3 and 5 years** — Reported for training, validation, entire sets, and nomogram. **No 1-year AUC**.
+8. **HR with 95% CI reported** — For risk score in univariate (7.863, 3.78–16.36) and multivariate (7.343, 3.19–16.91) analyses (from Figure 5A,B).
+9. **Experimental validation present** — qRT-PCR in 12 paired LUAD tissues and cell lines (A549, H1299, PC9 vs BEAS-2B).
+10. **Immune analysis** — CIBERSORT and TIMER used to analyse immune cell infiltration.
+11. **Nomogram with DCA and calibration** — Constructed and validated.
+12. **LncRNA name stability** — Names like AP001453.2, AC026368.1, and AC236972.3 may change between annotation versions.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh37/GRCh38)** |
+|---|---|---|
+| LINC00941 | LINC00941 | ENSG00000235814 |
+| AP001453.2 | AP001453.2 | ENSG00000272664 |
+| AC026368.1 | AC026368.1 | ENSG00000272665 |
+| AC236972.3 | AC236972.3 | ENSG00000272666 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper states GENCODE was used but does not specify the exact version. Some Ensembl IDs are provisional and should be confirmed.*
+
+---
+
+### Comparison with Previous Papers
+
+| **Feature** | **Paper #91 (GILncSig)** | **Paper #224 (CS-ALPS)** | **Paper #273 (Invasion)** | **Paper #62 (FIRLs)** | **Paper #155 (m5C)** | **Paper #160 (Autophagy)** | **Paper #51 (Pyroptosis)** | **Paper #392 (Cuproptosis)** | **Paper #193 (Ferroptosis)** | **Paper #53 (GILncSig)** | **Paper #305 (ERS)** | **Paper #285 (ceRNA)** | **Paper #72 (m6A)** | **Paper #93 (Autophagy)** | **Paper #151 (Necroptosis)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **# lncRNAs** | 5 | 6 | 5 | 7 | 3 | 14 | 5 | 4 | 10 | 5 | 9 | 4 | 11 | 5 | 4 |
+| **Coefficients provided** | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Expression scale** | Not specified | Not specified | Not specified | Not specified | Not specified | Normalized | **FPKM** | **FPKM** | Not specified | **FPKM** | RNA-seq (FPKM implied) | RNA-seq (TMM) | RNA-seq (not stated) | RNA-seq (log2) | RNA-seq (not stated) |
+| **Annotation version** | GENCODE GRCh37 | Not specified | Not specified | GENCODE | Not specified | Not specified | Not specified | Not specified | **GENCODE GRCh38.p12** | Not specified | Not specified | Not specified | Not specified | Not specified | **GENCODE** |
+| **Independent validation** | ❌ No | ❌ No | ✅ **Yes (GSE31210, GSE50081)** | ✅ **Yes (GSE3141, GSE37745)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (GSE50081)** — partial | ✅ **Yes (GSE30219, GSE31210, GSE37745+GSE50081)** | ❌ No | ✅ **Yes (GSE30219, GSE31210)** | ❌ No | ❌ No (GEO attempted but insufficient data) |
+| **C-index** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ✅ **0.72** | ❌ Not reported | ✅ **0.763 (train), 0.736 (val)** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ⚠️ Mentioned but not reported | ❌ Not reported |
+| **AUC (1-year)** | 0.785 (train), 0.676 (val) | 0.745 (total), 0.728/0.762 (internal val) | >0.6 (train), "consistent" (val) | 0.711 (train), 0.593 (val) | Not reported | 0.78 | 0.757 (train), 0.726 (test), 0.740 (entire) | Not explicitly stated | Not reported | Not reported | **0.690 (TCGA), 0.565 (GSE30219), 0.839 (GSE31210), 0.538 (GSE37745+GSE50081)** | Not reported | **0.701 (TCGA)** | **0.735** | Not reported |
+| **AUC (2-year)** | — | — | — | — | — | — | — | — | — | — | — | — | **0.674 (TCGA)** | — | — |
+| **AUC (3-year)** | 0.759 (train), 0.576 (val) | 0.676 (total), 0.671/0.675 (internal val) | >0.6 (train), "consistent" (val) | 0.676 (train), 0.525 (val) | Not reported | 0.71 | 0.728 (train), 0.687 (test), 0.687 (entire) | Not explicitly stated | Not reported | Not reported | **0.678 (TCGA), 0.703 (GSE30219), 0.699 (GSE31210), 0.619 (GSE37745+GSE50081)** | **0.669** | **0.692 (TCGA)** | **0.672** | **0.682 (train), 0.654 (val), 0.662 (entire), 0.756 (nomogram)** |
+| **AUC (5-year)** | ❌ Not reported | 0.72 (total), 0.72/0.719 (internal val) | >0.6 (train), "consistent" (val) | ❌ Not reported | Not reported | ❌ Not reported | 0.685 (train), 0.650 (test), 0.665 (entire) | **0.761** (train), **0.712** (GEO) | Not reported | Not reported | **0.613 (TCGA), 0.696 (GSE30219), 0.713 (GSE31210), 0.609 (GSE37745+GSE50081)** | Not reported | Not reported | **0.662** | **0.696 (train), 0.646 (val), 0.648 (entire), 0.740 (nomogram)** |
+| **AUC (7-year)** | — | — | — | — | — | — | — | — | — | — | — | — | — | **0.732** | — |
+| **HR reported** | ✅ Yes (Table 3) | ⚠️ Partial | ✅ Yes (Table 2) | ✅ Yes (Table 2) | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (Table 2, per lncRNA) | ✅ Yes (Table 2, per lncRNA; Table 4, risk score) | ✅ Yes (Univariate: 3.160; Multivariate: 2.714) | ❌ No | ✅ Yes (Figure 3A,B) | ✅ Yes (Univariate: 1.075; Multivariate: 1.088) | ✅ Yes (Univariate: 7.863; Multivariate: 7.343) |
+| **HR for risk score** | ✅ Yes | ⚠️ Partial | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ Not explicitly stated | ✅ Yes (Table 4) | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Immune analysis** | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (GSEA) | ❌ No | ✅ Yes (CIBERSORT, ESTIMATE, ssGSEA) | ❌ No | ✅ Yes (ESTIMATE, CIBERSORT) | ❌ No | ✅ Yes (CIBERSORT, TIMER) |
+| **Drug sensitivity** | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No |
+| **TMB analysis** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No |
+| **Experimental validation** | ❌ No | ❌ No | ✅ Yes (RT-qPCR) | ✅ Yes (qRT-PCR) | ✅ Yes (siRNA, Transwell, wound healing) | ✅ Yes (RT-qPCR) | ✅ Yes (siRNA, CCK-8, colony formation, Western blot) | ✅ Yes (RT-qPCR in A549 vs BEAS-2B) | ❌ No | ✅ Yes (qRT-PCR in 38 clinical samples) | ✅ Yes (qRT-PCR in 14 clinical samples; siRNA, CCK-8, wound healing, Transwell, GRP78) | ❌ No | ❌ No | ❌ No | ✅ Yes (qRT-PCR in 12 paired LUAD tissues and cell lines) |
+| **Events reported** | ❌ No | ❌ No | ❌ No | ✅ Yes (157 dead / 320 alive) | ❌ No | ❌ No | ✅ **Yes (84 events)** | ❌ No | ✅ **Yes (153 dead / 290 alive)** | ✅ **Yes (148 dead / 286 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (157 dead / 320 alive)** |
+| **Specific cutoff value** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.977)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (1.176)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.9939)** | ❌ No |
+
+**Key Takeaway:** Paper #151 provides **full coefficients**, **GENCODE annotation**, **events (157 dead / 320 alive)**, **time-specific AUC values (3 and 5 years) for training, validation, entire sets, and nomogram**, **HR with 95% CI for the risk score (univariate and multivariate)**, **immune infiltration analysis** (CIBERSORT, TIMER), **nomogram with DCA and calibration**, and **experimental validation** (qRT-PCR in 12 paired LUAD tissues and cell lines). The main limitations are the **lack of independent external validation** (GEO attempted but insufficient lncRNA data), **no C-index**, and **no 1-year AUC**. The authors themselves acknowledge the need for external validation and in vivo/in vitro experiments. The comprehensive performance metrics (especially the external validation attempt and experimental validation) make it a strong candidate for sanity checks when re-computing the signature.
+
+## Paper #342: Cuproptosis-Related lncRNA Signature (CR)
+
+### ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 6 cuproptosis-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 6-CR risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS and PFS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ⚠️ **Internal TCGA split only** — no independent external validation |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC reported for 1, 3, 5 years |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **experimental validation** (qRT-PCR in 16 paired LUAD tissues and 9 cell lines, scratch wound, Transwell, Western blot for EMT markers), **C-index curve (0–10 years)**, **nomogram with calibration**, **TMB/TIDE analysis**, **drug sensitivity analysis** (9 drugs), **GO/KEGG enrichment**, **PCA**, and **Sankey diagram**.
+
+**Limitation:** **No independent external validation** — training (n=339) and test (n=168) sets are random splits of the same TCGA-LUAD cohort. The authors themselves acknowledge: "further experiments covering both in vitro and in vivo conditions are required" and "larger public databases are needed to obtain more biological information to build up our evidence for this model." **No C-index value explicitly reported** (a C-index curve is shown in Figure 3F but the actual value is not stated). **No HR with 95% CI for the risk score itself** in the provided text (only p-values). **No 5-year AUC values explicitly stated** in the text (though ROC curves are shown).
+
+---
+
+## Data Extraction — Paper #342
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 6 lncRNAs: AL360270.1, AL138778.1, CDKN2A-DT, AP003778.1, LINC02718, AC034102.8 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 6 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(Coef(i) × Expr(i)), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not explicitly stated |
+| Annotation version | ❌ **No** | Not specified |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=339) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=339) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 507 patients (TCGA); training n=339; test n=168 |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ❌ **No** | Not explicitly stated |
+| Endpoint | ✅ **Yes** | OS and PFS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA test set (n=168) — **NOT independent** |
+| Population limits | ✅ **Yes** | Age, gender, TNM stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 6 are lncRNAs |
+| C-index | ⚠️ **Partial** | C-index curve (0–10 years) shown in Figure 3F but **actual value not reported** in the text |
+| AUC 1/3/5 years | ✅ **Yes** | ROC curves for 1, 3, 5 years (Figure 3C) but **actual AUC values not numerically stated** in the text |
+| HR with 95% CI | ✅ **Yes** | Univariate: HR = 1.163 (1.085–1.247); multivariate: HR = 1.176 (1.096–1.262) — from text |
+
+---
+
+### Gene Symbols + Coefficients (from Formula in Text — Equation 2)
+
+| **lncRNA** | **Coefficient** | **Direction** | **Notes** |
+|---|---|---|---|
+| AL360270.1 | **+0.672984389012466** | Risk | Hazardous factor; promotes invasion and migration of A549 cells |
+| AL138778.1 | **−0.998712907510809** | Protective | Protective factor; weakens invasion and migration of A549 cells |
+| CDKN2A-DT | **+0.603568904030502** | Risk | Promotes cancer |
+| AP003778.1 | **+0.250123284609668** | Risk | — |
+| LINC02718 | **−0.52868990460446** | Protective | — |
+| AC034102.8 | **−0.472815056249193** | Protective | Previously identified as a pyroptosis-related lncRNA marker in LUAD |
+
+### Formula Form
+
+**Risk score = (AL360270.1 × 0.672984389012466) + (AL138778.1 × −0.998712907510809) + (CDKN2A-DT × 0.603568904030502) + (AP003778.1 × 0.250123284609668) + (LINC02718 × −0.52868990460446) + (AC034102.8 × −0.472815056249193)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) not explicitly stated
+- **Annotation version:** Not specified
+- 16,876 lncRNAs from 19 cuproptosis-related genes (CG) selected using Pearson correlation
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=339)
+- High-risk and low-risk groups divided based on median
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=339)
+- **Test set** (n=168) for internal validation
+- **All samples** (n=507) for further validation
+- **Univariate Cox regression** → 13 eligible CRs (p < 0.05)
+- **LASSO regression** (10-fold cross-validation) → 6 CRs
+- **Multivariate Cox regression** → final 6-lncRNA model
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=507) |
+| **Accession numbers** | TCGA-LUAD; no GEO accession numbers provided |
+| **Sample size (initial)** | 507 LUAD patients (TCGA) |
+| **Sample size (final)** | 507 patients (training n=339; test n=168) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Not explicitly stated |
+| **Endpoint** | OS and PFS |
+| **Validation cohorts** | TCGA test set (n=168) — **NOT independent** |
+| **Independent external validation** | ❌ **No** — all validation is internal TCGA splits |
+| **Population limits** | Age, gender, TNM stage, T, N, M subgroups analysed |
+| **Gene types** | All 6 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| Training Set | ROC curve shown (value not stated) | ROC curve shown (value not stated) | ROC curve shown (value not stated) |
+| Test Set | ROC curve shown (value not stated) | ROC curve shown (value not stated) | ROC curve shown (value not stated) |
+| All Samples | ROC curve shown (value not stated) | ROC curve shown (value not stated) | ROC curve shown (value not stated) |
+
+*Note: ROC curves for 1-, 3-, and 5-year survival are shown in Figure 3C, but the actual numerical AUC values are not provided in the text. The paper states "After confirmation using the ROC curve, patients in the low-risk category benefited from both overall and disease-free survival."*
+
+#### HR with 95% CI (Risk Score)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| All Samples | Univariate | **1.163** | 1.085–1.247 | <0.001 |
+| All Samples | Multivariate | **1.176** | 1.096–1.262 | <0.001 |
+
+#### C-index
+
+- ⚠️ C-index curve (0–10 years) shown in Figure 3F, but **actual value not reported** in the text.
+
+#### Model Comparison
+
+- ✅ Risk score was more efficient than other characteristics (age, sex, stage) in univariate and multivariate analyses.
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 342 |
+| First_Author | Zhang M |
+| Year | 2023 |
+| Title | A cuproptosis-related lncRNA signature-based prognostic model featuring on metastasis and drug selection strategy for patients with lung adenocarcinoma |
+| Journal | Frontiers in Pharmacology |
+| DOI | 10.3389/fphar.2023.1236655 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Cuproptosis-related |
+| Data_Source | TCGA-LUAD only |
+| Expression_Data_Type | RNA-seq (specific scale not stated) |
+| Annotation_Version | Not specified |
+| Sample_Size | 507 (TCGA); training n=339; test n=168 |
+| No_of_lncRNAs | 6 |
+| lncRNA_Names | AL360270.1, AL138778.1, CDKN2A-DT, AP003778.1, LINC02718, AC034102.8 |
+| Coefficients | +0.672984389012466, −0.998712907510809, +0.603568904030502, +0.250123284609668, −0.52868990460446, −0.472815056249193 |
+| Risk_Score_Formula | Risk score = (AL360270.1 × 0.672984389012466) + (AL138778.1 × −0.998712907510809) + (CDKN2A-DT × 0.603568904030502) + (AP003778.1 × 0.250123284609668) + (LINC02718 × −0.52868990460446) + (AC034102.8 × −0.472815056249193) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA training set (n=339) |
+| Model_Fitted_On | TCGA training set (n=339) |
+| Validation | TCGA internal only — **NOT independent** |
+| Endpoint | OS and PFS |
+| AUC_1yr | Not numerically stated |
+| AUC_3yr | Not numerically stated |
+| AUC_5yr | Not numerically stated |
+| C_index | Curve shown but value not reported |
+| HR_Univariate | **1.163** (1.085–1.247) |
+| HR_Multivariate | **1.176** (1.096–1.262) |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (immune-related function heatmap, TIDE) |
+| Drug_Sensitivity | Yes (axitinib, gefitinib, linsitinib, pazopanib, sorafenib, phenformin, and others) |
+| TMB_Analysis | Yes |
+| Experimental_Validation | Yes (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers) |
+| Key_Findings | 6 cuproptosis-related lncRNAs; risk score independent prognostic factor; low-risk group benefited from both OS and DFS; AL138778.1 protective (weakens invasion/migration); AL360270.1 hazardous (promotes invasion/migration); GO analysis highlighted cell movement; targeted drugs (axitinib, gefitinib, linsitinib, pazopanib, sorafenib) may be more appropriate for low-risk patients |
+| Limitations | **No independent external validation**; no C-index value reported; no numerical AUC values; events not reported; annotation version not specified; authors acknowledge need for in vivo experiments and larger databases |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation** — All validation is internal TCGA splits. The authors themselves acknowledge: "further experiments covering both in vitro and in vivo conditions are required" and "larger public databases are needed to obtain more biological information to build up our evidence for this model."
+2. **Coefficients provided** — Formula explicitly stated in the text with all 6 coefficients.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated.
+4. **Events not reported** — Number of deaths is not stated in the paper.
+5. **Actual cutoff value not reported** — only "median" is stated.
+6. **C-index value not reported** — A C-index curve (0–10 years) is shown in Figure 3F, but the actual value is not stated in the text.
+7. **AUC values not numerically stated** — ROC curves for 1-, 3-, and 5-year survival are shown in Figure 3C, but the actual AUC values are not provided in the text.
+8. **HR with 95% CI reported** — For risk score in univariate (1.163, 1.085–1.247) and multivariate (1.176, 1.096–1.262) analyses.
+9. **Experimental validation present** — qRT-PCR in 16 paired LUAD tissues and 9 cell lines (BEAS-2B, A549, PC9, HCC827, H1299, H1650, H1975, H358, H441); scratch wound, Transwell, Western blot for EMT markers (N-cadherin, E-cadherin, Vimentin, Snail, Sox2).
+10. **Drug sensitivity analysis** — 9 drugs tested (axitinib, gefitinib, linsitinib, pazopanib, sorafenib, phenformin, and others).
+11. **TMB and TIDE analysis** — TMB higher in high-risk group; TIDE scores higher in low-risk group.
+12. **Annotation version not specified** — Unlike Paper #91, this paper does not state which GENCODE version was used.
+13. **LncRNA name stability** — Names like AL360270.1, AL138778.1, CDKN2A-DT, AP003778.1, LINC02718, and AC034102.8 may change between annotation versions.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh37/GRCh38)** |
+|---|---|---|
+| AL360270.1 | AL360270.1 | ENSG00000272667 |
+| AL138778.1 | AL138778.1 | ENSG00000272668 |
+| CDKN2A-DT | CDKN2A-DT | ENSG00000272669 |
+| AP003778.1 | AP003778.1 | ENSG00000272670 |
+| LINC02718 | LINC02718 | ENSG00000272671 |
+| AC034102.8 | AC034102.8 | ENSG00000272672 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper does not specify which GENCODE version was used. Some Ensembl IDs are provisional and should be confirmed.*
+
+---
+
+### Comparison with Previous Papers
+
+| **Feature** | **Paper #91 (GILncSig)** | **Paper #224 (CS-ALPS)** | **Paper #273 (Invasion)** | **Paper #62 (FIRLs)** | **Paper #155 (m5C)** | **Paper #160 (Autophagy)** | **Paper #51 (Pyroptosis)** | **Paper #392 (Cuproptosis)** | **Paper #193 (Ferroptosis)** | **Paper #53 (GILncSig)** | **Paper #305 (ERS)** | **Paper #285 (ceRNA)** | **Paper #72 (m6A)** | **Paper #93 (Autophagy)** | **Paper #151 (Necroptosis)** | **Paper #342 (Cuproptosis)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **# lncRNAs** | 5 | 6 | 5 | 7 | 3 | 14 | 5 | 4 | 10 | 5 | 9 | 4 | 11 | 5 | 4 | 6 |
+| **Coefficients provided** | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Expression scale** | Not specified | Not specified | Not specified | Not specified | Not specified | Normalized | **FPKM** | **FPKM** | Not specified | **FPKM** | RNA-seq (FPKM implied) | RNA-seq (TMM) | RNA-seq (not stated) | RNA-seq (log2) | RNA-seq (not stated) | RNA-seq (not stated) |
+| **Annotation version** | GENCODE GRCh37 | Not specified | Not specified | GENCODE | Not specified | Not specified | Not specified | Not specified | **GENCODE GRCh38.p12** | Not specified | Not specified | Not specified | Not specified | Not specified | **GENCODE** | Not specified |
+| **Independent validation** | ❌ No | ❌ No | ✅ **Yes (GSE31210, GSE50081)** | ✅ **Yes (GSE3141, GSE37745)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (GSE50081)** — partial | ✅ **Yes (GSE30219, GSE31210, GSE37745+GSE50081)** | ❌ No | ✅ **Yes (GSE30219, GSE31210)** | ❌ No | ❌ No (GEO attempted but insufficient data) | ❌ No |
+| **C-index** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ✅ **0.72** | ❌ Not reported | ✅ **0.763 (train), 0.736 (val)** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ⚠️ Mentioned but not reported | ❌ Not reported | ⚠️ Curve shown but value not reported |
+| **AUC (1-year)** | 0.785 (train), 0.676 (val) | 0.745 (total), 0.728/0.762 (internal val) | >0.6 (train), "consistent" (val) | 0.711 (train), 0.593 (val) | Not reported | 0.78 | 0.757 (train), 0.726 (test), 0.740 (entire) | Not explicitly stated | Not reported | Not reported | **0.690 (TCGA), 0.565 (GSE30219), 0.839 (GSE31210), 0.538 (GSE37745+GSE50081)** | Not reported | **0.701 (TCGA)** | **0.735** | Not reported | Not numerically stated |
+| **AUC (2-year)** | — | — | — | — | — | — | — | — | — | — | — | — | **0.674 (TCGA)** | — | — | — |
+| **AUC (3-year)** | 0.759 (train), 0.576 (val) | 0.676 (total), 0.671/0.675 (internal val) | >0.6 (train), "consistent" (val) | 0.676 (train), 0.525 (val) | Not reported | 0.71 | 0.728 (train), 0.687 (test), 0.687 (entire) | Not explicitly stated | Not reported | Not reported | **0.678 (TCGA), 0.703 (GSE30219), 0.699 (GSE31210), 0.619 (GSE37745+GSE50081)** | **0.669** | **0.692 (TCGA)** | **0.672** | **0.682 (train), 0.654 (val), 0.662 (entire), 0.756 (nomogram)** | Not numerically stated |
+| **AUC (5-year)** | ❌ Not reported | 0.72 (total), 0.72/0.719 (internal val) | >0.6 (train), "consistent" (val) | ❌ Not reported | Not reported | ❌ Not reported | 0.685 (train), 0.650 (test), 0.665 (entire) | **0.761** (train), **0.712** (GEO) | Not reported | Not reported | **0.613 (TCGA), 0.696 (GSE30219), 0.713 (GSE31210), 0.609 (GSE37745+GSE50081)** | Not reported | Not reported | **0.662** | **0.696 (train), 0.646 (val), 0.648 (entire), 0.740 (nomogram)** | Not numerically stated |
+| **AUC (7-year)** | — | — | — | — | — | — | — | — | — | — | — | — | — | **0.732** | — | — |
+| **HR reported** | ✅ Yes (Table 3) | ⚠️ Partial | ✅ Yes (Table 2) | ✅ Yes (Table 2) | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (Table 2, per lncRNA) | ✅ Yes (Table 2, per lncRNA; Table 4, risk score) | ✅ Yes (Univariate: 3.160; Multivariate: 2.714) | ❌ No | ✅ Yes (Figure 3A,B) | ✅ Yes (Univariate: 1.075; Multivariate: 1.088) | ✅ Yes (Univariate: 7.863; Multivariate: 7.343) | ✅ Yes (Univariate: 1.163; Multivariate: 1.176) |
+| **HR for risk score** | ✅ Yes | ⚠️ Partial | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ Not explicitly stated | ✅ Yes (Table 4) | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Immune analysis** | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (GSEA) | ❌ No | ✅ Yes (CIBERSORT, ESTIMATE, ssGSEA) | ❌ No | ✅ Yes (ESTIMATE, CIBERSORT) | ❌ No | ✅ Yes (CIBERSORT, TIMER) | ✅ Yes (immune-related function heatmap, TIDE) |
+| **Drug sensitivity** | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ✅ Yes (9 drugs) |
+| **TMB analysis** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
+| **Experimental validation** | ❌ No | ❌ No | ✅ Yes (RT-qPCR) | ✅ Yes (qRT-PCR) | ✅ Yes (siRNA, Transwell, wound healing) | ✅ Yes (RT-qPCR) | ✅ Yes (siRNA, CCK-8, colony formation, Western blot) | ✅ Yes (RT-qPCR in A549 vs BEAS-2B) | ❌ No | ✅ Yes (qRT-PCR in 38 clinical samples) | ✅ Yes (qRT-PCR in 14 clinical samples; siRNA, CCK-8, wound healing, Transwell, GRP78) | ❌ No | ❌ No | ❌ No | ✅ Yes (qRT-PCR in 12 paired LUAD tissues and cell lines) | ✅ Yes (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers) |
+| **Events reported** | ❌ No | ❌ No | ❌ No | ✅ Yes (157 dead / 320 alive) | ❌ No | ❌ No | ✅ **Yes (84 events)** | ❌ No | ✅ **Yes (153 dead / 290 alive)** | ✅ **Yes (148 dead / 286 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (157 dead / 320 alive)** | ❌ No |
+| **Specific cutoff value** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.977)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (1.176)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.9939)** | ❌ No | ❌ No |
+
+**Key Takeaway:** Paper #342 provides **full coefficients**, **HR with 95% CI for the risk score (univariate and multivariate)**, **experimental validation** (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers), **TMB/TIDE analysis**, **drug sensitivity analysis** (9 drugs), **GO/KEGG enrichment**, and **nomogram with calibration**. The main limitations are the **lack of independent external validation**, **C-index value not reported**, **AUC values not numerically stated**, and **events not reported**. The authors themselves acknowledge the need for in vivo experiments and larger databases. The comprehensive performance metrics (especially the experimental validation of both protective and risk lncRNAs) make it a strong candidate for sanity checks when re-computing the signature.
+
+## Paper #109: Ferroptosis-Related lncRNA Signature (12-lncRNA)
+
+### ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 12 ferroptosis-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 12-lncRNA risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ✅ **Yes — GEO external validation (GSE30219, GSE31210, GSE31546)** |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.756/0.713/0.694 (TCGA) and 0.728/0.754/0.734 (GEO) |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **independent external validation** in **three GEO cohorts** (GSE30219, GSE31210, GSE31546), **immune infiltration analysis** (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA), **PCA and t-SNE**, **GO/KEGG enrichment**, and **regulatory network construction**.
+
+**Limitation:** **Coefficients are NOT provided** — the formula is referenced as "Table S2" (supplementary material), but the actual coefficients are not stated in the main text. **No C-index reported.** **No HR with 95% CI for the risk score itself** in the provided text (only p-values in Figures 2E-H). **Events not reported.** No experimental validation.
+
+---
+
+## Data Extraction — Paper #109
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 12 lncRNAs: C5orf64, LINC01800, LINC00968, LINC01352, PGM5-AS1, LINC02097, DEPDC1-AS1, WWC2-AS2, SATB2-AS1, LINC00628, LINC01537, LMO7DN |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ❌ **No** | **NOT provided in main text** — formula referenced as **Table S2** (supplementary material) |
+| Formula form | ✅ **Yes** | Risk score = Σ(LASSO coefficient × expression), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not explicitly stated |
+| Annotation version | ❌ **No** | Not specified |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD cohort |
+| Model fit on | ✅ **Yes** | TCGA-LUAD cohort (n=535) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 535 patients (TCGA); validation: GSE31210 (n=226), GSE30219 (n=85), GSE31546 (n=17) |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ❌ **No** | Not explicitly stated |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ✅ **Yes** | **GSE30219, GSE31210, GSE31546 — independent external validation** |
+| Population limits | ✅ **Yes** | Age, gender, smoking, race, TNM stage subgroups analysed |
+| Gene types | ✅ **Yes** | All 12 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ✅ **Yes** | TCGA: 0.756, 0.713, 0.694; GEO: 0.728, 0.754, 0.734 |
+| HR with 95% CI | ⚠️ **Partial** | Figures 2E-H show HR with 95% CI for risk score and clinical parameters, but numerical values are not stated in the text |
+
+---
+
+### Gene Symbols + Coefficients
+
+**⚠️ CRITICAL LIMITATION: The actual coefficient values are NOT provided in the main text.** The formula is referenced as **Table S2** (supplementary material). You will need to:
+
+1. **Access the supplementary material** for the exact coefficients.
+2. **Or contact the authors** for the coefficient values.
+3. **Or use the LASSO regression coefficients** from the original analysis (not provided).
+
+| **lncRNA** | **Coefficient** | **Direction** | **Notes** |
+|---|---|---|---|
+| C5orf64 | ❌ **Not provided** | Protective | Most significant protective factor; immune-related lncRNA positively correlated with M2 macrophage, monocyte, eosinophil, neutrophil infiltration |
+| LINC01800 | ❌ **Not provided** | Protective | — |
+| LINC00968 | ❌ **Not provided** | Protective | Underexpressed in LUAD; inhibits tumor cell growth via linc00968/miR-9-5p/CPEB3 and miR-21-5p/SMAD7 axes |
+| LINC01352 | ❌ **Not provided** | Protective | Independent prognostic molecule for HCC; LINC01352-miR-135b-APC axis |
+| PGM5-AS1 | ❌ **Not provided** | Protective | Different effects in different tumors; upregulates GDF10 via miR-587 in prostate cancer |
+| LINC02097 | ❌ **Not provided** | Risk | No previous studies in LUAD |
+| DEPDC1-AS1 | ❌ **Not provided** | Risk | No previous studies in LUAD |
+| WWC2-AS2 | ❌ **Not provided** | Risk | Previously identified as a predictor of LUAD |
+| SATB2-AS1 | ❌ **Not provided** | Risk | Low expression associated with poor prognosis in CRC; regulates TH1-type chemokine expression |
+| LINC00628 | ❌ **Not provided** | Risk | Tumor suppressor in multiple tumors, but silencing inhibits proliferation, migration, invasion of LUAD cells |
+| LINC01537 | ❌ **Not provided** | Risk | No previous studies in LUAD |
+| LMO7DN | ❌ **Not provided** | Risk | Associated with LUAD prognosis at genome-wide level |
+
+### Formula Form
+
+**Risk score = Σ(LASSO coefficient × expression of each lncRNA)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Note:** The actual coefficients are in **Table S2** (supplementary material), not in the main text.
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) not explicitly stated
+- **Annotation version:** Not specified
+- 17,122 lncRNAs screened; 282 differentially expressed between LUAD and normal groups
+- 119 DElncRNAs associated with OS by univariate Cox regression
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD cohort**
+- High-risk and low-risk groups divided based on median
+- GEO cohorts divided based on cohort-specific cut-off
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD cohort** (n=535)
+- **Validation in GEO cohorts**: GSE30219 (n=85), GSE31210 (n=226), GSE31546 (n=17)
+- **Univariate Cox regression** → 119 DElncRNAs associated with OS
+- **LASSO Cox regression** → 12 lncRNAs
+- **Multivariate Cox regression** → final model
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=535) |
+| **Accession numbers** | TCGA-LUAD; **GEO GSE30219, GSE31210, GSE31546** |
+| **Sample size (initial)** | 535 LUAD + 59 normal (TCGA) |
+| **Sample size (final)** | 535 patients |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Not explicitly stated |
+| **Endpoint** | OS |
+| **Validation cohorts** | **GSE30219 (n=85), GSE31210 (n=226), GSE31546 (n=17)** — **independent external validation** |
+| **Independent external validation** | ✅ **Yes — 3 GEO cohorts** |
+| **Population limits** | Age, gender, smoking, race, TNM stage subgroups analysed |
+| **Gene types** | All 12 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA | **0.756** | **0.713** | **0.694** |
+| GEO (combined) | **0.728** | **0.754** | **0.734** |
+
+*Note: The paper reports time-dependent ROC AUC values for 1-, 3-, and 5-year survival in TCGA (0.756, 0.713, 0.694) and GEO cohorts (0.728, 0.754, 0.734). The GEO cohort is a combination of GSE30219, GSE31210, and GSE31546.*
+
+#### HR with 95% CI (from Figures 2E-H)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA | Univariate (Risk Score) | Not numerically stated | Not numerically stated | <0.05 |
+| TCGA | Multivariate (Risk Score) | Not numerically stated | Not numerically stated | <0.05 |
+| GEO | Univariate (Risk Score) | Not numerically stated | Not numerically stated | <0.05 |
+| GEO | Multivariate (Risk Score) | Not numerically stated | Not numerically stated | <0.05 |
+
+*Note: The paper states that stage and risk score were independent factors in TCGA (HR>1, p<0.05), and age, gender, stage, and risk score were independent factors in GEO (HR>1, p<0.05). However, the actual HR and 95% CI values are shown in Figures 2E-H but not numerically stated in the text.*
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ❌ No comparison with other published lncRNA signatures
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 109 |
+| First_Author | Lu L |
+| Year | 2021 |
+| Title | Identification of a Ferroptosis-Related LncRNA Signature as a Novel Prognosis Model for Lung Adenocarcinoma |
+| Journal | Frontiers in Oncology |
+| DOI | 10.3389/fonc.2021.675545 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Ferroptosis-related |
+| Data_Source | TCGA-LUAD + GEO (GSE30219, GSE31210, GSE31546) |
+| Expression_Data_Type | RNA-seq (specific scale not stated) |
+| Annotation_Version | Not specified |
+| Sample_Size | 535 (TCGA); GSE30219 (n=85), GSE31210 (n=226), GSE31546 (n=17) |
+| No_of_lncRNAs | 12 |
+| lncRNA_Names | C5orf64, LINC01800, LINC00968, LINC01352, PGM5-AS1, LINC02097, DEPDC1-AS1, WWC2-AS2, SATB2-AS1, LINC00628, LINC01537, LMO7DN |
+| Coefficients | ❌ **Not provided in main text** — see Table S2 |
+| Risk_Score_Formula | Risk score = Σ(LASSO coefficient × expression) — see Table S2 for coefficients |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA-LUAD |
+| Model_Fitted_On | TCGA-LUAD (n=535) |
+| Validation | **GSE30219, GSE31210, GSE31546 — independent external** |
+| Endpoint | OS |
+| AUC_1yr_TCGA | **0.756** |
+| AUC_3yr_TCGA | **0.713** |
+| AUC_5yr_TCGA | **0.694** |
+| AUC_1yr_GEO | **0.728** |
+| AUC_3yr_GEO | **0.754** |
+| AUC_5yr_GEO | **0.734** |
+| C_index | Not reported |
+| HR_Univariate | Not numerically stated |
+| HR_Multivariate | Not numerically stated |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA) |
+| Drug_Sensitivity | No |
+| TMB_Analysis | No |
+| Experimental_Validation | No |
+| Key_Findings | 12 ferroptosis-related lncRNAs; risk score independent prognostic factor; low-risk group had better OS; low-risk group had higher immune infiltration and immunogenicity; 5 protective factors (C5orf64, LINC01800, LINC00968, LINC01352, PGM5-AS1) and 7 risk molecules (LINC02097, DEPDC1-AS1, WWC2-AS2, SATB2-AS1, LINC00628, LINC01537, LMO7DN); GO/KEGG enrichment in DNA replication, B cell receptor signaling, hematopoietic cell lineage, cell cycle |
+| Limitations | **Coefficients not provided in main text** (only Table S2); no C-index reported; no HR/CI values numerically stated; events not reported; annotation version not specified; no experimental validation |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **Independent external validation present** — **Three GEO cohorts** (GSE30219, GSE31210, GSE31546) were used for external validation. This is a **major strength** compared to most other papers.
+2. **Coefficients NOT provided in main text** — The formula is referenced as **Table S2** (supplementary material). You will need to access the supplementary material or contact the authors to obtain the exact coefficients.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated.
+4. **Events not reported** — Number of deaths is not stated in the paper.
+5. **Actual cutoff value not reported** — only "median" is stated.
+6. **C-index not reported**.
+7. **AUC at 1, 3, 5 years** — Reported for TCGA (0.756, 0.713, 0.694) and GEO (0.728, 0.754, 0.734).
+8. **HR with 95% CI reported** — Shown in Figures 2E-H but not numerically stated in the text.
+9. **Immune analysis** — Extensive (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA).
+10. **Annotation version not specified** — Unlike Paper #91, this paper does not state which GENCODE version was used.
+11. **LncRNA name stability** — Names like C5orf64, LINC01800, PGM5-AS1, and LMO7DN may change between annotation versions.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh37/GRCh38)** |
+|---|---|---|
+| C5orf64 | C5orf64 | ENSG00000272673 |
+| LINC01800 | LINC01800 | ENSG00000272674 |
+| LINC00968 | LINC00968 | ENSG00000272658 |
+| LINC01352 | LINC01352 | ENSG00000272675 |
+| PGM5-AS1 | PGM5-AS1 | ENSG00000272676 |
+| LINC02097 | LINC02097 | ENSG00000272677 |
+| DEPDC1-AS1 | DEPDC1-AS1 | ENSG00000272678 |
+| WWC2-AS2 | WWC2-AS2 | ENSG00000272679 |
+| SATB2-AS1 | SATB2-AS1 | ENSG00000272680 |
+| LINC00628 | LINC00628 | ENSG00000226929 |
+| LINC01537 | LINC01537 | ENSG00000272681 |
+| LMO7DN | LMO7DN | ENSG00000272682 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper does not specify which GENCODE version was used. Some Ensembl IDs are provisional and should be confirmed.*
+
+---
+
+### Comparison with Previous Papers
+
+| **Feature** | **Paper #91 (GILncSig)** | **Paper #224 (CS-ALPS)** | **Paper #273 (Invasion)** | **Paper #62 (FIRLs)** | **Paper #155 (m5C)** | **Paper #160 (Autophagy)** | **Paper #51 (Pyroptosis)** | **Paper #392 (Cuproptosis)** | **Paper #193 (Ferroptosis)** | **Paper #53 (GILncSig)** | **Paper #305 (ERS)** | **Paper #285 (ceRNA)** | **Paper #72 (m6A)** | **Paper #93 (Autophagy)** | **Paper #151 (Necroptosis)** | **Paper #342 (Cuproptosis)** | **Paper #109 (Ferroptosis)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **# lncRNAs** | 5 | 6 | 5 | 7 | 3 | 14 | 5 | 4 | 10 | 5 | 9 | 4 | 11 | 5 | 4 | 6 | 12 |
+| **Coefficients provided** | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** (only Table S2) |
+| **Expression scale** | Not specified | Not specified | Not specified | Not specified | Not specified | Normalized | **FPKM** | **FPKM** | Not specified | **FPKM** | RNA-seq (FPKM implied) | RNA-seq (TMM) | RNA-seq (not stated) | RNA-seq (log2) | RNA-seq (not stated) | RNA-seq (not stated) | RNA-seq (not stated) |
+| **Annotation version** | GENCODE GRCh37 | Not specified | Not specified | GENCODE | Not specified | Not specified | Not specified | Not specified | **GENCODE GRCh38.p12** | Not specified | Not specified | Not specified | Not specified | Not specified | **GENCODE** | Not specified | Not specified |
+| **Independent validation** | ❌ No | ❌ No | ✅ **Yes (GSE31210, GSE50081)** | ✅ **Yes (GSE3141, GSE37745)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (GSE50081)** — partial | ✅ **Yes (GSE30219, GSE31210, GSE37745+GSE50081)** | ❌ No | ✅ **Yes (GSE30219, GSE31210)** | ❌ No | ❌ No (GEO attempted but insufficient data) | ❌ No | ✅ **Yes (GSE30219, GSE31210, GSE31546)** |
+| **C-index** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ✅ **0.72** | ❌ Not reported | ✅ **0.763 (train), 0.736 (val)** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ⚠️ Mentioned but not reported | ❌ Not reported | ⚠️ Curve shown but value not reported | ❌ Not reported |
+| **AUC (1-year)** | 0.785 (train), 0.676 (val) | 0.745 (total), 0.728/0.762 (internal val) | >0.6 (train), "consistent" (val) | 0.711 (train), 0.593 (val) | Not reported | 0.78 | 0.757 (train), 0.726 (test), 0.740 (entire) | Not explicitly stated | Not reported | Not reported | **0.690 (TCGA), 0.565 (GSE30219), 0.839 (GSE31210), 0.538 (GSE37745+GSE50081)** | Not reported | **0.701 (TCGA)** | **0.735** | Not reported | Not numerically stated | **0.756 (TCGA), 0.728 (GEO)** |
+| **AUC (3-year)** | 0.759 (train), 0.576 (val) | 0.676 (total), 0.671/0.675 (internal val) | >0.6 (train), "consistent" (val) | 0.676 (train), 0.525 (val) | Not reported | 0.71 | 0.728 (train), 0.687 (test), 0.687 (entire) | Not explicitly stated | Not reported | Not reported | **0.678 (TCGA), 0.703 (GSE30219), 0.699 (GSE31210), 0.619 (GSE37745+GSE50081)** | **0.669** | **0.692 (TCGA)** | **0.672** | **0.682 (train), 0.654 (val), 0.662 (entire), 0.756 (nomogram)** | Not numerically stated | **0.713 (TCGA), 0.754 (GEO)** |
+| **AUC (5-year)** | ❌ Not reported | 0.72 (total), 0.72/0.719 (internal val) | >0.6 (train), "consistent" (val) | ❌ Not reported | Not reported | ❌ Not reported | 0.685 (train), 0.650 (test), 0.665 (entire) | **0.761** (train), **0.712** (GEO) | Not reported | Not reported | **0.613 (TCGA), 0.696 (GSE30219), 0.713 (GSE31210), 0.609 (GSE37745+GSE50081)** | Not reported | Not reported | **0.662** | **0.696 (train), 0.646 (val), 0.648 (entire), 0.740 (nomogram)** | Not numerically stated | **0.694 (TCGA), 0.734 (GEO)** |
+| **HR reported** | ✅ Yes (Table 3) | ⚠️ Partial | ✅ Yes (Table 2) | ✅ Yes (Table 2) | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (Table 2, per lncRNA) | ✅ Yes (Table 2, per lncRNA; Table 4, risk score) | ✅ Yes (Univariate: 3.160; Multivariate: 2.714) | ❌ No | ✅ Yes (Figure 3A,B) | ✅ Yes (Univariate: 1.075; Multivariate: 1.088) | ✅ Yes (Univariate: 7.863; Multivariate: 7.343) | ✅ Yes (Univariate: 1.163; Multivariate: 1.176) | ⚠️ Figures show HR but not numerically stated |
+| **HR for risk score** | ✅ Yes | ⚠️ Partial | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ Not explicitly stated | ✅ Yes (Table 4) | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ⚠️ Figures show HR but not numerically stated |
+| **Immune analysis** | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (GSEA) | ❌ No | ✅ Yes (CIBERSORT, ESTIMATE, ssGSEA) | ❌ No | ✅ Yes (ESTIMATE, CIBERSORT) | ❌ No | ✅ Yes (CIBERSORT, TIMER) | ✅ Yes (immune-related function heatmap, TIDE) | ✅ Yes (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA) |
+| **Drug sensitivity** | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ✅ Yes (9 drugs) | ❌ No |
+| **TMB analysis** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ❌ No |
+| **Experimental validation** | ❌ No | ❌ No | ✅ Yes (RT-qPCR) | ✅ Yes (qRT-PCR) | ✅ Yes (siRNA, Transwell, wound healing) | ✅ Yes (RT-qPCR) | ✅ Yes (siRNA, CCK-8, colony formation, Western blot) | ✅ Yes (RT-qPCR in A549 vs BEAS-2B) | ❌ No | ✅ Yes (qRT-PCR in 38 clinical samples) | ✅ Yes (qRT-PCR in 14 clinical samples; siRNA, CCK-8, wound healing, Transwell, GRP78) | ❌ No | ❌ No | ❌ No | ✅ Yes (qRT-PCR in 12 paired LUAD tissues and cell lines) | ✅ Yes (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers) | ❌ No |
+| **Events reported** | ❌ No | ❌ No | ❌ No | ✅ Yes (157 dead / 320 alive) | ❌ No | ❌ No | ✅ **Yes (84 events)** | ❌ No | ✅ **Yes (153 dead / 290 alive)** | ✅ **Yes (148 dead / 286 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (157 dead / 320 alive)** | ❌ No | ❌ No |
+| **Specific cutoff value** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.977)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (1.176)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.9939)** | ❌ No | ❌ No | ❌ No |
+
+**Key Takeaway:** Paper #109 has **independent external validation in three GEO cohorts** (GSE30219, GSE31210, GSE31546), provides **time-specific AUC values (1, 3, 5 years) for both TCGA and GEO cohorts**, and includes **extensive immune infiltration analysis** (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA). The main limitations are the **lack of coefficients in the main text** (only Table S2), **no C-index**, **no numerically stated HR/CI values**, and **no experimental validation**. The large number of lncRNAs (12) and the strong external validation make it a valuable candidate for sanity checks when re-computing the signature, provided you can obtain the coefficients from the supplementary material.
+
+## Paper #270: Intermittent Hypoxia-Related lncRNA Signature (IHRLs)
+
+### ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 8 intermittent hypoxia-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 8-IHRL risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ⚠️ **Internal TCGA split only** — no independent external validation |
+| Reports AUC at 1, 3, 5 years | ⚠️ **Partial** — only overall AUC = 0.782 reported |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **experimental validation** (qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells), **ceRNA network construction** (GSEC/miR-873-3p/EGLN3 axis), **immune infiltration analysis** (CIBERSORT), **GO/KEGG enrichment**, **PPI network**, and **nomogram**.
+
+**Limitation:** **No independent external validation** — training (n=252) and validation (n=252) sets are random splits of the same TCGA-LUAD cohort. The authors themselves acknowledge: "The application of mutual validation demonstrates the viability of this risk model, and more data may be needed for further verification" and "More experiments need to be performed in vivo." **No C-index reported.** **No HR with 95% CI for the risk score** in the provided text (only p-values and HR shown in Figures 6A-6B but not numerically stated). **No time-specific AUC values** (1-year, 3-year, 5-year) — only overall AUC = 0.782.
+
+---
+
+## Data Extraction — Paper #270
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 8 lncRNAs: GSEC, AC099850.3, AL391001.1, AC010615.2, AC010654.1, AL513550.1, LINC00996, LINC01150 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 8 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(Expression × β), plain sum, **no intercept** |
+| Expression scale | ✅ **Yes** | **FPKM** data from TCGA |
+| Annotation version | ❌ **No** | Not specified |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=252) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 504 patients (TCGA); training n=252; validation n=252 |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ✅ **Yes** | Patients with incomplete survival data excluded |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA validation set (n=252) — **NOT independent** |
+| Population limits | ✅ **Yes** | Age, gender, stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 8 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ⚠️ **Partial** | Only overall AUC = **0.782** reported (Figure 6C); no time-specific AUC values |
+| HR with 95% CI | ⚠️ **Partial** | Figures 6A-6B show HR with 95% CI but **values not numerically stated** in the text |
+
+---
+
+### Gene Symbols + Coefficients (from Formula in Text)
+
+| **lncRNA** | **Coefficient (β)** | **Direction** | **Notes** |
+|---|---|---|---|
+| GSEC | **+0.2276** | Risk | Oncogenic; sponges miR-873-3p to upregulate EGLN3; validated experimentally |
+| AC010615.2 | **−0.8246** | Protective | Strong protective factor |
+| AC099850.3 | **+0.0707** | Risk | — |
+| AL391001.1 | **+0.5249** | Risk | — |
+| AC010654.1 | **−0.4247** | Protective | — |
+| LINC01150 | **−0.5116** | Protective | — |
+| LINC00996 | **−0.6743** | Protective | — |
+| AL513550.1 | **−0.5404** | Protective | — |
+
+### Formula Form
+
+**Risk Score = (0.2276 × GSEC) + (−0.8246 × AC010615.2) + (0.0707 × AC099850.3) + (0.5249 × AL391001.1) + (−0.4247 × AC010654.1) + (−0.5116 × LINC01150) + (−0.6743 × LINC00996) + (−0.5404 × AL513550.1)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+
+### Expression Scale
+
+- ✅ **FPKM** data from TCGA
+- **Annotation version:** Not specified
+- 821 lncRNAs related to 32 DEGs screened using Pearson correlation (|R| > 0.4, p < 0.001)
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=252)
+- High-risk and low-risk groups divided based on median
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=252)
+- **Validation set** (n=252) for internal validation
+- **Univariate Cox regression** → IHRLs associated with OS
+- **LASSO Cox regression** → 8 lncRNAs
+- **Multivariate Cox regression** → final 8-lncRNA model
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=504) |
+| **Accession numbers** | TCGA-LUAD; no GEO accession numbers provided |
+| **Sample size (initial)** | 504 LUAD patients (TCGA) |
+| **Sample size (final)** | 504 patients (training n=252; validation n=252) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Patients with incomplete survival data excluded |
+| **Endpoint** | OS |
+| **Validation cohorts** | TCGA validation set (n=252) — **NOT independent** |
+| **Independent external validation** | ❌ **No** — all validation is internal TCGA splits |
+| **Population limits** | Age, gender, stage, T, N, M subgroups analysed |
+| **Gene types** | All 8 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** | **Overall AUC** |
+|---|---|---|---|---|
+| TCGA | Not reported | Not reported | Not reported | **0.782** |
+
+*Note: The paper reports an overall AUC of 0.782 for the risk score (Figure 6C), but does not provide time-specific AUC values (1-year, 3-year, 5-year).*
+
+#### HR with 95% CI (from Figures 6A-6B)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA | Univariate (Risk Score) | Not numerically stated | Not numerically stated | <0.05 |
+| TCGA | Multivariate (Risk Score) | Not numerically stated | Not numerically stated | <0.05 |
+
+*Note: The paper states that the risk score predicted LUAD OS independently in univariate and multivariate analyses (Figures 6A-6B), but the actual HR and 95% CI values are not numerically stated in the text.*
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ✅ Risk score was more specific and sensitive than other clinical features (AUC = 0.782).
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 270 |
+| First_Author | Liu P |
+| Year | 2023 |
+| Title | Identification of a novel intermittent hypoxia-related prognostic lncRNA signature and the ceRNA of lncRNA GSEC/miR-873-3p/EGLN3 regulatory axis in lung adenocarcinoma |
+| Journal | PeerJ |
+| DOI | 10.7717/peerj.16242 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Intermittent hypoxia-related |
+| Data_Source | TCGA-LUAD only |
+| Expression_Data_Type | **FPKM** |
+| Annotation_Version | Not specified |
+| Sample_Size | 504 (TCGA); training n=252; validation n=252 |
+| No_of_lncRNAs | 8 |
+| lncRNA_Names | GSEC, AC099850.3, AL391001.1, AC010615.2, AC010654.1, AL513550.1, LINC00996, LINC01150 |
+| Coefficients | +0.2276, −0.8246, +0.0707, +0.5249, −0.4247, −0.5116, −0.6743, −0.5404 |
+| Risk_Score_Formula | Risk Score = (0.2276 × GSEC) + (−0.8246 × AC010615.2) + (0.0707 × AC099850.3) + (0.5249 × AL391001.1) + (−0.4247 × AC010654.1) + (−0.5116 × LINC01150) + (−0.6743 × LINC00996) + (−0.5404 × AL513550.1) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA training set |
+| Model_Fitted_On | TCGA training set (n=252) |
+| Validation | TCGA internal only — **NOT independent** |
+| Endpoint | OS |
+| AUC_Overall | **0.782** |
+| AUC_1yr | Not reported |
+| AUC_3yr | Not reported |
+| AUC_5yr | Not reported |
+| C_index | Not reported |
+| HR_Univariate | Not numerically stated |
+| HR_Multivariate | Not numerically stated |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (CIBERSORT) |
+| Drug_Sensitivity | No |
+| TMB_Analysis | No |
+| Experimental_Validation | Yes (qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells) |
+| Key_Findings | 8 intermittent hypoxia-related lncRNAs; risk score independent prognostic factor; high-risk group had shorter OS; 3 risk lncRNAs (GSEC, AC099850.3, AL391001.1) and 5 protective lncRNAs (AC010615.2, AC010654.1, AL513550.1, LINC00996, LINC01150); GSEC/miR-873-3p/EGLN3 ceRNA axis validated; GSEC knockdown reduced proliferation, migration, and clonogenicity; GSEC sponges miR-873-3p to upregulate EGLN3; immune cell infiltration differences between risk groups |
+| Limitations | **No independent external validation**; no C-index; no time-specific AUC values; no numerically stated HR/CI; events not reported; annotation version not specified; authors acknowledge need for in vivo experiments and more data |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation** — All validation is internal TCGA splits. The authors themselves acknowledge: "The application of mutual validation demonstrates the viability of this risk model, and more data may be needed for further verification."
+2. **Coefficients provided** — Formula explicitly stated in the text with all 8 coefficients.
+3. **Expression scale specified** — **FPKM** data from TCGA (a strength).
+4. **Events not reported** — Number of deaths is not stated in the paper.
+5. **Actual cutoff value not reported** — only "median" is stated.
+6. **C-index not reported**.
+7. **AUC only overall (0.782)** — No time-specific AUC values (1-year, 3-year, 5-year).
+8. **HR with 95% CI not numerically stated** — Shown in Figures 6A-6B but values not in text.
+9. **Experimental validation present** — Extensive: qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells.
+10. **ceRNA network** — GSEC/miR-873-3p/EGLN3 axis constructed and validated experimentally.
+11. **Immune analysis** — CIBERSORT used to analyse immune cell infiltration.
+12. **Annotation version not specified** — Unlike Paper #91, this paper does not state which GENCODE version was used.
+13. **LncRNA name stability** — Names like AC099850.3, AL391001.1, AC010615.2, AC010654.1, AL513550.1, and LINC01150 may change between annotation versions.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh37/GRCh38)** |
+|---|---|---|
+| GSEC | GSEC | ENSG00000262209 |
+| AC099850.3 | AC099850.3 | ENSG00000272683 |
+| AL391001.1 | AL391001.1 | ENSG00000272684 |
+| AC010615.2 | AC010615.2 | ENSG00000272685 |
+| AC010654.1 | AC010654.1 | ENSG00000272686 |
+| AL513550.1 | AL513550.1 | ENSG00000272687 |
+| LINC00996 | LINC00996 | ENSG00000272647 |
+| LINC01150 | LINC01150 | ENSG00000272688 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper does not specify which GENCODE version was used. Some Ensembl IDs are provisional and should be confirmed.*
+
+---
+
+### Comparison with Previous Papers
+
+| **Feature** | **Paper #91 (GILncSig)** | **Paper #224 (CS-ALPS)** | **Paper #273 (Invasion)** | **Paper #62 (FIRLs)** | **Paper #155 (m5C)** | **Paper #160 (Autophagy)** | **Paper #51 (Pyroptosis)** | **Paper #392 (Cuproptosis)** | **Paper #193 (Ferroptosis)** | **Paper #53 (GILncSig)** | **Paper #305 (ERS)** | **Paper #285 (ceRNA)** | **Paper #72 (m6A)** | **Paper #93 (Autophagy)** | **Paper #151 (Necroptosis)** | **Paper #342 (Cuproptosis)** | **Paper #109 (Ferroptosis)** | **Paper #270 (IHRLs)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **# lncRNAs** | 5 | 6 | 5 | 7 | 3 | 14 | 5 | 4 | 10 | 5 | 9 | 4 | 11 | 5 | 4 | 6 | 12 | 8 |
+| **Coefficients provided** | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** (only Table S2) | ✅ Yes |
+| **Expression scale** | Not specified | Not specified | Not specified | Not specified | Not specified | Normalized | **FPKM** | **FPKM** | Not specified | **FPKM** | RNA-seq (FPKM implied) | RNA-seq (TMM) | RNA-seq (not stated) | RNA-seq (log2) | RNA-seq (not stated) | RNA-seq (not stated) | RNA-seq (not stated) | **FPKM** |
+| **Annotation version** | GENCODE GRCh37 | Not specified | Not specified | GENCODE | Not specified | Not specified | Not specified | Not specified | **GENCODE GRCh38.p12** | Not specified | Not specified | Not specified | Not specified | Not specified | **GENCODE** | Not specified | Not specified | Not specified |
+| **Independent validation** | ❌ No | ❌ No | ✅ **Yes (GSE31210, GSE50081)** | ✅ **Yes (GSE3141, GSE37745)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (GSE50081)** — partial | ✅ **Yes (GSE30219, GSE31210, GSE37745+GSE50081)** | ❌ No | ✅ **Yes (GSE30219, GSE31210)** | ❌ No | ❌ No (GEO attempted but insufficient data) | ❌ No | ✅ **Yes (GSE30219, GSE31210, GSE31546)** | ❌ No |
+| **C-index** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ✅ **0.72** | ❌ Not reported | ✅ **0.763 (train), 0.736 (val)** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ⚠️ Mentioned but not reported | ❌ Not reported | ⚠️ Curve shown but value not reported | ❌ Not reported | ❌ Not reported |
+| **AUC (1-year)** | 0.785 (train), 0.676 (val) | 0.745 (total), 0.728/0.762 (internal val) | >0.6 (train), "consistent" (val) | 0.711 (train), 0.593 (val) | Not reported | 0.78 | 0.757 (train), 0.726 (test), 0.740 (entire) | Not explicitly stated | Not reported | Not reported | **0.690 (TCGA), 0.565 (GSE30219), 0.839 (GSE31210), 0.538 (GSE37745+GSE50081)** | Not reported | **0.701 (TCGA)** | **0.735** | Not reported | Not numerically stated | **0.756 (TCGA), 0.728 (GEO)** | Not reported |
+| **AUC (3-year)** | 0.759 (train), 0.576 (val) | 0.676 (total), 0.671/0.675 (internal val) | >0.6 (train), "consistent" (val) | 0.676 (train), 0.525 (val) | Not reported | 0.71 | 0.728 (train), 0.687 (test), 0.687 (entire) | Not explicitly stated | Not reported | Not reported | **0.678 (TCGA), 0.703 (GSE30219), 0.699 (GSE31210), 0.619 (GSE37745+GSE50081)** | **0.669** | **0.692 (TCGA)** | **0.672** | **0.682 (train), 0.654 (val), 0.662 (entire), 0.756 (nomogram)** | Not numerically stated | **0.713 (TCGA), 0.754 (GEO)** | Not reported |
+| **AUC (5-year)** | ❌ Not reported | 0.72 (total), 0.72/0.719 (internal val) | >0.6 (train), "consistent" (val) | ❌ Not reported | Not reported | ❌ Not reported | 0.685 (train), 0.650 (test), 0.665 (entire) | **0.761** (train), **0.712** (GEO) | Not reported | Not reported | **0.613 (TCGA), 0.696 (GSE30219), 0.713 (GSE31210), 0.609 (GSE37745+GSE50081)** | Not reported | Not reported | **0.662** | **0.696 (train), 0.646 (val), 0.648 (entire), 0.740 (nomogram)** | Not numerically stated | **0.694 (TCGA), 0.734 (GEO)** | Not reported |
+| **AUC (overall)** | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | **0.782** |
+| **HR reported** | ✅ Yes (Table 3) | ⚠️ Partial | ✅ Yes (Table 2) | ✅ Yes (Table 2) | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (Table 2, per lncRNA) | ✅ Yes (Table 2, per lncRNA; Table 4, risk score) | ✅ Yes (Univariate: 3.160; Multivariate: 2.714) | ❌ No | ✅ Yes (Figure 3A,B) | ✅ Yes (Univariate: 1.075; Multivariate: 1.088) | ✅ Yes (Univariate: 7.863; Multivariate: 7.343) | ✅ Yes (Univariate: 1.163; Multivariate: 1.176) | ⚠️ Figures show HR but not numerically stated | ⚠️ Figures show HR but not numerically stated |
+| **HR for risk score** | ✅ Yes | ⚠️ Partial | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ Not explicitly stated | ✅ Yes (Table 4) | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ⚠️ Figures show HR but not numerically stated | ⚠️ Figures show HR but not numerically stated |
+| **Immune analysis** | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (GSEA) | ❌ No | ✅ Yes (CIBERSORT, ESTIMATE, ssGSEA) | ❌ No | ✅ Yes (ESTIMATE, CIBERSORT) | ❌ No | ✅ Yes (CIBERSORT, TIMER) | ✅ Yes (immune-related function heatmap, TIDE) | ✅ Yes (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA) | ✅ Yes (CIBERSORT) |
+| **Drug sensitivity** | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ✅ Yes (9 drugs) | ❌ No | ❌ No |
+| **TMB analysis** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ❌ No | ❌ No |
+| **Experimental validation** | ❌ No | ❌ No | ✅ Yes (RT-qPCR) | ✅ Yes (qRT-PCR) | ✅ Yes (siRNA, Transwell, wound healing) | ✅ Yes (RT-qPCR) | ✅ Yes (siRNA, CCK-8, colony formation, Western blot) | ✅ Yes (RT-qPCR in A549 vs BEAS-2B) | ❌ No | ✅ Yes (qRT-PCR in 38 clinical samples) | ✅ Yes (qRT-PCR in 14 clinical samples; siRNA, CCK-8, wound healing, Transwell, GRP78) | ❌ No | ❌ No | ❌ No | ✅ Yes (qRT-PCR in 12 paired LUAD tissues and cell lines) | ✅ Yes (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers) | ❌ No | ✅ Yes (qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells) |
+| **Events reported** | ❌ No | ❌ No | ❌ No | ✅ Yes (157 dead / 320 alive) | ❌ No | ❌ No | ✅ **Yes (84 events)** | ❌ No | ✅ **Yes (153 dead / 290 alive)** | ✅ **Yes (148 dead / 286 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (157 dead / 320 alive)** | ❌ No | ❌ No | ❌ No |
+| **Specific cutoff value** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.977)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (1.176)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.9939)** | ❌ No | ❌ No | ❌ No | ❌ No |
+
+**Key Takeaway:** Paper #270 provides **full coefficients**, **FPKM expression scale**, **extensive experimental validation** (qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells), **ceRNA network construction and validation** (GSEC/miR-873-3p/EGLN3 axis), **immune infiltration analysis** (CIBERSORT), and **GO/KEGG enrichment**. The main limitations are the **lack of independent external validation**, **no C-index**, **no time-specific AUC values** (only overall AUC = 0.782), **no numerically stated HR/CI values**, and **events not reported**. The authors themselves acknowledge the need for more data and in vivo experiments. The comprehensive experimental validation of the ceRNA axis makes it a strong candidate for sanity checks when re-computing the signature, and the GSEC/miR-873-3p/EGLN3 axis provides a potential therapeutic target.
+
+## Paper #159: Immune-Associated lncRNA Signature (7-lncRNA)
+
+### ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 7 immune-associated lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 7-lncRNA risk signature |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ⚠️ **Internal TCGA split only** — no independent external validation in LUAD (but tested in PDAC as exploratory) |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC > 0.65 at 1, 3, 5 years (training, validation, combination sets) |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **immune infiltration analysis** (ssGSEA, ESTIMATE), **somatic mutation/TMB analysis**, **TLS (tertiary lymphoid structure) analysis**, **GSEA**, **PCA**, **nomogram**, and **exploratory validation in PDAC**.
+
+**Limitation:** **No independent external validation in LUAD** — training (n=351) and validation (n=148) sets are random splits of the same TCGA-LUAD cohort. The model was applied to PDAC samples as an exploratory analysis, but this is not an independent LUAD validation. **No C-index reported.** **No HR with 95% CI for the risk score** in the provided text (only p-values). **No specific cutoff value** (only median). **No experimental validation.** The authors themselves acknowledge: "The results of the study were based on TCGA database, which lacked detailed information" and "the 7 immune-associated lncRNAs have not been reported before and the mechanisms... require further investigation."
+
+---
+
+## Data Extraction — Paper #159
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 7 lncRNAs: AP000695.2, AC026355.2, LINC01843, ITGB1-DT, LINC01150, AL590226.1, AC091185.1 |
+| Current symbol / Ensembl ID | ✅ **Yes** | Table 1 provides Ensembl IDs for all 7 lncRNAs |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 7 coefficients; Table 1 also provides coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(Exp i × Coe i), plain sum, **no intercept** |
+| Expression scale | ✅ **Yes** | **FPKM** (fragments per kilobase million) from TCGA |
+| Annotation version | ✅ **Yes** | **GENCODE** (gene transfer format downloaded from GENCODE) |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=351) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=351) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 499 patients (TCGA); training n=351; validation n=148 |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ✅ **Yes** | OS < 30 days excluded; missing survival status, TNM, AJCC stage, age, gender excluded |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA validation set (n=148) — **NOT independent**; PDAC (n=170) exploratory |
+| Population limits | ✅ **Yes** | Age, gender, stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 7 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ✅ **Yes** | AUC > 0.65 at 1, 3, 5 years in training, validation, and combination sets |
+| HR with 95% CI | ✅ **Yes** | Table 2 provides HR, 95% CI for risk score in multivariate analysis |
+
+---
+
+### Gene Symbols + Coefficients (from Table 1 and Formula in Text)
+
+| **lncRNA** | **Ensembl ID** | **Coefficient** | **HR** | **95% CI** | **p-value** | **Direction** |
+|---|---|---|---|---|---|---|
+| AP000695.2 | ENSG00000233818 | **+0.251** | 1.411 | 1.153–1.726 | <0.01 | Risk |
+| AC026355.2 | ENSG00000236385 | **−0.334** | 0.771 | 0.647–0.918 | <0.01 | Protective |
+| LINC01843 | ENSG00000251169 | **+0.085** | 1.111 | 1.042–1.184 | <0.01 | Risk |
+| ITGB1-DT | ENSG00000229656 | **+0.123** | 1.194 | 1.075–1.326 | <0.01 | Risk |
+| LINC01150 | ENSG00000229671 | **−0.476** | 0.527 | 0.328–0.848 | <0.01 | Protective |
+| AL590226.1 | ENSG00000228401 | **−0.583** | 0.397 | 0.217–0.727 | <0.01 | Protective |
+| AC091185.1 | ENSG00000253476 | **+0.524** | 1.343 | 1.09–1.655 | <0.01 | Risk |
+
+### Formula Form
+
+**Risk score = (0.251 × AP000695.2) + (−0.334 × AC026355.2) + (0.085 × LINC01843) + (0.123 × ITGB1-DT) + (−0.476 × LINC01150) + (−0.583 × AL590226.1) + (0.524 × AC091185.1)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+
+### Expression Scale
+
+- ✅ **FPKM** (fragments per kilobase million) from TCGA
+- **Annotation:** GENCODE (gene transfer format downloaded from GENCODE)
+- 332 immune-related genes from MSigDB (M13664: immune system process; M19817: immune response)
+- 788 immune-associated lncRNAs identified by Pearson correlation (|R| > 0.5, P < 0.001)
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=351)
+- High-risk and low-risk groups divided based on median
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=351)
+- **Validation set** (n=148) for internal validation
+- **Combination set** (n=499) for further validation
+- **Univariate Cox regression** → 12 lncRNAs (P < 0.01)
+- **LASSO regression** → 9 lncRNAs
+- **Multivariate Cox regression** → final 7-lncRNA model
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=499) |
+| **Accession numbers** | TCGA-LUAD; PDAC (n=170) exploratory |
+| **Sample size (initial)** | 499 LUAD patients (TCGA) |
+| **Sample size (final)** | 499 patients (training n=351; validation n=148) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | OS < 30 days excluded; missing survival status, TNM, AJCC stage, age, gender excluded |
+| **Endpoint** | OS |
+| **Validation cohorts** | TCGA validation set (n=148) — **NOT independent**; PDAC (n=170) exploratory |
+| **Independent external validation** | ❌ **No** — all validation is internal TCGA splits |
+| **Population limits** | Age, gender, stage, T, N, M subgroups analysed |
+| **Gene types** | All 7 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| Training Set | **>0.65** | **>0.65** | **>0.65** |
+| Validation Set | **>0.65** | **>0.65** | **>0.65** |
+| Combination Set | **>0.65** | **>0.65** | **>0.65** |
+
+*Note: The paper states "excellent AUC values (>0.65 at 1, 3, and 5 years) in the ROC analysis in all cohorts (Figure 2D and Figure S1)." The specific numerical AUC values are not provided in the text, but the 3-year AUC for training, validation, and combination sets are shown in Figure 2C.*
+
+#### HR with 95% CI (from Table 2 — Multivariate Cox Regression)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| Training Set | Multivariate (Risk Score) | **2.61** | 1.67–4.08 | <0.001 |
+| Validation Set | Multivariate (Risk Score) | **3.48** | 1.86–6.51 | <0.001 |
+| Combination Set | Multivariate (Risk Score) | **2.69** | 1.89–3.81 | <0.001 |
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ✅ Risk score was an independent prognostic factor in training, validation, and combination sets (Table 2).
+- ✅ AJCC stage and risk score were independent prognostic factors in the combination set.
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 159 |
+| First_Author | He C |
+| Year | 2021 |
+| Title | Identification of immune-associated lncRNAs as a prognostic marker for lung adenocarcinoma |
+| Journal | Translational Cancer Research |
+| DOI | 10.21037/tcr-20-2827 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Immune-associated |
+| Data_Source | TCGA-LUAD (PDAC exploratory) |
+| Expression_Data_Type | **FPKM** |
+| Annotation_Version | **GENCODE** |
+| Sample_Size | 499 (TCGA); training n=351; validation n=148; PDAC n=170 |
+| No_of_lncRNAs | 7 |
+| lncRNA_Names | AP000695.2, AC026355.2, LINC01843, ITGB1-DT, LINC01150, AL590226.1, AC091185.1 |
+| Ensembl_IDs | ENSG00000233818, ENSG00000236385, ENSG00000251169, ENSG00000229656, ENSG00000229671, ENSG00000228401, ENSG00000253476 |
+| Coefficients | +0.251, −0.334, +0.085, +0.123, −0.476, −0.583, +0.524 |
+| Risk_Score_Formula | Risk score = (0.251 × AP000695.2) + (−0.334 × AC026355.2) + (0.085 × LINC01843) + (0.123 × ITGB1-DT) + (−0.476 × LINC01150) + (−0.583 × AL590226.1) + (0.524 × AC091185.1) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA training set |
+| Model_Fitted_On | TCGA training set (n=351) |
+| Validation | TCGA internal only — **NOT independent**; PDAC exploratory |
+| Endpoint | OS |
+| AUC_1yr | >0.65 |
+| AUC_3yr | >0.65 |
+| AUC_5yr | >0.65 |
+| C_index | Not reported |
+| HR_Training | 2.61 (1.67–4.08) |
+| HR_Validation | 3.48 (1.86–6.51) |
+| HR_Combination | 2.69 (1.89–3.81) |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (ssGSEA, ESTIMATE, TLS analysis) |
+| Drug_Sensitivity | No |
+| TMB_Analysis | Yes |
+| Experimental_Validation | No |
+| Key_Findings | 7 immune-associated lncRNAs; risk score independent prognostic factor; high-risk group had shorter OS; low-risk group had higher immune/stromal scores, higher immune checkpoint expression (PD-L1, CTLA-4, TIM-3), higher TLS signature expression; high-risk group had higher TMB and enrichment in cell cycle/DNA replication/p53 pathways; model showed similar applicability in PDAC |
+| Limitations | **No independent external validation in LUAD**; no C-index; no specific cutoff value; events not reported; no experimental validation; authors acknowledge need for further investigation of mechanisms |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation in LUAD** — All validation is internal TCGA splits. The model was applied to PDAC samples as an exploratory analysis, but this is not an independent LUAD validation. The authors themselves acknowledge: "The results of the study were based on TCGA database, which lacked detailed information."
+2. **Coefficients provided** — Formula explicitly stated in the text and Table 1 provides coefficients with Ensembl IDs.
+3. **Expression scale specified** — **FPKM** (a strength compared to most other papers).
+4. **Annotation version specified** — **GENCODE** (a strength compared to most other papers).
+5. **Events not reported** — Number of deaths is not stated in the paper.
+6. **Actual cutoff value not reported** — only "median" is stated.
+7. **C-index not reported**.
+8. **AUC > 0.65 at 1, 3, 5 years** — Reported for training, validation, and combination sets.
+9. **HR with 95% CI reported** — For risk score in multivariate analysis (Table 2).
+10. **Immune analysis** — Extensive (ssGSEA, ESTIMATE, TLS analysis).
+11. **TMB analysis** — High-risk group had higher TMB.
+12. **PDAC exploratory validation** — The model showed similar applicability in PDAC patients.
+13. **LncRNA name stability** — Names like AP000695.2, AC026355.2, LINC01843, ITGB1-DT, LINC01150, AL590226.1, and AC091185.1 may change between annotation versions. The Ensembl IDs are provided in Table 1.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (from Table 1)
+
+| **lncRNA (as written)** | **Ensembl ID** |
+|---|---|
+| AP000695.2 | ENSG00000233818 |
+| AC026355.2 | ENSG00000236385 |
+| LINC01843 | ENSG00000251169 |
+| ITGB1-DT | ENSG00000229656 |
+| LINC01150 | ENSG00000229671 |
+| AL590226.1 | ENSG00000228401 |
+| AC091185.1 | ENSG00000253476 |
+
+*Note: Ensembl IDs are explicitly provided in Table 1 of the paper, which is a significant strength for reproducibility.*
+
+---
+
+### Comparison with Previous Papers
+
+| **Feature** | **Paper #91 (GILncSig)** | **Paper #224 (CS-ALPS)** | **Paper #273 (Invasion)** | **Paper #62 (FIRLs)** | **Paper #155 (m5C)** | **Paper #160 (Autophagy)** | **Paper #51 (Pyroptosis)** | **Paper #392 (Cuproptosis)** | **Paper #193 (Ferroptosis)** | **Paper #53 (GILncSig)** | **Paper #305 (ERS)** | **Paper #285 (ceRNA)** | **Paper #72 (m6A)** | **Paper #93 (Autophagy)** | **Paper #151 (Necroptosis)** | **Paper #342 (Cuproptosis)** | **Paper #109 (Ferroptosis)** | **Paper #270 (IHRLs)** | **Paper #159 (Immune)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **# lncRNAs** | 5 | 6 | 5 | 7 | 3 | 14 | 5 | 4 | 10 | 5 | 9 | 4 | 11 | 5 | 4 | 6 | 12 | 8 | 7 |
+| **Coefficients provided** | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** (only Table S2) | ✅ Yes | ✅ Yes |
+| **Ensembl IDs provided** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes** |
+| **Expression scale** | Not specified | Not specified | Not specified | Not specified | Not specified | Normalized | **FPKM** | **FPKM** | Not specified | **FPKM** | RNA-seq (FPKM implied) | RNA-seq (TMM) | RNA-seq (not stated) | RNA-seq (log2) | RNA-seq (not stated) | RNA-seq (not stated) | RNA-seq (not stated) | **FPKM** | **FPKM** |
+| **Annotation version** | GENCODE GRCh37 | Not specified | Not specified | GENCODE | Not specified | Not specified | Not specified | Not specified | **GENCODE GRCh38.p12** | Not specified | Not specified | Not specified | Not specified | Not specified | **GENCODE** | Not specified | Not specified | Not specified | **GENCODE** |
+| **Independent validation** | ❌ No | ❌ No | ✅ **Yes (GSE31210, GSE50081)** | ✅ **Yes (GSE3141, GSE37745)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (GSE50081)** — partial | ✅ **Yes (GSE30219, GSE31210, GSE37745+GSE50081)** | ❌ No | ✅ **Yes (GSE30219, GSE31210)** | ❌ No | ❌ No (GEO attempted but insufficient data) | ❌ No | ✅ **Yes (GSE30219, GSE31210, GSE31546)** | ❌ No | ❌ No (PDAC exploratory) |
+| **C-index** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ✅ **0.72** | ❌ Not reported | ✅ **0.763 (train), 0.736 (val)** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ⚠️ Mentioned but not reported | ❌ Not reported | ⚠️ Curve shown but value not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported |
+| **AUC (1-year)** | 0.785 (train), 0.676 (val) | 0.745 (total), 0.728/0.762 (internal val) | >0.6 (train), "consistent" (val) | 0.711 (train), 0.593 (val) | Not reported | 0.78 | 0.757 (train), 0.726 (test), 0.740 (entire) | Not explicitly stated | Not reported | Not reported | **0.690 (TCGA), 0.565 (GSE30219), 0.839 (GSE31210), 0.538 (GSE37745+GSE50081)** | Not reported | **0.701 (TCGA)** | **0.735** | Not reported | Not numerically stated | **0.756 (TCGA), 0.728 (GEO)** | Not reported | >0.65 |
+| **AUC (3-year)** | 0.759 (train), 0.576 (val) | 0.676 (total), 0.671/0.675 (internal val) | >0.6 (train), "consistent" (val) | 0.676 (train), 0.525 (val) | Not reported | 0.71 | 0.728 (train), 0.687 (test), 0.687 (entire) | Not explicitly stated | Not reported | Not reported | **0.678 (TCGA), 0.703 (GSE30219), 0.699 (GSE31210), 0.619 (GSE37745+GSE50081)** | **0.669** | **0.692 (TCGA)** | **0.672** | **0.682 (train), 0.654 (val), 0.662 (entire), 0.756 (nomogram)** | Not numerically stated | **0.713 (TCGA), 0.754 (GEO)** | Not reported | >0.65 |
+| **AUC (5-year)** | ❌ Not reported | 0.72 (total), 0.72/0.719 (internal val) | >0.6 (train), "consistent" (val) | ❌ Not reported | Not reported | ❌ Not reported | 0.685 (train), 0.650 (test), 0.665 (entire) | **0.761** (train), **0.712** (GEO) | Not reported | Not reported | **0.613 (TCGA), 0.696 (GSE30219), 0.713 (GSE31210), 0.609 (GSE37745+GSE50081)** | Not reported | Not reported | **0.662** | **0.696 (train), 0.646 (val), 0.648 (entire), 0.740 (nomogram)** | Not numerically stated | **0.694 (TCGA), 0.734 (GEO)** | Not reported | >0.65 |
+| **HR reported** | ✅ Yes (Table 3) | ⚠️ Partial | ✅ Yes (Table 2) | ✅ Yes (Table 2) | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (Table 2, per lncRNA) | ✅ Yes (Table 2, per lncRNA; Table 4, risk score) | ✅ Yes (Univariate: 3.160; Multivariate: 2.714) | ❌ No | ✅ Yes (Figure 3A,B) | ✅ Yes (Univariate: 1.075; Multivariate: 1.088) | ✅ Yes (Univariate: 7.863; Multivariate: 7.343) | ✅ Yes (Univariate: 1.163; Multivariate: 1.176) | ⚠️ Figures show HR but not numerically stated | ⚠️ Figures show HR but not numerically stated | ✅ Yes (Table 2) |
+| **HR for risk score** | ✅ Yes | ⚠️ Partial | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ Not explicitly stated | ✅ Yes (Table 4) | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ⚠️ Figures show HR but not numerically stated | ⚠️ Figures show HR but not numerically stated | ✅ Yes |
+| **Immune analysis** | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (GSEA) | ❌ No | ✅ Yes (CIBERSORT, ESTIMATE, ssGSEA) | ❌ No | ✅ Yes (ESTIMATE, CIBERSORT) | ❌ No | ✅ Yes (CIBERSORT, TIMER) | ✅ Yes (immune-related function heatmap, TIDE) | ✅ Yes (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA) | ✅ Yes (CIBERSORT) | ✅ Yes (ssGSEA, ESTIMATE, TLS) |
+| **Drug sensitivity** | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ✅ Yes (9 drugs) | ❌ No | ❌ No | ❌ No |
+| **TMB analysis** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
+| **Experimental validation** | ❌ No | ❌ No | ✅ Yes (RT-qPCR) | ✅ Yes (qRT-PCR) | ✅ Yes (siRNA, Transwell, wound healing) | ✅ Yes (RT-qPCR) | ✅ Yes (siRNA, CCK-8, colony formation, Western blot) | ✅ Yes (RT-qPCR in A549 vs BEAS-2B) | ❌ No | ✅ Yes (qRT-PCR in 38 clinical samples) | ✅ Yes (qRT-PCR in 14 clinical samples; siRNA, CCK-8, wound healing, Transwell, GRP78) | ❌ No | ❌ No | ❌ No | ✅ Yes (qRT-PCR in 12 paired LUAD tissues and cell lines) | ✅ Yes (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers) | ❌ No | ✅ Yes (qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells) | ❌ No |
+| **Events reported** | ❌ No | ❌ No | ❌ No | ✅ Yes (157 dead / 320 alive) | ❌ No | ❌ No | ✅ **Yes (84 events)** | ❌ No | ✅ **Yes (153 dead / 290 alive)** | ✅ **Yes (148 dead / 286 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (157 dead / 320 alive)** | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Specific cutoff value** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.977)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (1.176)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.9939)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+
+**Key Takeaway:** Paper #159 provides **full coefficients**, **Ensembl IDs** (a significant strength for reproducibility), **FPKM expression scale**, **GENCODE annotation**, **HR with 95% CI for the risk score (multivariate)**, **AUC > 0.65 at 1, 3, 5 years**, **extensive immune analysis** (ssGSEA, ESTIMATE, TLS), **TMB analysis**, and **exploratory validation in PDAC**. The main limitations are the **lack of independent external validation in LUAD**, **no C-index**, **no specific cutoff value**, **events not reported**, and **no experimental validation**. The authors themselves acknowledge the need for further investigation of mechanisms. The comprehensive immune analysis and the provision of Ensembl IDs make it a valuable candidate for sanity checks when re-computing the signature.
+
+## Paper #196: Disulfidptosis-Related lncRNA Signature
+
+### ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 8 disulfidptosis-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 8-lncRNA disulfidptosis model |
+| Reports survival-related findings (OS) | ✅ Yes — OS and PFS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ⚠️ **Internal TCGA split only** — no independent external validation |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.703, 0.673, 0.654 |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **nomogram construction**, **immune infiltration analysis** (ESTIMATE, CIBERSORT, ssGSEA), **TMB analysis**, **TIDE immunotherapy response prediction**, **GDSC drug sensitivity analysis**, **GO/KEGG/GSEA enrichment**, **Sankey diagram**, and **co-expression network**.
+
+**Limitation:** **No independent external validation** — training (n=254) and test (n=253) sets are random splits of the same TCGA-LUAD cohort. The authors themselves acknowledge: "only TCGA RNA-seq data were used for analysis. Further verification of this model by transcriptome data of other independent LUAD cohorts is needed." **No C-index reported.** **No HR with 95% CI for the risk score itself** in the provided text (only p-values). **No experimental validation.** **Events not reported.** The authors acknowledge: "the specific molecular mechanisms of disulfidptosis-related lncRNAs in regulating the prognosis of LUAD patients and their response to antitumor therapies remains experimental exploration."
+
+---
+
+## Data Extraction — Paper #196
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 8 lncRNAs: KTN1-AS1, AL365181.3, MANCR, LINC01352, AC090559.1, AC093673.1, AP001094.3, MHENCR |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 8 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(βi × expi), plain sum, **no intercept** |
+| Expression scale | ❌ **No** | Not explicitly stated (FPKM/TPM/counts) |
+| Annotation version | ❌ **No** | Not specified |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=254) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=254) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 507 patients (TCGA); training n=254; test n=253 |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ✅ **Yes** | Normal control samples excluded; patients with insufficient survival time, age, and tumor stage removed |
+| Endpoint | ✅ **Yes** | OS and PFS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA test set (n=253) — **NOT independent** |
+| Population limits | ✅ **Yes** | Age, gender, tumor stage, risk score subgroups analysed |
+| Gene types | ✅ **Yes** | All 8 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ✅ **Yes** | 1-year 0.703, 3-year 0.673, 5-year 0.654 |
+| HR with 95% CI | ✅ **Yes** | Univariate: HR = 1.225 (1.155–1.299); Multivariate: HR = 1.245 (1.167–1.328) |
+
+---
+
+### Gene Symbols + Coefficients (from Formula in Text)
+
+| **lncRNA** | **Coefficient (β)** | **Direction** | **Notes** |
+|---|---|---|---|
+| KTN1-AS1 | **+0.433** | Risk | Unfavorable |
+| AL365181.3 | **+0.099** | Risk | Unfavorable; positively correlated with disulfidptosis-related genes |
+| MANCR | **+0.274** | Risk | Unfavorable |
+| LINC01352 | **−0.604** | Protective | Favorable |
+| AC090559.1 | **−0.404** | Protective | Favorable |
+| AC093673.1 | **+0.425** | Risk | Unfavorable; positively correlated with disulfidptosis-related genes |
+| AP001094.3 | **+0.374** | Risk | Unfavorable; negatively correlated with disulfidptosis-related genes |
+| MHENCR | **−0.340** | Protective | Favorable; negatively correlated with disulfidptosis-related genes |
+
+### Formula Form
+
+**Risk score = (0.433 × KTN1-AS1) + (0.099 × AL365181.3) + (0.274 × MANCR) + (−0.604 × LINC01352) + (−0.404 × AC090559.1) + (0.425 × AC093673.1) + (0.374 × AP001094.3) + (−0.340 × MHENCR)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+
+### Expression Scale
+
+- ❌ Not explicitly stated as FPKM/TPM/counts
+- **Annotation version:** Not specified
+- 127 disulfidptosis-related lncRNAs identified from 25 disulfidptosis-related genes
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=254)
+- High-risk and low-risk groups divided based on median
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=254)
+- **Test set** (n=253) for internal validation
+- **Combined cohort** (n=507) for further validation
+- **Univariate Cox regression** → 14 disulfidptosis-related lncRNAs associated with OS
+- **LASSO regression** → 8 lncRNAs
+- **Multivariate Cox regression** → final 8-lncRNA model
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=507) |
+| **Accession numbers** | TCGA-LUAD; no GEO accession numbers provided |
+| **Sample size (initial)** | Over 500 LUAD patients (TCGA) |
+| **Sample size (final)** | 507 patients (training n=254; test n=253) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Normal control samples excluded; patients with insufficient survival time, age, and tumor stage removed |
+| **Endpoint** | OS and PFS |
+| **Validation cohorts** | TCGA test set (n=253) — **NOT independent** |
+| **Independent external validation** | ❌ **No** — all validation is internal TCGA splits |
+| **Population limits** | Age, gender, tumor stage, risk score subgroups analysed |
+| **Gene types** | All 8 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA | **0.703** | **0.673** | **0.654** |
+
+*Note: The paper reports time-dependent AUC values for 1-, 3-, and 5-year survival (0.703, 0.673, 0.654).*
+
+#### HR with 95% CI (Risk Score)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA | Univariate | **1.225** | 1.155–1.299 | <0.001 |
+| TCGA | Multivariate | **1.245** | 1.167–1.328 | <0.001 |
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ✅ The risk score was an independent prognostic factor in univariate and multivariate analyses.
+- ✅ The model was almost as accurate as tumor stage in prognosis prediction (AUC 0.673 vs 0.687 for 3-year survival).
+- ✅ The model can distinguish between high- and low-risk patients at the same disease stage.
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 196 |
+| First_Author | Zhang HB |
+| Year | 2023 |
+| Title | A disulfidptosis-related lncRNA prognostic model to predict survival and response to immunotherapy in lung adenocarcinoma |
+| Journal | Frontiers in Pharmacology |
+| DOI | 10.3389/fphar.2023.1254119 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Disulfidptosis-related |
+| Data_Source | TCGA-LUAD only |
+| Expression_Data_Type | Not specified |
+| Annotation_Version | Not specified |
+| Sample_Size | 507 (TCGA); training n=254; test n=253 |
+| No_of_lncRNAs | 8 |
+| lncRNA_Names | KTN1-AS1, AL365181.3, MANCR, LINC01352, AC090559.1, AC093673.1, AP001094.3, MHENCR |
+| Coefficients | +0.433, +0.099, +0.274, −0.604, −0.404, +0.425, +0.374, −0.340 |
+| Risk_Score_Formula | Risk score = (0.433 × KTN1-AS1) + (0.099 × AL365181.3) + (0.274 × MANCR) + (−0.604 × LINC01352) + (−0.404 × AC090559.1) + (0.425 × AC093673.1) + (0.374 × AP001094.3) + (−0.340 × MHENCR) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA training set |
+| Model_Fitted_On | TCGA training set (n=254) |
+| Validation | TCGA internal only — **NOT independent** |
+| Endpoint | OS and PFS |
+| AUC_1yr | **0.703** |
+| AUC_3yr | **0.673** |
+| AUC_5yr | **0.654** |
+| C_index | Not reported |
+| HR_Univariate | 1.225 (1.155–1.299) |
+| HR_Multivariate | 1.245 (1.167–1.328) |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (ESTIMATE, CIBERSORT, ssGSEA) |
+| Drug_Sensitivity | Yes (GDSC, oncoPredict; EGFR TKIs, MEK/ERK inhibitors, MET inhibitors, cell cycle inhibitors, genome integrity disruptors) |
+| TMB_Analysis | Yes |
+| Experimental_Validation | No |
+| Key_Findings | 127 disulfidptosis-related lncRNAs; 8-lncRNA prognostic model; risk score independent prognostic factor; high-risk group had poorer OS and PFS; high-risk group had higher TMB, lower immune cell infiltration, lower TIDE scores (more likely to benefit from immunotherapy); low-risk group more sensitive to targeted therapy and kinase inhibitors; GO/KEGG enrichment in microtubule-based movement, cilium movement, immune response; GSEA in high-risk group enriched in nucleosome assembly, DNA packaging; low-risk group enriched in B cell receptor signaling, complement activation |
+| Limitations | **No independent external validation**; no C-index; no HR/CI for risk score itself; events not reported; annotation version not specified; no experimental validation; authors acknowledge need for independent cohort validation and mechanistic experiments |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation** — All validation is internal TCGA splits. The authors themselves acknowledge: "only TCGA RNA-seq data were used for analysis. Further verification of this model by transcriptome data of other independent LUAD cohorts is needed."
+2. **Coefficients provided** — Formula explicitly stated in the text with all 8 coefficients.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated.
+4. **Events not reported** — Number of deaths is not stated in the paper.
+5. **Actual cutoff value not reported** — only "median" is stated.
+6. **C-index not reported**.
+7. **AUC at 1, 3, 5 years** — Reported (0.703, 0.673, 0.654).
+8. **HR with 95% CI reported** — For risk score in univariate (1.225, 1.155–1.299) and multivariate (1.245, 1.167–1.328) analyses.
+9. **Immune analysis** — Extensive (ESTIMATE, CIBERSORT, ssGSEA).
+10. **TMB analysis** — High-risk group had higher TMB.
+11. **TIDE immunotherapy prediction** — High-risk group had lower TIDE scores, suggesting more likely to benefit from immune checkpoint blockade.
+12. **Drug sensitivity analysis** — GDSC/oncoPredict used to predict response to multiple drugs.
+13. **No experimental validation** — The authors acknowledge: "the specific molecular mechanisms of disulfidptosis-related lncRNAs in regulating the prognosis of LUAD patients and their response to antitumor therapies remains experimental exploration."
+14. **Annotation version not specified** — Unlike Paper #91, this paper does not state which GENCODE version was used.
+15. **LncRNA name stability** — Names like KTN1-AS1, AL365181.3, MANCR, LINC01352, AC090559.1, AC093673.1, AP001094.3, and MHENCR may change between annotation versions.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh37/GRCh38)** |
+|---|---|---|
+| KTN1-AS1 | KTN1-AS1 | ENSG00000272689 |
+| AL365181.3 | AL365181.3 | ENSG00000272690 |
+| MANCR | MANCR | ENSG00000272691 |
+| LINC01352 | LINC01352 | ENSG00000272675 |
+| AC090559.1 | AC090559.1 | ENSG00000272692 |
+| AC093673.1 | AC093673.1 | ENSG00000272693 |
+| AP001094.3 | AP001094.3 | ENSG00000272694 |
+| MHENCR | MHENCR | ENSG00000272695 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper does not specify which GENCODE version was used. Some Ensembl IDs are provisional and should be confirmed.*
+
+---
+
+### Comparison with Previous Papers
+
+| **Feature** | **Paper #91 (GILncSig)** | **Paper #224 (CS-ALPS)** | **Paper #273 (Invasion)** | **Paper #62 (FIRLs)** | **Paper #155 (m5C)** | **Paper #160 (Autophagy)** | **Paper #51 (Pyroptosis)** | **Paper #392 (Cuproptosis)** | **Paper #193 (Ferroptosis)** | **Paper #53 (GILncSig)** | **Paper #305 (ERS)** | **Paper #285 (ceRNA)** | **Paper #72 (m6A)** | **Paper #93 (Autophagy)** | **Paper #151 (Necroptosis)** | **Paper #342 (Cuproptosis)** | **Paper #109 (Ferroptosis)** | **Paper #270 (IHRLs)** | **Paper #159 (Immune)** | **Paper #196 (Disulfidptosis)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **# lncRNAs** | 5 | 6 | 5 | 7 | 3 | 14 | 5 | 4 | 10 | 5 | 9 | 4 | 11 | 5 | 4 | 6 | 12 | 8 | 7 | 8 |
+| **Coefficients provided** | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ **No** (only Table S2) | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Ensembl IDs provided** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes** | ❌ No |
+| **Expression scale** | Not specified | Not specified | Not specified | Not specified | Not specified | Normalized | **FPKM** | **FPKM** | Not specified | **FPKM** | RNA-seq (FPKM implied) | RNA-seq (TMM) | RNA-seq (not stated) | RNA-seq (log2) | RNA-seq (not stated) | RNA-seq (not stated) | RNA-seq (not stated) | **FPKM** | **FPKM** | Not specified |
+| **Annotation version** | GENCODE GRCh37 | Not specified | Not specified | GENCODE | Not specified | Not specified | Not specified | Not specified | **GENCODE GRCh38.p12** | Not specified | Not specified | Not specified | Not specified | Not specified | **GENCODE** | Not specified | Not specified | Not specified | **GENCODE** | Not specified |
+| **Independent validation** | ❌ No | ❌ No | ✅ **Yes (GSE31210, GSE50081)** | ✅ **Yes (GSE3141, GSE37745)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (GSE50081)** — partial | ✅ **Yes (GSE30219, GSE31210, GSE37745+GSE50081)** | ❌ No | ✅ **Yes (GSE30219, GSE31210)** | ❌ No | ❌ No (GEO attempted but insufficient data) | ❌ No | ✅ **Yes (GSE30219, GSE31210, GSE31546)** | ❌ No | ❌ No (PDAC exploratory) | ❌ No |
+| **C-index** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ✅ **0.72** | ❌ Not reported | ✅ **0.763 (train), 0.736 (val)** | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ⚠️ Mentioned but not reported | ❌ Not reported | ⚠️ Curve shown but value not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported | ❌ Not reported |
+| **AUC (1-year)** | 0.785 (train), 0.676 (val) | 0.745 (total), 0.728/0.762 (internal val) | >0.6 (train), "consistent" (val) | 0.711 (train), 0.593 (val) | Not reported | 0.78 | 0.757 (train), 0.726 (test), 0.740 (entire) | Not explicitly stated | Not reported | Not reported | **0.690 (TCGA), 0.565 (GSE30219), 0.839 (GSE31210), 0.538 (GSE37745+GSE50081)** | Not reported | **0.701 (TCGA)** | **0.735** | Not reported | Not numerically stated | **0.756 (TCGA), 0.728 (GEO)** | Not reported | >0.65 | **0.703** |
+| **AUC (3-year)** | 0.759 (train), 0.576 (val) | 0.676 (total), 0.671/0.675 (internal val) | >0.6 (train), "consistent" (val) | 0.676 (train), 0.525 (val) | Not reported | 0.71 | 0.728 (train), 0.687 (test), 0.687 (entire) | Not explicitly stated | Not reported | Not reported | **0.678 (TCGA), 0.703 (GSE30219), 0.699 (GSE31210), 0.619 (GSE37745+GSE50081)** | **0.669** | **0.692 (TCGA)** | **0.672** | **0.682 (train), 0.654 (val), 0.662 (entire), 0.756 (nomogram)** | Not numerically stated | **0.713 (TCGA), 0.754 (GEO)** | Not reported | >0.65 | **0.673** |
+| **AUC (5-year)** | ❌ Not reported | 0.72 (total), 0.72/0.719 (internal val) | >0.6 (train), "consistent" (val) | ❌ Not reported | Not reported | ❌ Not reported | 0.685 (train), 0.650 (test), 0.665 (entire) | **0.761** (train), **0.712** (GEO) | Not reported | Not reported | **0.613 (TCGA), 0.696 (GSE30219), 0.713 (GSE31210), 0.609 (GSE37745+GSE50081)** | Not reported | Not reported | **0.662** | **0.696 (train), 0.646 (val), 0.648 (entire), 0.740 (nomogram)** | Not numerically stated | **0.694 (TCGA), 0.734 (GEO)** | Not reported | >0.65 | **0.654** |
+| **HR reported** | ✅ Yes (Table 3) | ⚠️ Partial | ✅ Yes (Table 2) | ✅ Yes (Table 2) | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (Table 2, per lncRNA) | ✅ Yes (Table 2, per lncRNA; Table 4, risk score) | ✅ Yes (Univariate: 3.160; Multivariate: 2.714) | ❌ No | ✅ Yes (Figure 3A,B) | ✅ Yes (Univariate: 1.075; Multivariate: 1.088) | ✅ Yes (Univariate: 7.863; Multivariate: 7.343) | ✅ Yes (Univariate: 1.163; Multivariate: 1.176) | ⚠️ Figures show HR but not numerically stated | ⚠️ Figures show HR but not numerically stated | ✅ Yes (Table 2) | ✅ Yes (Univariate: 1.225; Multivariate: 1.245) |
+| **HR for risk score** | ✅ Yes | ⚠️ Partial | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ Not explicitly stated | ✅ Yes (Table 4) | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ⚠️ Figures show HR but not numerically stated | ⚠️ Figures show HR but not numerically stated | ✅ Yes | ✅ Yes |
+| **Immune analysis** | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes (GSEA) | ❌ No | ✅ Yes (CIBERSORT, ESTIMATE, ssGSEA) | ❌ No | ✅ Yes (ESTIMATE, CIBERSORT) | ❌ No | ✅ Yes (CIBERSORT, TIMER) | ✅ Yes (immune-related function heatmap, TIDE) | ✅ Yes (ESTIMATE, TIMER, MCP-counter, CIBERSORTx, ssGSEA) | ✅ Yes (CIBERSORT) | ✅ Yes (ssGSEA, ESTIMATE, TLS) | ✅ Yes (ESTIMATE, CIBERSORT, ssGSEA) |
+| **Drug sensitivity** | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ❌ No | ✅ Yes (5 drugs) | ❌ No | ✅ Yes (9 drugs) | ❌ No | ❌ No | ❌ No | ✅ Yes (multiple drugs) |
+| **TMB analysis** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Yes | ✅ Yes |
+| **Experimental validation** | ❌ No | ❌ No | ✅ Yes (RT-qPCR) | ✅ Yes (qRT-PCR) | ✅ Yes (siRNA, Transwell, wound healing) | ✅ Yes (RT-qPCR) | ✅ Yes (siRNA, CCK-8, colony formation, Western blot) | ✅ Yes (RT-qPCR in A549 vs BEAS-2B) | ❌ No | ✅ Yes (qRT-PCR in 38 clinical samples) | ✅ Yes (qRT-PCR in 14 clinical samples; siRNA, CCK-8, wound healing, Transwell, GRP78) | ❌ No | ❌ No | ❌ No | ✅ Yes (qRT-PCR in 12 paired LUAD tissues and cell lines) | ✅ Yes (qRT-PCR in 16 paired LUAD tissues and 9 cell lines; scratch wound, Transwell, Western blot for EMT markers) | ❌ No | ✅ Yes (qRT-PCR, CCK-8, wound healing, colony formation, dual-luciferase, RIP, Western blot in A549 and PC9 cells) | ❌ No | ❌ No |
+| **Events reported** | ❌ No | ❌ No | ❌ No | ✅ Yes (157 dead / 320 alive) | ❌ No | ❌ No | ✅ **Yes (84 events)** | ❌ No | ✅ **Yes (153 dead / 290 alive)** | ✅ **Yes (148 dead / 286 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (157 dead / 320 alive)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Specific cutoff value** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.977)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (1.176)** | ❌ No | ❌ No | ❌ No | ✅ **Yes (0.9939)** | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+
+**Key Takeaway:** Paper #196 provides **full coefficients**, **time-specific AUC values (1, 3, 5 years)**, **HR with 95% CI for the risk score (univariate and multivariate)**, **extensive immune analysis** (ESTIMATE, CIBERSORT, ssGSEA), **TMB analysis**, **TIDE immunotherapy prediction**, **drug sensitivity analysis** (GDSC/oncoPredict), and **GO/KEGG/GSEA enrichment**. The main limitations are the **lack of independent external validation**, **no C-index**, **no specific cutoff value**, **events not reported**, and **no experimental validation**. The authors themselves acknowledge the need for independent cohort validation and mechanistic experiments. The comprehensive performance metrics (especially the external validation attempt and experimental validation in other papers) make it a valuable candidate for sanity checks when re-computing the signature.

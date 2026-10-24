@@ -1,0 +1,16 @@
+signature,author,year,coefficients_reported,gene_ids,external_validation,validation_cohorts,scaling_stated,cutoff_defined,notes
+Paper9_Zhang2021,Zhang,2021,Yes,HGNC,Yes,GSE11969,No,Yes,
+Paper51_Song2021,Song,2021,Yes,HGNC,No,,No,Yes,
+Paper53_Yang2022,Yang,2022,Yes,HGNC,Yes,GSE50081,No,Yes,
+Paper62_Yao2021,Yao,2021,Yes,HGNC,Yes,"GSE3141;GSE37745",No,Yes,Cohort used in Figure 3 case study
+Paper91_Lin2024,Lin,2024,Yes,HGNC,No,,No,Yes,
+Paper141_Yang2023,Yang,2023,Yes,HGNC,No,,No,Yes,Largest signature (11 genes)
+Paper151_Diao2022,Diao,2022,Yes,HGNC,No,,No,Yes,Note discusses GEO limitation
+Paper159_He2021,He,2021,Yes,HGNC,Yes,PDAC (trans-tumour),No,Yes,Validated in pancreatic cancer not LUAD
+Paper165_Jin2020,Jin,2020,Yes,HGNC,No,,No,Yes,
+Paper192_Geng2021,Geng,2021,Yes,HGNC,Yes,GSE31210,No,Yes,
+Paper193_Zheng2021,Zheng,2021,Yes,HGNC,No,,No,Yes,
+Paper197_Li2023,Li,2023,Yes,HGNC,No,,No,Yes,Two internal TCGA splits only
+Paper298_Li2023,Li,2023,Yes,HGNC,Yes,IMvigor210,No,Yes,Bladder cancer immunotherapy cohort
+Paper305_Yu2024,Yu,2024,Yes,HGNC,Yes,"GSE30219;GSE31210;GSE37745;GSE50081",No,Yes,Only signature evaluable in GSE31210
+Paper352_Zhang2025,Zhang,2025,Yes,HGNC,No,,No,Yes,

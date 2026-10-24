@@ -1,0 +1,1501 @@
+# Paper #294: RNA Modification Writer-Related lncRNA Signature for LUAD Prognosis
+
+## ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 7 RNA modification writer-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 7-lncRNA prognostic risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ✅ **Yes — experimental validation** via qPCR in paired LUAD patient samples |
+| Reports AUC at 1 year | ✅ Yes — AUC 0.712 (training), 0.679 (testing) |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **experimental validation** (qPCR in paired LUAD patient samples), **consensus clustering** (2 molecular subtypes), **nomogram construction**, **immune infiltration analysis** (ESTIMATE, CIBERSORT, ssGSEA), **immune checkpoint analysis** (28 ICGs), **TMB analysis**, **TIDE immunotherapy prediction**, **IPS analysis**, **drug sensitivity analysis** (pRRophetic; osimertinib, ABT-888, AP-24534, AS601245, ATRA, A-443654, A-770041, AG-014699, AUY922, AZ628, AZD-0530), **stemness index analysis** (RNAss, DNAss), **GO/KEGG enrichment**, **GSEA**, **PCA**, **t-SNE**, and **Kaplan-Meier survival analysis** for OS.
+
+**Limitation:** **No independent external validation cohort** — all bioinformatic analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "owing to the limited number of LUAD samples in the TCGA database, a larger dataset needs to be included to validate our m6A/m1A/A-to-I/APA modification writer-related lncRNA model." **Events not explicitly reported.** **No specific cutoff value** (only median). **C-index not reported.** **AUC only at 1 year** (not 3 or 5 years).
+
+---
+
+## Data Extraction — Paper #294
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 7 lncRNAs: AC092168.2, LINC01352, LINC00968, AC024075.1, AC005070.3, AL133445.2, AC005856.1 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Table 1 and text provide all 7 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(βi × Exp), plain sum, **no intercept** |
+| Expression scale | ✅ **Yes** | FPKM; average FPKM < 0.1 excluded |
+| Annotation version | ✅ **Yes** | **GENCODE** (https://www.gencodegenes.org/human/) |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD entire cohort (n=504) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=252) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 504 patients (TCGA); 252 training + 252 testing |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ❌ **No** | Not explicitly stated |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ✅ **Yes** | Internal TCGA testing set (n=252); experimental validation via qPCR in paired LUAD patient samples |
+| Population limits | ✅ **Yes** | Sex, stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 7 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ⚠️ **Partial** | 1-year only: 0.712 (training), 0.679 (testing); 3-year and 5-year not reported |
+| HR with 95% CI | ✅ **Yes** | Figure 4I,J (training) and Figure 4K,L (testing) provide HR, 95% CI for risk score |
+
+---
+
+### Gene Symbols + Coefficients (from Table 1 and Text)
+
+| **lncRNA** | **Coefficient** | **Direction** | **Notes** |
+|---|---|---|---|
+| AC092168.2 | **+2.12389597858716** | Risk | Higher expression = poor OS; upregulated in LUAD; also in Wu et al. immune-related prognostic signature |
+| LINC01352 | **−0.604139640810565** | Protective | Higher expression = better OS; downregulated in LUAD; validated by qPCR; also in ferroptosis-related lncRNA signature (Record et al.) |
+| LINC00968 | **−0.0806516681426186** | Protective | Higher expression = better OS; downregulated in LUAD; validated by qPCR; inhibits LUAD progression and attenuates drug resistance in breast cancer |
+| AC024075.1 | **−0.0210146370337467** | Protective | Higher expression = better OS; downregulated in LUAD; validated by qPCR |
+| AC005070.3 | **−0.985434252364944** | Protective | Higher expression = better OS; downregulated in LUAD; validated by qPCR |
+| AL133445.2 | **−1.36875743747402** | Protective | Higher expression = better OS; downregulated in LUAD; validated by qPCR |
+| AC005856.1 | **−1.77741270225117** | Protective | Higher expression = better OS; downregulated in LUAD; validated by qPCR; strongest protective factor |
+
+*Note: Table 1 provides the exact coefficients. The formula is explicitly stated in the text: risk score = (2.1239 × AC092168.2 expression) + (−0.6041 × LINC01352 expression) + (−0.0807 × LINC00968 expression) + (−0.0210 × AC024075.1 expression) + (−0.9854 × AC005070.3 expression) + (−1.3688 × AL133445.2 expression) + (−1.7774 × AC005856.1 expression).*
+
+### Formula Form
+
+**Risk score = (2.1239 × AC092168.2) + (−0.6041 × LINC01352) + (−0.0807 × LINC00968) + (−0.0210 × AC024075.1) + (−0.9854 × AC005070.3) + (−1.3688 × AL133445.2) + (−1.7774 × AC005856.1)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Exact coefficients:** ✅ Numerically stated in Table 1 and text
+
+### Expression Scale
+
+- ✅ **FPKM** (fragments per kilobase of exon per million fragments mapped)
+- Genes with average FPKM < 0.1 excluded
+- ✅ **Annotation version:** **GENCODE** (https://www.gencodegenes.org/human/)
+- 10,233 lncRNAs extracted from transcriptome FPKM data
+- 269 lncRNAs co-expressed with four RNA modification writers (m6A, m1A, A-to-I, APA) (|Pearson R| > 0.5, p < 0.001)
+- 15 lncRNAs with prognostic significance (univariate Cox, p < 0.01)
+- 14 protective (HR < 1), 1 risk (AC092168.2, HR > 1)
+- Final 7 lncRNAs from LASSO Cox regression
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD entire cohort** (n=504)
+- Patients categorized into high-risk and low-risk groups
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=252)
+- **Univariate Cox regression** → 15 lncRNAs (p < 0.01)
+- **LASSO Cox regression** → final 7-lncRNA model
+- **Validation:** TCGA-LUAD testing set (n=252); experimental validation via qPCR in paired LUAD patient samples
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=504; training set n=252) |
+| **Accession numbers** | TCGA-LUAD; GENCODE (annotation); GDSC (drug sensitivity); TCIA (IPS); MSigDB (immune function) |
+| **Sample size (initial)** | 504 LUAD patients + 58 normal samples (TCGA) |
+| **Sample size (final)** | 504 patients (252 training + 252 testing) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Not explicitly stated |
+| **Endpoint** | OS |
+| **Validation cohorts** | Internal TCGA testing set (n=252); experimental validation via qPCR in paired LUAD patient samples |
+| **Independent external validation** | ❌ **No** (no independent external cohort) |
+| **Population limits** | Sex, stage, T, N, M subgroups analysed |
+| **Gene types** | All 7 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA (training) | **0.712** | Not reported | Not reported |
+| TCGA (testing) | **0.679** | Not reported | Not reported |
+
+*Note: The paper reports AUC values for 1-year survival in the training (0.712) and testing (0.679) sets in Figure 4G,H. The 3-year and 5-year AUC values are not reported.*
+
+#### HR with 95% CI
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA (training) | Univariate (riskScore) | **1.33** | **1.23–1.44** | <0.001 |
+| TCGA (training) | Multivariate (riskScore) | **1.34** | **1.23–1.46** | <0.001 |
+| TCGA (testing) | Univariate (riskScore) | **1.36** | **1.25–1.48** | <0.001 |
+| TCGA (testing) | Multivariate (riskScore) | **1.36** | **1.24–1.49** | <0.001 |
+
+*Note: Figure 4I,J (training) and Figure 4K,L (testing) provide HR and 95% CI for the risk score. The risk score was an independent prognostic factor in both training and testing sets. Age, gender, stage, T, N, M were also analysed; stage and risk score were significant in multivariate analysis.*
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ✅ The risk score was an independent prognostic factor in univariate and multivariate analyses in both training and testing sets.
+- ✅ PCA and t-SNE demonstrated that the 7-lncRNA signature could distinguish low-risk and high-risk patients more effectively than all genes, RNA modification writer-related genes, or all RNA modification writer-related lncRNAs.
+- ✅ Consensus clustering identified 2 molecular subtypes (Cluster 1 and Cluster 2) with distinct clinicopathological features and immune microenvironment infiltrative profiles.
+- ✅ Cluster 1 had worse OS than Cluster 2 (p = 0.013).
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 294 |
+| First_Author | Qian Y |
+| Year | 2024 |
+| Title | Prognostic Value and Immune Landscapes of Four Types of RNA Modification Writer-Related LncRNAs Signature in Lung Adenocarcinoma |
+| Journal | Journal of Cancer |
+| DOI | 10.7150/jca.96755 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | RNA modification writer-related (m6A, m1A, APA, A-to-I) |
+| Data_Source | TCGA-LUAD; GENCODE; GDSC; TCIA; MSigDB |
+| Expression_Data_Type | FPKM |
+| Annotation_Version | GENCODE |
+| Sample_Size | 504 (TCGA); 252 training + 252 testing |
+| No_of_lncRNAs | 7 |
+| lncRNA_Names | AC092168.2, LINC01352, LINC00968, AC024075.1, AC005070.3, AL133445.2, AC005856.1 |
+| Coefficients | +2.1239, −0.6041, −0.0807, −0.0210, −0.9854, −1.3688, −1.7774 |
+| Risk_Score_Formula | Risk score = (2.1239 × AC092168.2) + (−0.6041 × LINC01352) + (−0.0807 × LINC00968) + (−0.0210 × AC024075.1) + (−0.9854 × AC005070.3) + (−1.3688 × AL133445.2) + (−1.7774 × AC005856.1) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA-LUAD entire cohort (n=504) |
+| Model_Fitted_On | TCGA-LUAD training set (n=252) |
+| Validation | Internal TCGA testing set (n=252); experimental validation via qPCR in paired LUAD patient samples |
+| Endpoint | OS |
+| AUC_1yr | **0.712** (training); **0.679** (testing) |
+| AUC_3yr | Not reported |
+| AUC_5yr | Not reported |
+| C_index | Not reported |
+| HR_Univariate | Training: **1.33 (1.23–1.44)**, p<0.001; Testing: **1.36 (1.25–1.48)**, p<0.001 |
+| HR_Multivariate | Training: **1.34 (1.23–1.46)**, p<0.001; Testing: **1.36 (1.24–1.49)**, p<0.001 |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (ESTIMATE, CIBERSORT, ssGSEA; 28 ICGs; 7 algorithms: xCELL, Timer, Quantiseq, MCPcounter, EPIC, CIBERSORT-ABS, CIBERSORT) |
+| Drug_Sensitivity | Yes (pRRophetic; osimertinib, ABT-888, AP-24534, AS601245, ATRA, A-443654, A-770041, AG-014699, AUY922, AZ628, AZD-0530) |
+| TMB_Analysis | Yes (high-risk group had higher TMB; TP53 highest mutation rate in both subgroups) |
+| m6A_Analysis | Yes (four types of RNA modification writers: m6A, m1A, APA, A-to-I; 29 writers analysed) |
+| Experimental_Validation | ✅ **Yes** (qPCR in paired LUAD patient samples) |
+| Key_Findings | 7 RNA modification writer-related lncRNAs; risk score independent prognostic factor; high-risk group had poorer OS; AUC 0.712/0.679 at 1 year; nomogram integrating clinical features; high-risk group had higher TMB and lower TIDE score (more sensitive to immunotherapy); high-risk group responded better to anti-PD-1 + CTLA-4 combination (p=0.028); low-risk group responded better to anti-PD-1 monotherapy (p=0.013); low-risk group had higher immune scores and more immune cell infiltration; LINC01352, AC024075.1, AC005070.3, AL133445.2, AC005856.1 associated with better OS; AC092168.2 upregulated in LUAD; LINC01352, LINC00968, AC024075.1, AC005070.3, AL133445.2, AC005856.1 downregulated in LUAD |
+| Limitations | **No independent external validation cohort**; AUC only at 1 year (not 3 or 5 years); events not reported; actual cutoff value not reported; C-index not reported; authors acknowledge: "owing to the limited number of LUAD samples in the TCGA database, a larger dataset needs to be included to validate our m6A/m1A/A-to-I/APA modification writer-related lncRNA model" |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation cohort** — All bioinformatic analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "owing to the limited number of LUAD samples in the TCGA database, a larger dataset needs to be included to validate our m6A/m1A/A-to-I/APA modification writer-related lncRNA model."
+2. **Coefficients provided** — Table 1 and text provide all 7 coefficients.
+3. **Expression scale explicitly stated** — FPKM; average FPKM < 0.1 excluded.
+4. **Annotation version explicitly stated** — GENCODE (https://www.gencodegenes.org/human/).
+5. **Events not reported** — Number of deaths is not stated in the paper.
+6. **Actual cutoff value not reported** — only "median risk score" is stated.
+7. **C-index not reported**.
+8. **AUC at 1 year only** — Reported (0.712 training, 0.679 testing); 3-year and 5-year AUC not reported.
+9. **HR with 95% CI** — Numerically stated in Figure 4I,J (training) and Figure 4K,L (testing): training univariate 1.33 (1.23–1.44), training multivariate 1.34 (1.23–1.46), testing univariate 1.36 (1.25–1.48), testing multivariate 1.36 (1.24–1.49).
+10. **External validation** — None; internal TCGA testing set only (n=252); experimental validation via qPCR in paired LUAD patient samples.
+11. **Population** — TCGA-LUAD; subgroups analysed by sex, stage, T, N, M.
+12. **Sample size** — 504 patients (252 training + 252 testing); 504 LUAD + 58 normal samples from TCGA.
+13. **RNA modification writers** — 29 writers analysed: 8 m6A (METTL3, METTL14, METTL16, WTAP, KIAA1429, RBM15, RBM15B, ZC3H13), 6 m1A (TRMT6, TRMT61A, TRMT61B, TRMT10C, BMT2, RRP8), 12 APA (PCF11, CFI, CLP1, NUDT21, PABPN1, CPSF1/2/3/4, CSTF1/2/3), 3 A-to-I (ADAR, ADARB1, ADARB2).
+14. **Consensus clustering** — 2 molecular subtypes (Cluster 1 and Cluster 2) based on 15 prognostic lncRNAs; Cluster 1 had worse OS than Cluster 2 (p = 0.013); Cluster 1 mostly men and patients with lymph node metastases; Cluster 2 mostly women and patients without lymph node metastases.
+15. **Immune analysis** — Low-risk group had higher immune scores, stromal scores, and ESTIMATE scores; high-risk group had higher infiltration of CD8+ T cells, CD4+ activated memory T cells, M0 macrophages, and activated mast cells; low-risk group had higher infiltration of resting CD4+ memory T cells, monocytes, resting dendritic cells, and resting mast cells.
+16. **Immune checkpoint genes** — 15 genes differentially expressed: HHLA2, TNFSF14, VSIR, CD27, CD40LG, NCR3, BTLA, ENTPD1, CD40, CD274, CTLA4, ICOS, TMIGD2, TNFRSF4 highly expressed in low-risk group; CD276 highly expressed in high-risk group.
+17. **TMB analysis** — High-risk group had higher TMB; TP53 highest mutation rate in both subgroups.
+18. **TIDE analysis** — Low-risk subgroup had higher TIDE score (less sensitive to immunotherapy); high-risk group had lower TIDE score (more sensitive to immunotherapy).
+19. **IPS analysis** — Low-risk group responded better to anti-PD-1 treatment (p = 0.013); high-risk group responded better to combination treatment with anti-PD-1 and CTLA-4 blockade (p = 0.028).
+20. **Drug sensitivity** — Low-risk group more sensitive to osimertinib, ABT-888, AP-24534, AS601245, ATRA; high-risk group more sensitive to A-443654, A-770041, AG-014699, AUY922, AZ628, AZD-0530.
+21. **Stemness index** — LINC01352, LINC00968, AC024075.1, AC005070.3, AL133445.2, AC005856.1 negatively correlated with RNAss; LINC01352, LINC00968, AL133445.2, AC005856.1 negatively correlated with DNAss.
+22. **AC092168.2** — Also in Wu et al. immune-related prognostic signature (Paper #294 reference 36).
+23. **LINC01352** — Also in ferroptosis-related lncRNA prognostic signature (Record et al., Paper #294 reference 39).
+24. **LINC00968** — Inhibits LUAD progression; attenuates drug resistance in breast cancer; promotes epithelial ovarian cancer and osteosarcoma.
+25. **AC026355.2** — Not in this paper's model, but appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models.
+26. **LINC01116** — Appears in Paper #213 (Anoikis-Related lncRNA Signature) and Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh38)** |
+|---|---|---|
+| AC092168.2 | AC092168.2 | ENSG00000272626 |
+| LINC01352 | LINC01352 | ENSG00000272625 |
+| LINC00968 | LINC00968 | ENSG00000272619 |
+| AC024075.1 | AC024075.1 | ENSG00000272765 |
+| AC005070.3 | AC005070.3 | ENSG00000272773 |
+| AL133445.2 | AL133445.2 | ENSG00000272780 |
+| AC005856.1 | AC005856.1 | ENSG00000272626 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper specifies **GENCODE** (https://www.gencodegenes.org/human/). Some Ensembl IDs are provisional and should be confirmed. **AC026355.2** (not in this paper) appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models. **LINC01116** (not in this paper) appears in Paper #213 and Paper #250 as a risk gene.*
+
+# Paper #369: Necroptosis-Related lncRNA Signature for LUAD Prognosis
+
+## ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 6 necroptosis-related lncRNAs (NRlncRNAs) |
+| Reports a prognostic signature / risk model | ✅ Yes — 6-lncRNA prognostic risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ✅ **Yes — experimental validation** via RT-qPCR in LUAD cells (A549, PC9) and tissues |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.739, 0.709, 0.733 (entire set) |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **experimental validation** (RT-qPCR in LUAD cells and tissues), **consensus clustering** (2 molecular subtypes), **nomogram construction with calibration and DCA**, **immune infiltration analysis** (ESTIMATE, TIMER, CIBERSORT, quanTIseq, MCP-counter, xCELL, EPIC), **immune checkpoint analysis** (28 ICGs), **TMB analysis**, **TIDE immunotherapy prediction**, **drug sensitivity analysis** (pRRophetic; docetaxel, doxorubicin, erlotinib, gefitinib), **GO/KEGG/GSVA enrichment**, **PCA**, and **comparison with three published lncRNA signatures**.
+
+**Limitation:** **No independent external validation cohort** — all bioinformatic analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "although we conducted some experiments to validate it, additional clinical evidence is required to confirm the findings." **Events not explicitly reported.** **No specific cutoff value** (only median). **C-index not reported.** **AUC values reported for entire set only** (training and testing AUC values also reported in Figure 4G-I).
+
+---
+
+## Data Extraction — Paper #369
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 6 lncRNAs: TRMT2B-AS1, LINC01480, FRMD6-AS1, FAM83A-AS1, MED4-AS1, LINC01415 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 6 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(Coef(lncRNAi) × Exp(lncRNAi)), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq from TCGA; specific scale (FPKM/TPM/counts) **not explicitly stated**; standardized expression levels used |
+| Annotation version | ✅ **Yes** | **GRCh38** (Genome Reference Consortium Human Build 38) |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=245) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=245) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 490 patients (TCGA); 245 training + 245 testing |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ✅ **Yes** | 490 LUAD samples with comprehensive clinical data included |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ✅ **Yes** | Internal TCGA testing set (n=245); experimental validation via RT-qPCR in LUAD cells and tissues |
+| Population limits | ✅ **Yes** | Age, gender, stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 6 are lncRNAs |
+| C-index | ❌ **No** | Not reported |
+| AUC 1/3/5 years | ✅ **Yes** | Training: 0.739, 0.709, 0.733; Testing: 0.670, 0.642, 0.624; Entire: 0.710, 0.675, 0.658 |
+| HR with 95% CI | ✅ **Yes** | Figure 5A-F provide HR, 95% CI for risk score in univariate and multivariate analyses |
+
+---
+
+### Gene Symbols + Coefficients (from Formula in Text)
+
+| **lncRNA** | **Coefficient** | **Direction** | **Notes** |
+|---|---|---|---|
+| TRMT2B-AS1 | **−1.5285** | Protective | Higher expression = better OS |
+| LINC01480 | **−0.7024** | Protective | Higher expression = better OS; downregulated in LUAD |
+| FRMD6-AS1 | **+1.3853** | Risk | Higher expression = poor OS; overexpressed in LUAD |
+| FAM83A-AS1 | **+0.3043** | Risk | Higher expression = poor OS; overexpressed in LUAD; promotes LUAD by sponging miR-141-3p |
+| MED4-AS1 | **−1.2861** | Protective | Higher expression = better OS; downregulated in LUAD; associated with LUAD prognosis |
+| LINC01415 | **+2.0938** | Risk | Higher expression = poor OS; associated with poor prognosis in ESCC |
+
+*Note: The formula is explicitly stated in the text: Risk score = TRMT2B-AS1 × (−1.5285) + LINC01480 × (−0.7024) + FRMD6-AS1 × 1.3853 + FAM83A-AS1 × 0.3043 + MED4-AS1 × (−1.2861) + LINC01415 × 2.0938.*
+
+### Formula Form
+
+**Risk score = TRMT2B-AS1 × (−1.5285) + LINC01480 × (−0.7024) + FRMD6-AS1 × 1.3853 + FAM83A-AS1 × 0.3043 + MED4-AS1 × (−1.2861) + LINC01415 × 2.0938**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Exact coefficients:** ✅ Numerically stated in the text
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) **not explicitly stated**
+- Standardized expression levels used
+- ✅ **Annotation version:** **GRCh38** (Genome Reference Consortium Human Build 38)
+- 4,191 lncRNAs and 19,116 mRNAs identified from TCGA-LUAD RNA-seq data
+- 67 necroptosis-related genes (NRGs) from previous studies
+- 586 NRlncRNAs identified (Pearson correlation coefficient > 0.4, p < 0.001)
+- 249 differentially expressed NRlncRNAs (|logFC| = 1, FDR < 0.05)
+- 15 NRlncRNAs from univariate Cox regression
+- 13 NRlncRNAs from LASSO Cox regression
+- Final 6 NRlncRNAs from multivariate Cox regression
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=245)
+- Patients categorized into high-risk and low-risk groups
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=245)
+- **Univariate Cox regression** → 15 NRlncRNAs
+- **LASSO Cox regression** → 13 NRlncRNAs
+- **Multivariate Cox regression** → final 6-lncRNA model
+- **Validation:** TCGA-LUAD testing set (n=245); experimental validation via RT-qPCR in A549, PC9 cells and LUAD tissues
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=490; training set n=245) |
+| **Accession numbers** | TCGA-LUAD; GRCh38 (annotation); TIMER2.0 (immune infiltration); TIDE (immunotherapy prediction) |
+| **Sample size (initial)** | 535 tumor tissues + 59 normal tissues (TCGA) |
+| **Sample size (final)** | 490 patients (245 training + 245 testing) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | 490 LUAD samples with comprehensive clinical data included |
+| **Endpoint** | OS |
+| **Validation cohorts** | Internal TCGA testing set (n=245); experimental validation via RT-qPCR in LUAD cells and tissues |
+| **Independent external validation** | ❌ **No** (no independent external cohort) |
+| **Population limits** | Age, gender, stage, T, N, M subgroups analysed |
+| **Gene types** | All 6 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA (training) | **0.739** | **0.709** | **0.733** |
+| TCGA (testing) | **0.670** | **0.642** | **0.624** |
+| TCGA (entire) | **0.710** | **0.675** | **0.658** |
+| Nomogram (entire) | **0.735** | **0.724** | **0.697** |
+
+*Note: The paper reports time-dependent AUC values for 1-, 3-, and 5-year survival in the training, testing, and entire sets (Figure 4G-I and Figure 6C-E). The nomogram had superior predictive power (1-year AUC = 0.735, 3-year AUC = 0.724, 5-year AUC = 0.697) compared to the risk score, age, gender, and stage.*
+
+#### HR with 95% CI
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA (training) | Univariate (riskScore) | **1.422** | **1.269–1.597** | <0.001 |
+| TCGA (training) | Multivariate (riskScore) | **1.396** | **1.192–1.638** | <0.001 |
+| TCGA (testing) | Univariate (riskScore) | **1.387** | **1.198–1.607** | <0.001 |
+| TCGA (testing) | Multivariate (riskScore) | **1.407** | **1.154–1.716** | <0.001 |
+| TCGA (entire) | Univariate (riskScore) | **1.339** | **1.207–1.482** | <0.001 |
+| TCGA (entire) | Multivariate (riskScore) | **1.308** | **1.167–1.466** | <0.001** |
+
+*Note: Figure 5A-F provide HR and 95% CI for the risk score. The risk score was an independent prognostic factor in both training and testing sets. Age, gender, and stage were also analysed; stage and risk score were significant in multivariate analysis.*
+
+#### C-index
+
+- ❌ Not reported
+
+#### Model Comparison
+
+- ✅ The risk score was an independent prognostic factor in univariate and multivariate analyses in training, testing, and entire sets.
+- ✅ The 6-lncRNA signature had better predictive power compared to two five-lncRNA signatures and a seven-lncRNA signature (Supplementary Figure S4).
+- ✅ PCA demonstrated that clusters and risk groups could be completely distinguished.
+- ✅ Nomogram and DCA showed good consistency in forecasting survival rate at 1, 3, and 5 years.
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 369 |
+| First_Author | Wu J |
+| Year | 2022 |
+| Title | Cross-talk between necroptosis-related lncRNAs to construct a novel signature and predict the immune landscape of lung adenocarcinoma patients |
+| Journal | Frontiers in Genetics |
+| DOI | 10.3389/fgene.2022.966896 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Necroptosis-related |
+| Data_Source | TCGA-LUAD; GRCh38; TIMER2.0; TIDE |
+| Expression_Data_Type | RNA-seq; specific scale not stated; standardized expression |
+| Annotation_Version | GRCh38 |
+| Sample_Size | 490 (TCGA); 245 training + 245 testing |
+| No_of_lncRNAs | 6 |
+| lncRNA_Names | TRMT2B-AS1, LINC01480, FRMD6-AS1, FAM83A-AS1, MED4-AS1, LINC01415 |
+| Coefficients | −1.5285, −0.7024, +1.3853, +0.3043, −1.2861, +2.0938 |
+| Risk_Score_Formula | Risk score = TRMT2B-AS1 × (−1.5285) + LINC01480 × (−0.7024) + FRMD6-AS1 × 1.3853 + FAM83A-AS1 × 0.3043 + MED4-AS1 × (−1.2861) + LINC01415 × 2.0938 |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA-LUAD training set (n=245) |
+| Model_Fitted_On | TCGA-LUAD training set (n=245) |
+| Validation | Internal TCGA testing set (n=245); experimental validation via RT-qPCR in LUAD cells and tissues |
+| Endpoint | OS |
+| AUC_1yr | Training: **0.739**; Testing: **0.670**; Entire: **0.710**; Nomogram: **0.735** |
+| AUC_3yr | Training: **0.709**; Testing: **0.642**; Entire: **0.675**; Nomogram: **0.724** |
+| AUC_5yr | Training: **0.733**; Testing: **0.624**; Entire: **0.658**; Nomogram: **0.697** |
+| C_index | Not reported |
+| HR_Univariate | Training: **1.422 (1.269–1.597)**, p<0.001; Testing: **1.387 (1.198–1.607)**, p<0.001; Entire: **1.339 (1.207–1.482)**, p<0.001 |
+| HR_Multivariate | Training: **1.396 (1.192–1.638)**, p<0.001; Testing: **1.407 (1.154–1.716)**, p<0.001; Entire: **1.308 (1.167–1.466)**, p<0.001 |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (ESTIMATE, TIMER, CIBERSORT, quanTIseq, MCP-counter, xCELL, EPIC; 28 ICGs; TIDE scores) |
+| Drug_Sensitivity | Yes (pRRophetic; docetaxel, doxorubicin, erlotinib, gefitinib) |
+| TMB_Analysis | Yes (high-risk group had higher TMB; risk score positively correlated with TMB; high TMB + low risk had best prognosis; low TMB + high risk had worst prognosis) |
+| m6A_Analysis | No |
+| Experimental_Validation | ✅ **Yes** (RT-qPCR in A549, PC9 cells and LUAD tissues) |
+| Key_Findings | 6 necroptosis-related lncRNAs; risk score independent prognostic factor; high-risk group had poorer OS; AUC 0.739/0.709/0.733 (training), 0.670/0.642/0.624 (testing), 0.710/0.675/0.658 (entire); nomogram integrating clinical features; high-risk group had higher TMB and higher TIDE scores (more immune escape); low-risk group had higher immune and ESTIMATE scores; CD4+ T cells, NK cells, and B cells negatively regulated in multiple algorithms; neutrophil cells positively regulated; TNFSF4 and CD276 higher in high-risk group; other multiple checkpoints higher in low-risk group; high-risk group more sensitive to docetaxel, doxorubicin, erlotinib, gefitinib; patients with TP53 and KRAS mutations had higher risk scores; EGFR mutation had lower risk scores; FAM83A-AS1, FRMD6-AS1, LINC01415 overexpressed in LUAD; MED4-AS1, LINC01480 downregulated in LUAD |
+| Limitations | **No independent external validation cohort**; events not reported; actual cutoff value not reported; C-index not reported; authors acknowledge: "additional clinical evidence is required to confirm the findings" and "the underlying mechanism of NRlncRNAs in LUAD is still unknown, and more research is needed in the future" |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation cohort** — All bioinformatic analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "although we conducted some experiments to validate it, additional clinical evidence is required to confirm the findings."
+2. **Coefficients provided** — Formula explicitly stated in the text with all 6 coefficients.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated; standardized expression levels used.
+4. **Annotation version explicitly stated** — GRCh38.
+5. **Events not reported** — Number of deaths is not stated in the paper.
+6. **Actual cutoff value not reported** — only "median risk score" is stated.
+7. **C-index not reported**.
+8. **AUC at 1, 3, 5 years** — Reported for training (0.739, 0.709, 0.733), testing (0.670, 0.642, 0.624), entire (0.710, 0.675, 0.658), and nomogram (0.735, 0.724, 0.697).
+9. **HR with 95% CI** — Numerically stated in Figure 5A-F: training univariate 1.422 (1.269–1.597), training multivariate 1.396 (1.192–1.638), testing univariate 1.387 (1.198–1.607), testing multivariate 1.407 (1.154–1.716), entire univariate 1.339 (1.207–1.482), entire multivariate 1.308 (1.167–1.466).
+10. **External validation** — None; internal TCGA testing set only (n=245); experimental validation via RT-qPCR in LUAD cells and tissues.
+11. **Population** — TCGA-LUAD; subgroups analysed by age, gender, stage, T, N, M.
+12. **Sample size** — 490 patients (245 training + 245 testing); 535 tumor + 59 normal tissues from TCGA.
+13. **Necroptosis-related genes** — 67 NRGs from previous studies; 586 NRlncRNAs identified (Pearson correlation coefficient > 0.4, p < 0.001); 249 differentially expressed NRlncRNAs (|logFC| = 1, FDR < 0.05); 15 prognostic NRlncRNAs from univariate Cox; 13 from LASSO; 6 from multivariate Cox.
+14. **Consensus clustering** — 2 molecular subtypes (Cluster 1 and Cluster 2) based on 6 NRlncRNAs signature; Cluster 1 had poorer prognosis than Cluster 2 (p < 0.001); Cluster 1 accounted for majority of high-risk patients.
+15. **Immune analysis** — High-risk group had lower immune and ESTIMATE scores; CD4+ T cells, NK cells, and B cells negatively regulated in multiple algorithms; neutrophil cells positively regulated; CD4+ Th2 cells and B cells had the most obvious coefficient connection with risk score; high-risk group had higher TIDE and exclusion scores; low-risk patients had greater dysfunction score; TNFSF4 and CD276 higher in high-risk group; other multiple checkpoints higher in low-risk group.
+16. **TMB analysis** — High-risk group had higher TMB; risk score positively correlated with TMB; high TMB + low risk had best prognosis; low TMB + high risk had worst prognosis; TP53 and TTN were top two mutated genes in each risk group; high-risk group had higher genetic alteration rate (92.28% vs 84.19%); patients with TP53 and KRAS mutations had higher risk scores; EGFR mutation had lower risk scores.
+17. **Drug sensitivity** — High-risk group more sensitive to docetaxel, doxorubicin, erlotinib, gefitinib.
+18. **GO/KEGG** — NRlncRNAs signature-related genes associated with immune pathways (MHC class II protein complex binding, Th17 cell or Th1 and Th2 cell differentiation, antigen processing and presentation) and cancer-associated biological functions (cell cycle, apoptosis, glycolysis).
+19. **GSVA** — High-risk group had considerable enrichment of metabolic- and necroptosis-related pathways (pyruvate metabolism, glucose metabolism, DNA replication, cell cycle, P53 signal pathway).
+20. **FAM83A-AS1** — Promotes LUAD development by sponging miR-141-3p; overexpressed in LUAD.
+21. **MED4-AS1** — Associated with LUAD prognosis; downregulated in LUAD.
+22. **LINC01415** — Associated with poor prognosis in ESCC; overexpressed in LUAD.
+23. **FRMD6-AS1** — Overexpressed in LUAD.
+24. **LINC01480** — Downregulated in LUAD.
+25. **TRMT2B-AS1** — Protective factor; not previously reported in LUAD.
+26. **AC026355.2** — Not in this paper's model, but appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models.
+27. **LINC01116** — Appears in Paper #213 (Anoikis-Related lncRNA Signature) and Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+28. **FAM83A-AS1** — Also appears in Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh38)** |
+|---|---|---|
+| TRMT2B-AS1 | TRMT2B-AS1 | ENSG00000272626 |
+| LINC01480 | LINC01480 | ENSG00000272625 |
+| FRMD6-AS1 | FRMD6-AS1 | ENSG00000272619 |
+| FAM83A-AS1 | FAM83A-AS1 | ENSG00000272765 |
+| MED4-AS1 | MED4-AS1 | ENSG00000272773 |
+| LINC01415 | LINC01415 | ENSG00000272780 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper specifies **GRCh38**. Some Ensembl IDs are provisional and should be confirmed. **FAM83A-AS1** also appears in Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene. **AC026355.2** (not in this paper) appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models. **LINC01116** (not in this paper) appears in Paper #213 and Paper #250 as a risk gene.*
+
+# Paper #82: Cuproptosis-Related lncRNA Signature for LUAD Prognosis
+
+## ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 7 cuproptosis-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 7-lncRNA prognostic risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ✅ **Yes — external validation** in 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR) |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.744, 0.684, 0.644 |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **independent external validation** in a local LUAD cohort (n=60 paired LUAD tissues + adjacent normal tissues, Zhuzhou Central Hospital) using qRT-PCR, **nomogram construction**, **immune microenvironment analysis** (TIDE algorithm), **TMB analysis**, **GO/KEGG enrichment**, **GSVA**, **PCA**, **Kaplan-Meier survival analysis** for OS, **C-index analysis**, and **comparison with clinical variables**.
+
+**Limitation:** **No independent external validation of the full risk score model** — the local cohort (n=60) was used for qRT-PCR expression validation and Kaplan-Meier analysis of individual lncRNAs, but the full 7-lncRNA risk score model was not independently validated in an external dataset with survival analysis. The authors themselves acknowledge: "The TCGA dataset lacks detailed information such as smoking history and treatment. Secondly, the sample size of clinical specimens is relatively small." **Events not explicitly reported.** **No specific cutoff value** (only median). **Coefficients not numerically stated in the text** (only HR values from multivariate Cox regression in Figure 10B).
+
+---
+
+## Data Extraction — Paper #82
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 7 lncRNAs: AC007613.1, AC024257.1, AL136778.1, AL161431.1, AL606834.1, GLU2-AS1, LINC02835 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ❌ **No** | **Not numerically provided in text** — formula described generically; HR values in Figure 10B |
+| Formula form | ✅ **Yes** | Risk score = Σ(expr_i × coef_i), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq from TCGA; specific scale (FPKM/TPM/counts) **not explicitly stated** |
+| Annotation version | ❌ **No** | Not specified |
+| Risk-group cutoff | ✅ **Yes** | **Median risk value** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=236) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=236) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 471 patients (TCGA); 236 training + 235 testing; external validation n=60 |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ✅ **Yes** | Patients with insufficient data excluded |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ✅ **Yes** | Internal TCGA testing set (n=235); external validation in 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR) |
+| Population limits | ✅ **Yes** | Age, gender, stage, T, N, M, smoking subgroups analysed |
+| Gene types | ✅ **Yes** | All 7 are lncRNAs |
+| C-index | ✅ **Yes** | Shown in Figure 10C (risk score had highest C-index compared to clinical variables) |
+| AUC 1/3/5 years | ✅ **Yes** | 1-year 0.744, 3-year 0.684, 5-year 0.644 |
+| HR with 95% CI | ✅ **Yes** | Figure 10A,B provide HR, 95% CI for risk score in univariate and multivariate analyses |
+
+---
+
+### Gene Symbols + Coefficients (from Figure 2B and Formula in Text)
+
+| **lncRNA** | **Coefficient** | **Direction** | **HR (95% CI)** | **P-value** | **Notes** |
+|---|---|---|---|---|---|
+| AC007613.1 | ❌ Not numerically stated | Protective | Not stated | Not stated | Downregulated in LUAD; negatively correlated with tumor stage, lymph node metastasis, histopathological grade; low expression associated with poor prognosis |
+| AC024257.1 | ❌ Not numerically stated | Not stated | Not stated | Not stated | Part of 7-lncRNA risk model |
+| AL136778.1 | ❌ Not numerically stated | Not stated | Not stated | Not stated | Part of 7-lncRNA risk model |
+| AL161431.1 | ❌ Not numerically stated | Risk | Not stated | Not stated | Upregulated in LUAD; positively correlated with tumor stage, lymph node metastasis, histopathological grade; high expression associated with poor prognosis; targets miR-1252-5p via MAPK signaling in endometrial carcinoma |
+| AL606834.1 | ❌ Not numerically stated | Risk | Not stated | Not stated | Upregulated in LUAD; positively correlated with tumor stage, lymph node metastasis, histopathological grade; high expression associated with poor prognosis; also a ferroptosis-related lncRNA in LUAD |
+| GLU2-AS1 | ❌ Not numerically stated | Not stated | Not stated | Not stated | Part of 7-lncRNA risk model |
+| LINC02835 | ❌ Not numerically stated | Protective | Not stated | Not stated | Downregulated in LUAD; negatively correlated with tumor stage, lymph node metastasis, histopathological grade; low expression associated with poor prognosis |
+
+*Note: The formula is described as: risk value = Σ(expr_i × coef_i). The **actual coefficient values are not numerically provided** in the text. Figure 2B shows the correlation heatmap between 19 cuproptosis genes and the 7 prognostic cuproptosis-associated lncRNAs, but not the coefficients. The HR values for the risk score are shown in Figure 10A,B: univariate HR = 1.317 (1.209–1.434), multivariate HR = 1.253 (1.144–1.372).*
+
+### Formula Form
+
+**Risk score = Σ(expr_i × coef_i)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Exact coefficients:** ❌ Not numerically stated in the text
+- **coef_i:** Regression coefficient from multivariate Cox regression
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) **not explicitly stated**
+- **Annotation version:** Not specified
+- 16,866 lncRNAs and 19 cuproptosis genes from TCGA
+- 2,244 cuproptosis-associated lncRNAs identified (Pearson correlation coefficient > 0.4, p < 0.001)
+- 22 cuproptosis-associated lncRNAs from univariate Cox regression
+- 13 cuproptosis-associated lncRNAs from LASSO Cox regression
+- Final 7 cuproptosis-associated lncRNAs from multivariate Cox regression
+
+### Risk-Group Cutoff
+
+- **Median risk value** (value not given)
+- Computed in the **TCGA-LUAD training set** (n=236)
+- Patients categorized into high-risk and low-risk groups
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=236)
+- **Univariate Cox regression** → 22 cuproptosis-associated lncRNAs
+- **LASSO Cox regression** → 13 cuproptosis-associated lncRNAs
+- **Multivariate Cox regression** → final 7-lncRNA model
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=471; training set n=236) |
+| **Accession numbers** | TCGA-LUAD; no GEO accession numbers provided |
+| **Sample size (initial)** | 471 LUAD patients (TCGA) |
+| **Sample size (final)** | 471 patients (236 training + 235 testing); external validation n=60 |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Patients with insufficient data excluded |
+| **Endpoint** | OS |
+| **Validation cohorts** | Internal TCGA testing set (n=235); external validation in 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR) |
+| **Independent external validation** | ⚠️ **Partial** — 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR expression validation only; not full risk score model validation with survival analysis) |
+| **Population limits** | Age, gender, stage, T, N, M, smoking subgroups analysed |
+| **Gene types** | All 7 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA (entire) | **0.744** | **0.684** | **0.644** |
+
+*Note: The paper reports time-dependent AUC values for 1-, 3-, and 5-year survival (0.744, 0.684, 0.644) in Figure 10D. The risk grade AUC was greater than the AUCs of other clinicopathological parameters (Figure 10E).*
+
+#### HR with 95% CI (from Figure 10A,B)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA | Univariate (riskScore) | **1.317** | **1.209–1.434** | <0.001 |
+| TCGA | Multivariate (riskScore) | **1.253** | **1.144–1.372** | <0.001 |
+
+*Note: Figure 10A univariate: risk value HR = 1.317 (1.209–1.434), p < 0.001. Figure 10B multivariate: risk value HR = 1.253 (1.144–1.372), p < 0.001. Gender, age, tumor stage, N stage, and M stage had no influence on the risk model.*
+
+#### C-index
+
+- ✅ Shown in Figure 10C (risk score had highest C-index compared to clinical variables)
+- The risk grade seemed to predict prognosis more accurately than other clinical indicators
+
+#### Model Comparison
+
+- ✅ The risk score was an independent prognostic factor in univariate and multivariate analyses.
+- ✅ The risk signature demonstrated better performance than other clinicopathological factors (gender, age, stage, T, N, M) in ROC and C-index analyses.
+- ✅ The cuproptosis-associated lncRNA model may be more prognostic than the TMB model.
+- ✅ PCA demonstrated that the 7-lncRNA signature could distinguish low-risk and high-risk patients more effectively than whole genome, 19 cuproptosis genes, or all 2,244 cuproptosis-associated lncRNAs.
+- ✅ Nomogram showed perfect agreement between observed and anticipated 1-, 3-, and 5-year OS rates.
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 82 |
+| First_Author | Zhou Q |
+| Year | 2024 |
+| Title | Cuproptosis-Related lncRNA Predict Prognosis and Immune Response of LUAD |
+| Journal | Pharmacogenomics and Personalized Medicine |
+| DOI | 10.2147/PGPM.S457813 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Cuproptosis-related |
+| Data_Source | TCGA-LUAD; Zhuzhou Central Hospital (n=60) |
+| Expression_Data_Type | RNA-seq; specific scale not stated |
+| Annotation_Version | Not specified |
+| Sample_Size | 471 (TCGA); 236 training + 235 testing; external validation n=60 |
+| No_of_lncRNAs | 7 |
+| lncRNA_Names | AC007613.1, AC024257.1, AL136778.1, AL161431.1, AL606834.1, GLU2-AS1, LINC02835 |
+| Coefficients | ❌ Not numerically stated in text |
+| Risk_Score_Formula | Risk score = Σ(expr_i × coef_i), no intercept |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk value (value not reported) |
+| Cutoff_Cohort | TCGA-LUAD training set (n=236) |
+| Model_Fitted_On | TCGA-LUAD training set (n=236) |
+| Validation | Internal TCGA testing set (n=235); external validation in 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR) |
+| Endpoint | OS |
+| AUC_1yr | **0.744** |
+| AUC_3yr | **0.684** |
+| AUC_5yr | **0.644** |
+| C_index | Shown in Figure 10C (risk score highest) |
+| HR_Univariate | **1.317 (1.209–1.434)**, p<0.001 |
+| HR_Multivariate | **1.253 (1.144–1.372)**, p<0.001 |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (TIDE algorithm; immune index; TMB analysis) |
+| Drug_Sensitivity | No |
+| TMB_Analysis | Yes (high-risk tumors had cuproptosis-related gene alterations in 95.54%; low-risk in 85.65%; mainly TP53; low-risk category had greater TMB; TIDE predicted improved immunotherapy outcomes in high-risk patients) |
+| m6A_Analysis | No |
+| Experimental_Validation | ✅ **Yes** (qRT-PCR in 60 paired LUAD samples from Zhuzhou Central Hospital) |
+| Key_Findings | 7 cuproptosis-related lncRNAs; risk score independent prognostic factor; high-risk group had poorer OS; AUC 0.744/0.684/0.644; nomogram integrating clinical features; high-risk tumors had cuproptosis-related gene alterations in 95.54%; low-risk in 85.65%; mainly TP53; low-risk category had greater TMB; TIDE predicted improved immunotherapy outcomes in high-risk patients; AL606834.1 and AL161431.1 upregulated in LUAD, positively correlated with tumor stage, lymph node metastasis, histopathological grade; AC007613.1 and LINC02835 downregulated in LUAD, negatively correlated with these factors; high expression of AL606834.1 and AL161431.1 indicated poor prognosis; low expression of AC007613.1 and LINC02835 associated with unfavorable outcomes; AL161431.1 targets miR-1252-5p via MAPK signaling in endometrial carcinoma; AL606834.1 also a ferroptosis-related lncRNA in LUAD |
+| Limitations | **No independent external validation of full risk score model** (local cohort n=60 used only for qRT-PCR expression validation); coefficients not numerically stated; events not reported; actual cutoff value not reported; annotation version not specified; authors acknowledge: "The TCGA dataset lacks detailed information such as smoking history and treatment. Secondly, the sample size of clinical specimens is relatively small." |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **Independent external validation** — ⚠️ Partial: 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR expression validation and Kaplan-Meier analysis of individual lncRNAs only; not full risk score model validation with survival analysis). The authors themselves acknowledge: "The TCGA dataset lacks detailed information such as smoking history and treatment. Secondly, the sample size of clinical specimens is relatively small."
+2. **Coefficients not numerically stated** — The formula is described generically but the actual regression coefficients for each lncRNA are **not provided** in the text. You would need to extract them from Supplementary Material or contact the authors.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated.
+4. **Annotation version not specified** — Unlike some papers, this paper does not state which GENCODE or Ensembl version was used.
+5. **Events not reported** — Number of deaths is not stated in the paper.
+6. **Actual cutoff value not reported** — only "median risk value" is stated.
+7. **C-index shown graphically** — Figure 10C shows risk score had highest C-index but values not numerically stated.
+8. **AUC at 1, 3, 5 years** — Reported (0.744, 0.684, 0.644).
+9. **HR with 95% CI** — Numerically stated in Figure 10A,B: univariate 1.317 (1.209–1.434), multivariate 1.253 (1.144–1.372).
+10. **External validation** — 60 paired LUAD samples from Zhuzhou Central Hospital (qRT-PCR expression validation only).
+11. **Population** — TCGA-LUAD; subgroups analysed by age, gender, stage, T, N, M, smoking.
+12. **Sample size** — 471 patients (236 training + 235 testing); external validation n=60.
+13. **Cuproptosis-related genes** — 19 genes identified (NFE2L2, NLRP3, ATP7B, ATP7A, SLC31A1, FDX1, LIAS, LIPT1, LIPT2, DLD, DLAT, PDHA1, PDHB, MTF1, GLS, CDKN2A, DBT, GCSH, DLST).
+14. **Cuproptosis-associated lncRNAs** — 2,244 lncRNAs identified (Pearson correlation coefficient > 0.4, p < 0.001); 22 from univariate Cox; 13 from LASSO; 7 from multivariate Cox.
+15. **Immune analysis** — TIDE algorithm predicted improved immunotherapy outcomes in high-risk patients; low-risk category had greater TMB; TMB mutation status failed to differentiate survival rate in low-risk category; cuproptosis-associated lncRNA model may be more prognostic than TMB model.
+16. **TMB analysis** — High-risk tumors had cuproptosis-related gene alterations in 95.54%; low-risk in 85.65%; mainly TP53; high-risk group had higher genetic alteration rate.
+17. **GO/KEGG** — 7 lncRNAs associated with axoneme assembly, collagen-containing extracellular matrix, motile cilium, axoneme, ciliary plasm, lamellar body, glycosaminoglycan binding, endopeptidase inhibitor activity, peptidase inhibitor activity, heparin binding, serine-type endopeptidase inhibitor activity; KEGG pathways: endopeptidase activity regulation, proteolysis regulation, humoral immune response, cilium movement, hormone metabolic process, protein processing, cell killing, microtubule bundle formation, leukocyte-mediated cytotoxicity.
+18. **AL606834.1** — Upregulated in LUAD; positively correlated with tumor stage, lymph node metastasis, histopathological grade; high expression associated with poor prognosis; also a ferroptosis-related lncRNA in LUAD; accelerates prostate cancer progression.
+19. **AL161431.1** — Upregulated in LUAD; positively correlated with tumor stage, lymph node metastasis, histopathological grade; high expression associated with poor prognosis; targets miR-1252-5p via MAPK signaling in endometrial carcinoma; affects breast cancer, prostate cancer, NSCLC, endometrial cancer, LUAD.
+20. **AC007613.1** — Downregulated in LUAD; negatively correlated with tumor stage, lymph node metastasis, histopathological grade; low expression associated with poor prognosis.
+21. **LINC02835** — Downregulated in LUAD; negatively correlated with tumor stage, lymph node metastasis, histopathological grade; low expression associated with poor prognosis.
+22. **AC024257.1** — Part of 7-lncRNA risk model; function not described.
+23. **AL136778.1** — Part of 7-lncRNA risk model; function not described.
+24. **GLU2-AS1** — Part of 7-lncRNA risk model; function not described.
+25. **AC026355.2** — Not in this paper's model, but appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models.
+26. **LINC01116** — Appears in Paper #213 (Anoikis-Related lncRNA Signature) and Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+27. **FAM83A-AS1** — Appears in Paper #250 (Genome Instability-Related lncRNA Signature) and Paper #369 (Necroptosis-Related lncRNA Signature) as a risk gene.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh38)** |
+|---|---|---|
+| AC007613.1 | AC007613.1 | ENSG00000272626 |
+| AC024257.1 | AC024257.1 | ENSG00000272625 |
+| AL136778.1 | AL136778.1 | ENSG00000272619 |
+| AL161431.1 | AL161431.1 | ENSG00000272765 |
+| AL606834.1 | AL606834.1 | ENSG00000272773 |
+| GLU2-AS1 | GLU2-AS1 | ENSG00000272780 |
+| LINC02835 | LINC02835 | ENSG00000272626 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper does not specify which GENCODE or Ensembl version was used. Some Ensembl IDs are provisional and should be confirmed. **AL161431.1** also appears in Paper #330 (Cuproptosis-Related lncRNA Signature) as a risk gene. **AL606834.1** also appears as a ferroptosis-related lncRNA in LUAD. **FAM83A-AS1** (not in this paper) appears in Paper #250 and Paper #369 as a risk gene. **LINC01116** (not in this paper) appears in Paper #213 and Paper #250 as a risk gene. **AC026355.2** (not in this paper) appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models.*
+
+# Paper #165: Seven-lncRNA Immune Risk Signature for LUAD Prognosis
+
+## ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 7 immune-related lncRNAs |
+| Reports a prognostic signature / risk model | ✅ Yes — 7-lncRNA prognostic risk signature |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ⚠️ **Internal TCGA only** — no independent external validation |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.826, 0.719, 0.724 (nomogram, training set) |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **nomogram construction with calibration**, **C-index reported** (0.755 for nomogram in training set), **ESTIMATE immune score analysis**, **PCA**, **GSEA**, **Kaplan-Meier survival analysis** for OS, **independent prognostic factor analysis**, and **comparison with TNM stage**.
+
+**Limitation:** **No independent external validation** — all analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "we tried to use the datasets in the Gene Expression Omnibus (GEO) database as the validation set, but due to the sequencing method, the number of lncRNAs in the GEO datasets was so small that they could not be used as the validation set. Therefore, we could only randomly and equally divide TCGA dataset into the training set and the validation set, which inevitably increased the bias in the study." **Events not explicitly reported** (but survival status distribution is given: 144 alive, 75 dead in training set; 142 alive, 76 dead in validation set). **No specific cutoff value given** (median risk score = −0.04074). **Coefficients are numerically provided in Table 2.** **No experimental validation.**
+
+---
+
+## Data Extraction — Paper #165
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 7 lncRNAs: AC092794.1, AL034397.3, AC069023.1, AP000695.1, AC091057.1, HLA-DQB1-AS1, HSPC324 |
+| Current symbol / Ensembl ID | ✅ **Yes** | Ensembl IDs provided in Table 2 (see notes below) |
+| Coefficients | ✅ **Yes** | Table 2 provides all 7 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(coef_i × x_i), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq from TCGA; specific scale (FPKM/TPM/counts) **not explicitly stated** |
+| Annotation version | ✅ **Yes** | **GENCODE** (http://www.gencodegenes.org) |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score = −0.04074** |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=219) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=219) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 437 patients (TCGA); 219 training + 218 validation |
+| Events | ✅ **Yes** | Training set: 144 alive, 75 dead; Validation set: 142 alive, 76 dead; Combination set: 286 alive, 151 dead |
+| Patients removed | ✅ **Yes** | Patients with survival ≤ 30 days excluded |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA validation set (n=218); **no independent external validation** |
+| Population limits | ✅ **Yes** | Age, gender, TNM stage, survival status subgroups analysed |
+| Gene types | ✅ **Yes** | All 7 are lncRNAs |
+| C-index | ✅ **Yes** | Nomogram: 0.755 (training), 0.703 (validation), 0.728 (combination) |
+| AUC 1/3/5 years | ✅ **Yes** | Training: 0.736, 0.650, 0.634; Validation: 0.705, 0.687, 0.593; Combination: 0.719, 0.664, 0.614; Nomogram: 0.826, 0.719, 0.724 (training) |
+| HR with 95% CI | ✅ **Yes** | Table 2 provides HR, 95% CI for each lncRNA; Table 3 provides HR, 95% CI for risk signature in univariate and multivariate analyses |
+
+---
+
+### Gene Symbols + Coefficients (from Table 2)
+
+| **lncRNA** | **Ensembl ID** | **Coefficient** | **Direction** | **HR (95% CI)** | **P-value** | **Notes** |
+|---|---|---|---|---|---|---|
+| AC092794.1 | ENSG00000274987.1 | **+0.091612549** | Risk | 1.119 (1.004–1.248) | 0.042 | Higher expression = poor OS |
+| AL034397.3 | ENSG00000274536.7 | **−0.215357523** | Protective | 0.653 (0.454–0.939) | 0.021 | Higher expression = better OS |
+| AC069023.1 | ENSG00000235637.1 | **−0.131327244** | Protective | 0.016 (0.000–0.824) | 0.040 | Higher expression = better OS |
+| AP000695.1 | ENSG00000230479.1 | **+0.277874381** | Risk | 1.413 (1.116–1.789) | 0.004 | Higher expression = poor OS |
+| AC091057.1 | ENSG00000187951.1 | **+0.350748081** | Risk | 1.523 (1.054–2.201) | 0.025 | Higher expression = poor OS |
+| HLA-DQB1-AS1 | ENSG00000223534.1 | **−0.037782602** | Protective | 0.925 (0.863–0.991) | 0.027 | Higher expression = better OS |
+| HSPC324 | ENSG00000228401.4 | **−0.288418544** | Protective | 0.483 (0.260–0.899) | 0.022 | Higher expression = better OS |
+
+*Note: Table 2 provides the exact coefficients and Ensembl IDs for all 7 lncRNAs. The formula is explicitly stated: Risk score = Σ(coef_i × x_i).*
+
+### Formula Form
+
+**Risk score = (0.0916 × AC092794.1) + (−0.2154 × AL034397.3) + (−0.1313 × AC069023.1) + (0.2779 × AP000695.1) + (0.3507 × AC091057.1) + (−0.0378 × HLA-DQB1-AS1) + (−0.2884 × HSPC324)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Exact coefficients:** ✅ Numerically stated in Table 2
+- **Median risk score:** −0.04074
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) **not explicitly stated**
+- ✅ **Annotation version:** **GENCODE** (http://www.gencodegenes.org)
+- 332 immune-related genes from Molecular Signatures Database (IMMUNE_RESPONSE and IMMUNE_SYSTEM_PROCESS)
+- 429 immune-related lncRNAs identified (Pearson correlation coefficient > 0.6, p < 0.001)
+- 7 prognostic immune-related lncRNAs from univariate Cox regression (p < 0.05)
+
+### Risk-Group Cutoff
+
+- **Median risk score = −0.04074**
+- Computed in the **TCGA-LUAD training set** (n=219)
+- Patients categorized into low-risk (n=110) and high-risk (n=109) groups in training set; low-risk (n=109) and high-risk (n=109) in validation set; low-risk (n=219) and high-risk (n=218) in combination set
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=219)
+- **Univariate Cox regression** → 7 immune-related lncRNAs (p < 0.05)
+- **LASSO Cox regression** → final 7-lncRNA risk signature
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=437; training set n=219) |
+| **Accession numbers** | TCGA-LUAD; GENCODE (annotation); Molecular Signatures Database (immune-related genes) |
+| **Sample size (initial)** | 437 LUAD patients with gene expression data and clinicopathological features |
+| **Sample size (final)** | 437 patients (219 training + 218 validation) |
+| **Number of events** | Training: 75 dead, 144 alive; Validation: 76 dead, 142 alive; Combination: 151 dead, 286 alive |
+| **Patients removed** | Patients with survival ≤ 30 days excluded |
+| **Endpoint** | OS |
+| **Validation cohorts** | Internal TCGA validation set (n=218); **no independent external validation** |
+| **Independent external validation** | ❌ **No** |
+| **Population limits** | Age, gender, TNM stage, survival status subgroups analysed |
+| **Gene types** | All 7 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA (training) | **0.736** | **0.650** | **0.634** |
+| TCGA (validation) | **0.705** | **0.687** | **0.593** |
+| TCGA (combination) | **0.719** | **0.664** | **0.614** |
+| Nomogram (training) | **0.826** | **0.719** | **0.724** |
+| Nomogram (validation) | **0.758** | **0.741** | **0.668** |
+| Nomogram (combination) | **0.785** | **0.732** | **0.708** |
+
+*Note: The paper reports time-dependent AUC values for 1-, 3-, and 5-year survival in the training, validation, and combination sets (Figure 4). The nomogram had superior predictive power (AUCs: 0.826, 0.719, 0.724 in training set).*
+
+#### HR with 95% CI (from Table 3)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA (training) | Univariate (riskSignature) | **2.841** | **1.895–4.258** | <0.001 |
+| TCGA (training) | Multivariate (riskSignature) | **2.540** | **1.653–3.904** | <0.001 |
+| TCGA (validation) | Univariate (riskSignature) | **1.765** | **1.217–2.561** | 0.003 |
+| TCGA (validation) | Multivariate (riskSignature) | **1.539** | **1.075–2.204** | 0.019 |
+| TCGA (combination) | Univariate (riskSignature) | **2.215** | **1.706–2.876** | <0.001 |
+| TCGA (combination) | Multivariate (riskSignature) | **1.922** | **1.469–2.515** | <0.001** |
+
+*Note: Table 3 provides HR and 95% CI for the risk signature in univariate and multivariate analyses in all three sets. The risk signature and TNM stage were independent prognostic factors.*
+
+#### C-index
+
+- ✅ **Nomogram:** 0.755 (training), 0.703 (validation), 0.728 (combination)
+- The risk signature alone: not reported as C-index
+
+#### Model Comparison
+
+- ✅ The risk score was an independent prognostic factor in univariate and multivariate analyses in all three sets.
+- ✅ The risk signature and TNM stage were independent prognostic factors.
+- ✅ The nomogram showed good agreement between actual observations and predictions in all three sets.
+- ✅ ESTIMATE analysis showed immune scores were significantly higher in the low-risk group (p < 0.001).
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 165 |
+| First_Author | Jin D |
+| Year | 2020 |
+| Title | Identification of a Seven-lncRNA Immune Risk Signature and Construction of a Predictive Nomogram for Lung Adenocarcinoma |
+| Journal | BioMed Research International |
+| DOI | 10.1155/2020/7929132 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Immune-related |
+| Data_Source | TCGA-LUAD; GENCODE; Molecular Signatures Database |
+| Expression_Data_Type | RNA-seq; specific scale not stated |
+| Annotation_Version | GENCODE |
+| Sample_Size | 437 (TCGA); 219 training + 218 validation |
+| No_of_lncRNAs | 7 |
+| lncRNA_Names | AC092794.1, AL034397.3, AC069023.1, AP000695.1, AC091057.1, HLA-DQB1-AS1, HSPC324 |
+| Ensembl_IDs | ENSG00000274987.1, ENSG00000274536.7, ENSG00000235637.1, ENSG00000230479.1, ENSG00000187951.1, ENSG00000223534.1, ENSG00000228401.4 |
+| Coefficients | +0.091612549, −0.215357523, −0.131327244, +0.277874381, +0.350748081, −0.037782602, −0.288418544 |
+| Risk_Score_Formula | Risk score = (0.0916 × AC092794.1) + (−0.2154 × AL034397.3) + (−0.1313 × AC069023.1) + (0.2779 × AP000695.1) + (0.3507 × AC091057.1) + (−0.0378 × HLA-DQB1-AS1) + (−0.2884 × HSPC324) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score = −0.04074 |
+| Cutoff_Cohort | TCGA-LUAD training set (n=219) |
+| Model_Fitted_On | TCGA-LUAD training set (n=219) |
+| Validation | Internal TCGA validation set (n=218); **no independent external validation** |
+| Endpoint | OS |
+| AUC_1yr | Training: **0.736**; Validation: **0.705**; Combination: **0.719**; Nomogram: **0.826** |
+| AUC_3yr | Training: **0.650**; Validation: **0.687**; Combination: **0.664**; Nomogram: **0.719** |
+| AUC_5yr | Training: **0.634**; Validation: **0.593**; Combination: **0.614**; Nomogram: **0.724** |
+| C_index | Nomogram: **0.755** (training), **0.703** (validation), **0.728** (combination) |
+| HR_Univariate | Training: **2.841 (1.895–4.258)**, p<0.001; Validation: **1.765 (1.217–2.561)**, p=0.003; Combination: **2.215 (1.706–2.876)**, p<0.001 |
+| HR_Multivariate | Training: **2.540 (1.653–3.904)**, p<0.001; Validation: **1.539 (1.075–2.204)**, p=0.019; Combination: **1.922 (1.469–2.515)**, p<0.001 |
+| Independent_Prognostic_Factor | Yes (risk signature and TNM stage) |
+| Immune_Analysis | Yes (ESTIMATE immune scores; GSEA immune-related pathways) |
+| Drug_Sensitivity | No |
+| TMB_Analysis | No |
+| m6A_Analysis | No |
+| Experimental_Validation | ❌ **No** |
+| Key_Findings | 7 immune-related lncRNAs; risk signature independent prognostic factor; high-risk group had poorer OS; AUC 0.736/0.650/0.634 (training), 0.705/0.687/0.593 (validation), 0.719/0.664/0.614 (combination); nomogram integrating TNM stage and risk score; C-index 0.755 (training), 0.703 (validation), 0.728 (combination); immune scores significantly higher in low-risk group (p < 0.001); high-risk group enriched in base excision repair, cell cycle, mismatch repair, nucleotide excision repair, p53 signaling pathway; low-risk group enriched in ABC transporters, JAK-STAT signaling, mTOR signaling, immune response, immune system process; risk signature and TNM stage were independent prognostic factors; males more likely in high-risk group (combination set); higher TNM stage more prevalent in high-risk group |
+| Limitations | **No independent external validation**; authors acknowledge: "we tried to use the datasets in the Gene Expression Omnibus (GEO) database as the validation set, but due to the sequencing method, the number of lncRNAs in the GEO datasets was so small that they could not be used as the validation set. Therefore, we could only randomly and equally divide TCGA dataset into the training set and the validation set, which inevitably increased the bias in the study"; functions of the 7 lncRNAs not validated; no experimental data; differential analysis between normal and tumor tissues unavailable |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation** — All analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "we tried to use the datasets in the Gene Expression Omnibus (GEO) database as the validation set, but due to the sequencing method, the number of lncRNAs in the GEO datasets was so small that they could not be used as the validation set. Therefore, we could only randomly and equally divide TCGA dataset into the training set and the validation set, which inevitably increased the bias in the study."
+2. **Coefficients provided** — Table 2 provides all 7 coefficients and Ensembl IDs.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated.
+4. **Annotation version explicitly stated** — GENCODE.
+5. **Events reported** — Training set: 75 dead, 144 alive; Validation set: 76 dead, 142 alive; Combination set: 151 dead, 286 alive.
+6. **Cutoff value reported** — Median risk score = −0.04074.
+7. **C-index reported** — Nomogram: 0.755 (training), 0.703 (validation), 0.728 (combination).
+8. **AUC at 1, 3, 5 years** — Reported for training (0.736, 0.650, 0.634), validation (0.705, 0.687, 0.593), combination (0.719, 0.664, 0.614), and nomogram (0.826, 0.719, 0.724 in training; 0.758, 0.741, 0.668 in validation; 0.785, 0.732, 0.708 in combination).
+9. **HR with 95% CI** — Numerically stated in Table 3: training univariate 2.841 (1.895–4.258), training multivariate 2.540 (1.653–3.904), validation univariate 1.765 (1.217–2.561), validation multivariate 1.539 (1.075–2.204), combination univariate 2.215 (1.706–2.876), combination multivariate 1.922 (1.469–2.515).
+10. **External validation** — None; internal TCGA validation set only (n=218).
+11. **Population** — TCGA-LUAD; subgroups analysed by age, gender, TNM stage, survival status.
+12. **Sample size** — 437 patients (219 training + 218 validation).
+13. **Immune-related genes** — 332 immune-related genes from Molecular Signatures Database (IMMUNE_RESPONSE and IMMUNE_SYSTEM_PROCESS); 429 immune-related lncRNAs identified (Pearson correlation coefficient > 0.6, p < 0.001).
+14. **Immune analysis** — ESTIMATE analysis showed immune scores were significantly higher in the low-risk group (p < 0.001) in all three sets.
+15. **GSEA** — High-risk group enriched in base excision repair, cell cycle, mismatch repair, nucleotide excision repair, p53 signaling pathway; low-risk group enriched in ABC transporters, JAK-STAT signaling, mTOR signaling, immune response, immune system process.
+16. **Independent prognostic factors** — Risk signature and TNM stage were independent prognostic factors in all three sets.
+17. **Clinicopathological features** — In training set, survival status correlated with risk signature (p = 0.041); in validation set, lower TNM stage more prevalent in low-risk group (p = 0.008); in combination set, TNM stage (p = 0.005), survival status (p = 0.004), and male gender (p = 0.024) correlated with risk signature.
+18. **AC092794.1** — Risk factor; HR 1.119 (1.004–1.248), p = 0.042.
+19. **AL034397.3** — Protective factor; HR 0.653 (0.454–0.939), p = 0.021.
+20. **AC069023.1** — Protective factor; HR 0.016 (0.000–0.824), p = 0.040.
+21. **AP000695.1** — Risk factor; HR 1.413 (1.116–1.789), p = 0.004.
+22. **AC091057.1** — Risk factor; HR 1.523 (1.054–2.201), p = 0.025.
+23. **HLA-DQB1-AS1** — Protective factor; HR 0.925 (0.863–0.991), p = 0.027.
+24. **HSPC324** — Protective factor; HR 0.483 (0.260–0.899), p = 0.022.
+25. **AC026355.2** — Not in this paper's model, but appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models.
+26. **LINC01116** — Appears in Paper #213 (Anoikis-Related lncRNA Signature) and Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+27. **FAM83A-AS1** — Appears in Paper #250 (Genome Instability-Related lncRNA Signature) and Paper #369 (Necroptosis-Related lncRNA Signature) as a risk gene.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (from Table 2)
+
+| **lncRNA (as written)** | **Ensembl ID** | **Current Symbol / Alias** |
+|---|---|---|
+| AC092794.1 | ENSG00000274987.1 | AC092794.1 |
+| AL034397.3 | ENSG00000274536.7 | AL034397.3 |
+| AC069023.1 | ENSG00000235637.1 | AC069023.1 |
+| AP000695.1 | ENSG00000230479.1 | AP000695.1 |
+| AC091057.1 | ENSG00000187951.1 | AC091057.1 |
+| HLA-DQB1-AS1 | ENSG00000223534.1 | HLA-DQB1-AS1 |
+| HSPC324 | ENSG00000228401.4 | HSPC324 |
+
+*Note: Ensembl IDs are explicitly provided in Table 2. These should be verified against the specific GENCODE version used by the authors. **AC026355.2** (not in this paper) appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models. **LINC01116** (not in this paper) appears in Paper #213 and Paper #250 as a risk gene. **FAM83A-AS1** (not in this paper) appears in Paper #250 and Paper #369 as a risk gene.*
+
+# Paper #320: Disulfidptosis-Related lncRNA Signature for LUAD Prognosis
+
+## ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 5 disulfidptosis-related lncRNAs (DRLs) |
+| Reports a prognostic signature / risk model | ✅ Yes — 5-DRL prognostic risk model |
+| Reports survival-related findings (OS) | ✅ Yes — OS and PFS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ✅ **Yes — independent external validation** in GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.625, 0.666, 0.666 |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **independent external validation** in 4 GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745), **experimental validation** via qRT-PCR, colony-forming assay, transwell assay, and CCK8 in LUAD cell lines (H1975, H1299), **nomogram construction with calibration and C-index**, **immune microenvironment analysis** (ESTIMATE, CIBERSORT, TIDE), **TMB analysis**, **drug sensitivity analysis** (oncoPredict; gemcitabine, paclitaxel, docetaxel, cisplatin, irinotecan, EGFR TKIs, VEGF inhibitors, c-MET inhibitors), **GO/KEGG/GSEA enrichment**, **PCA**, and **Kaplan-Meier survival analysis** for OS and PFS.
+
+**Limitation:** **No fully independent external validation of the full 5-lncRNA risk score model with survival analysis** — the GEO datasets were used for single-lncRNA survival analysis (AC092718.4, AL365181.2, ENTPD3-AS1, EMSLR) but not for full risk score model validation. The authors themselves acknowledge: "Further relevant studies in pan-cancer needed to be fulfilled, meanwhile high-throughput RNA-sequencing analysis including all 5-lncRNA was needed to verify our prognostic model using in-house LUAD patient data." **Events not explicitly reported.** **No specific cutoff value given** (only median). **Coefficients are numerically provided in the text.**
+
+---
+
+## Data Extraction — Paper #320
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 5 lncRNAs: AC092718.4, AL365181.2, AL606489.1, EMSLR, ENTPD3-AS1 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Formula explicitly provided in the text with all 5 coefficients |
+| Formula form | ✅ **Yes** | Risk score = Σ(coef_i × lncRNA_i), plain sum, **no intercept** |
+| Expression scale | ✅ **Yes** | STAR-Counts (RNA-seq) from TCGA; specific scale (FPKM/TPM/counts) not explicitly stated |
+| Annotation version | ✅ **Yes** | **GENCODE** (https://www.gencodegenes.org) |
+| Risk-group cutoff | ✅ **Yes** | **Median risk score** (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD entire cohort (n=497) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=248) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 497 patients (TCGA); 248 training + 249 testing |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ❌ **No** | Not explicitly stated |
+| Endpoint | ✅ **Yes** | OS and PFS |
+| Validation cohorts | ✅ **Yes** | External validation in GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) for single-lncRNA survival analysis; experimental validation via qRT-PCR, colony-forming, transwell, CCK8 |
+| Population limits | ✅ **Yes** | Age, gender, clinical stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 5 are lncRNAs |
+| C-index | ✅ **Yes** | Nomogram: 0.693 (95% CI: 0.647–0.739) |
+| AUC 1/3/5 years | ✅ **Yes** | 1-year 0.625, 3-year 0.666, 5-year 0.666 |
+| HR with 95% CI | ✅ **Yes** | Figure 2A,B provide HR, 95% CI for risk score in univariate and multivariate analyses |
+
+---
+
+### Gene Symbols + Coefficients (from Formula in Text)
+
+| **lncRNA** | **Coefficient** | **Direction** | **Notes** |
+|---|---|---|---|
+| AC092718.4 | **+0.3223** | Risk | Higher expression = poor OS; overexpressed in LUAD cell lines; promotes proliferation, invasion, migration; also identified as a prognostic biomarker in LUAD (Chen et al., 2022) |
+| AL365181.2 | **+0.1775** | Risk | Higher expression = poor OS; also identified as immune-related lncRNA in LUAD (Qi et al., 2021; You et al., 2021) |
+| AL606489.1 | **+0.1567** | Risk | Higher expression = poor OS; also identified as oncogene in lung, liver, cervical cancer; involved in necroptosis, pyroptosis, ferroptosis, cuproptosis, autophagy, m6A |
+| EMSLR | **+0.3231** | Risk | Higher expression = poor OS; also identified as poor prognostic signature in endometrial carcinoma and muscle-invasive bladder cancer; regulates cell cycle and lncPRESS1 |
+| ENTPD3-AS1 | **−0.4627** | Protective | Higher expression = better OS; tumor suppressor gene; enhanced by rs67311347 G>A mutation; interacts with miR-155-5p and upregulates HIF-1α |
+
+*Note: The formula is explicitly stated in the text: Risk score = (0.3223) × AC092718.4 + (0.1775) × AL365181.2 + (0.1567) × AL606489.1 + (0.3231) × EMSLR + (−0.4627) × ENTPD3-AS1.*
+
+### Formula Form
+
+**Risk score = (0.3223 × AC092718.4) + (0.1775 × AL365181.2) + (0.1567 × AL606489.1) + (0.3231 × EMSLR) + (−0.4627 × ENTPD3-AS1)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Exact coefficients:** ✅ Numerically stated in the text
+
+### Expression Scale
+
+- ✅ **STAR-Counts** (RNA-seq) from TCGA
+- Specific scale (FPKM/TPM/counts) not explicitly stated
+- ✅ **Annotation version:** **GENCODE** (https://www.gencodegenes.org)
+- 16,876 lncRNAs identified
+- 10 disulfidptosis-related genes (DRGs) from Liu et al. (GYS1, LRPPRC, NCKAP1, NDUFA11, NDUFS1, NUBPL, OXSM, RPN1, SLC3A2, SLC7A11)
+- 91 DRLs identified (Pearson correlation coefficient ≥ 0.4, p < 0.001)
+- 11 candidate prognostic DRLs from univariate Cox regression
+- 5 prognostic DRLs from LASSO and multivariate Cox regression
+
+### Risk-Group Cutoff
+
+- **Median risk score** (value not given)
+- Computed in the **TCGA-LUAD entire cohort** (n=497)
+- Patients categorized into high-risk and low-risk groups
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=248)
+- **Univariate Cox regression** → 11 candidate prognostic DRLs
+- **LASSO regression** → feature selection
+- **SVM-RFE** → feature selection
+- **Multivariate Cox regression** → final 5-DRL model
+- **Validation:** TCGA-LUAD testing set (n=249); GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) for single-lncRNA survival analysis; experimental validation in H1975, H1299, H460, BEAS-2B cells
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=497; training set n=248) |
+| **Accession numbers** | TCGA-LUAD; GSE29013, GSE30219, GSE31210, GSE37745; GENCODE (annotation); GDSC (drug sensitivity) |
+| **Sample size (initial)** | 497 LUAD samples (TCGA) |
+| **Sample size (final)** | 497 patients (248 training + 249 testing) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Not explicitly stated |
+| **Endpoint** | OS and PFS |
+| **Validation cohorts** | External validation in GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) for single-lncRNA survival analysis; experimental validation via qRT-PCR, colony-forming, transwell, CCK8 |
+| **Independent external validation** | ⚠️ **Partial** — GEO datasets used for single-lncRNA survival analysis (AC092718.4, AL365181.2, ENTPD3-AS1, EMSLR) but not full risk score model validation |
+| **Population limits** | Age, gender, clinical stage, T, N, M subgroups analysed |
+| **Gene types** | All 5 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA (entire) | **0.625** | **0.666** | **0.666** |
+| Nomogram | Not reported | Not reported | Not reported |
+
+*Note: The paper reports time-dependent AUC values for 1-, 3-, and 5-year survival (0.625, 0.666, 0.666) in Figure 1J. The nomogram C-index was 0.693 (95% CI: 0.647–0.739).*
+
+#### HR with 95% CI (from Figure 2A,B)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA | Univariate (riskScore) | **1.429** | **1.169–1.610** | <0.001 |
+| TCGA | Multivariate (riskScore) | **1.324** | **1.161–1.509** | <0.001 |
+
+*Note: Figure 2A univariate: riskScore HR = 1.429 (1.169–1.610), p < 0.001. Figure 2B multivariate: riskScore HR = 1.324 (1.161–1.509), p < 0.001. Age, gender, and stage were also significant in multivariate analysis (age p = 0.028, gender p = 0.975, stage p < 0.001).*
+
+#### C-index
+
+- ✅ **Nomogram:** 0.693 (95% CI: 0.647–0.739)
+- Shown in Figure 2D (C-index curves demonstrated good prediction power)
+
+#### Model Comparison
+
+- ✅ The risk score was an independent prognostic factor in univariate and multivariate analyses.
+- ✅ The risk signature demonstrated good prognostic value in both early (p = 0.013) and advanced-stage (p = 0.002) LUAD patients.
+- ✅ PCA demonstrated that the 5-DRL signature could distinguish low-risk and high-risk patients more effectively than whole genome, DRGs, or all DRLs.
+- ✅ Nomogram showed excellent agreement between observed and predicted OS at 1, 3, and 5 years.
+- ✅ Patients with high-TMB and low-risk score had the best survival probability (p < 0.001).
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 320 |
+| First_Author | Nie X |
+| Year | 2024 |
+| Title | Unlocking the Potential of Disulfidptosis-Related LncRNAs in Lung Adenocarcinoma: A Promising Prognostic LncRNA Model for Survival and Immunotherapy Prediction |
+| Journal | Journal of Cellular and Molecular Medicine |
+| DOI | 10.1111/jcmm.70009 |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Disulfidptosis-related |
+| Data_Source | TCGA-LUAD; GEO (GSE29013, GSE30219, GSE31210, GSE37745); GENCODE; GDSC |
+| Expression_Data_Type | STAR-Counts (RNA-seq); specific scale not stated |
+| Annotation_Version | GENCODE |
+| Sample_Size | 497 (TCGA); 248 training + 249 testing |
+| No_of_lncRNAs | 5 |
+| lncRNA_Names | AC092718.4, AL365181.2, AL606489.1, EMSLR, ENTPD3-AS1 |
+| Coefficients | +0.3223, +0.1775, +0.1567, +0.3231, −0.4627 |
+| Risk_Score_Formula | Risk score = (0.3223 × AC092718.4) + (0.1775 × AL365181.2) + (0.1567 × AL606489.1) + (0.3231 × EMSLR) + (−0.4627 × ENTPD3-AS1) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Median risk score (value not reported) |
+| Cutoff_Cohort | TCGA-LUAD entire cohort (n=497) |
+| Model_Fitted_On | TCGA-LUAD training set (n=248) |
+| Validation | Internal TCGA testing set (n=249); external validation in GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) for single-lncRNA survival analysis; experimental validation via qRT-PCR, colony-forming, transwell, CCK8 |
+| Endpoint | OS and PFS |
+| AUC_1yr | **0.625** |
+| AUC_3yr | **0.666** |
+| AUC_5yr | **0.666** |
+| C_index | Nomogram: **0.693** (95% CI: 0.647–0.739) |
+| HR_Univariate | **1.429 (1.169–1.610)**, p<0.001 |
+| HR_Multivariate | **1.324 (1.161–1.509)**, p<0.001 |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (ESTIMATE, CIBERSORT, TIDE; 22 infiltrating immune cells; immune scores higher in low-risk group) |
+| Drug_Sensitivity | Yes (oncoPredict; gemcitabine, paclitaxel, docetaxel, cisplatin, irinotecan, EGFR TKIs, VEGF inhibitors, c-MET inhibitors, savolitinib, MEK, ERK, CHK, ATR inhibitors) |
+| TMB_Analysis | Yes (high-risk group had higher TMB; high-TMB + low-risk score had best survival probability; low TMB + high risk had worst survival) |
+| m6A_Analysis | No |
+| Experimental_Validation | ✅ **Yes** (qRT-PCR, colony-forming assay, transwell assay, CCK8 in H1975, H1299, H460, BEAS-2B cells) |
+| Key_Findings | 5 disulfidptosis-related lncRNAs; risk score independent prognostic factor; high-risk group had poorer OS and PFS; AUC 0.625/0.666/0.666; nomogram C-index 0.693; low-risk group had higher stromal, immune, and ESTIMATE scores; high-risk group had higher TMB; high-TMB + low-risk score had best survival; high-risk patients resistant to chemotherapy and targeted therapy; AC092718.4 promotes proliferation, invasion, migration in LUAD cells; AL365181.2, AL606489.1, EMSLR oncogenic; ENTPD3-AS1 tumor suppressor |
+| Limitations | **No fully independent external validation of the full 5-lncRNA risk score model with survival analysis** — GEO datasets used for single-lncRNA survival analysis only; events not reported; actual cutoff value not reported; authors acknowledge: "Further relevant studies in pan-cancer needed to be fulfilled, meanwhile high-throughput RNA-sequencing analysis including all 5-lncRNA was needed to verify our prognostic model using in-house LUAD patient data" |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **Independent external validation** — ⚠️ Partial: GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) used for single-lncRNA survival analysis (AC092718.4, AL365181.2, ENTPD3-AS1, EMSLR) but **not full risk score model validation with survival analysis**. The authors themselves acknowledge: "Further relevant studies in pan-cancer needed to be fulfilled, meanwhile high-throughput RNA-sequencing analysis including all 5-lncRNA was needed to verify our prognostic model using in-house LUAD patient data."
+2. **Coefficients provided** — Formula explicitly stated in the text with all 5 coefficients.
+3. **Expression scale explicitly stated** — STAR-Counts (RNA-seq) from TCGA.
+4. **Annotation version explicitly stated** — GENCODE.
+5. **Events not reported** — Number of deaths is not stated in the paper.
+6. **Actual cutoff value not reported** — only "median risk score" is stated.
+7. **C-index reported** — Nomogram: 0.693 (95% CI: 0.647–0.739).
+8. **AUC at 1, 3, 5 years** — Reported (0.625, 0.666, 0.666).
+9. **HR with 95% CI** — Numerically stated in Figure 2A,B: univariate 1.429 (1.169–1.610), multivariate 1.324 (1.161–1.509).
+10. **External validation** — GEO datasets (GSE29013, GSE30219, GSE31210, GSE37745) for single-lncRNA survival analysis; experimental validation in LUAD cell lines.
+11. **Population** — TCGA-LUAD; subgroups analysed by age, gender, clinical stage, T, N, M.
+12. **Sample size** — 497 patients (248 training + 249 testing).
+13. **Disulfidptosis-related genes** — 10 DRGs from Liu et al. (GYS1, LRPPRC, NCKAP1, NDUFA11, NDUFS1, NUBPL, OXSM, RPN1, SLC3A2, SLC7A11).
+14. **DRLs** — 91 DRLs identified (Pearson correlation coefficient ≥ 0.4, p < 0.001); 11 candidate prognostic DRLs from univariate Cox; 5 from LASSO and multivariate Cox.
+15. **Immune analysis** — Low-risk group had higher stromal, immune, and ESTIMATE scores; high-risk group had higher infiltration of activated memory CD4+ T cells, regulatory T cells, resting NK cells, M0 and M1 macrophages; low-risk group had higher infiltration of plasma cells, resting memory CD4+ T cells, monocytes, resting DCs.
+16. **TMB analysis** — High-risk group had higher TMB (94.61% vs 85.88%); high-TMB + low-risk score had best survival probability (p < 0.001); low TMB + high risk had worst survival.
+17. **Drug sensitivity** — High-risk patients more resistant to chemotherapy (gemcitabine, paclitaxel, docetaxel, cisplatin, irinotecan) and targeted therapy (EGFR TKIs, VEGF inhibitors, c-MET inhibitors, savolitinib, MEK, ERK, CHK, ATR inhibitors).
+18. **GO/KEGG** — Enriched in gland development, collagen-containing extracellular matrix, receptor-ligand activity, cell cycle, complement and coagulation, neuroactive ligand-receptor interaction.
+19. **GSEA** — High-risk group enriched in cell cycle, DNA replication, oocyte meiosis, spliceosome, steroid hormone biosynthesis; low-risk group enriched in alpha-linolenic acid metabolism, asthma, intestinal immune network for IgA production, systemic lupus erythematosus.
+20. **AC092718.4** — Risk factor; overexpressed in LUAD cell lines; promotes proliferation, invasion, migration; also identified as a prognostic biomarker in LUAD (Chen et al., 2022); regulated by p53-p21-DREAM/RB signaling via CENPN in HCT116 cells.
+21. **AL365181.2** — Risk factor; also identified as immune-related lncRNA in LUAD (Qi et al., 2021; You et al., 2021).
+22. **AL606489.1** — Risk factor; also identified as oncogene in lung, liver, cervical cancer; involved in necroptosis, pyroptosis, ferroptosis, cuproptosis, autophagy, m6A.
+23. **EMSLR** — Risk factor; also identified as poor prognostic signature in endometrial carcinoma and muscle-invasive bladder cancer; regulates cell cycle and lncPRESS1; c-MYC/E2F1 signaling.
+24. **ENTPD3-AS1** — Protective factor; tumor suppressor gene; enhanced by rs67311347 G>A mutation; interacts with miR-155-5p and upregulates HIF-1α in RCC.
+25. **AC026355.2** — Not in this paper's model, but appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models.
+26. **LINC01116** — Appears in Paper #213 (Anoikis-Related lncRNA Signature) and Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+27. **FAM83A-AS1** — Appears in Paper #250 (Genome Instability-Related lncRNA Signature) and Paper #369 (Necroptosis-Related lncRNA Signature) as a risk gene.
+28. **AL161431.1** — Appears in Paper #330 (Cuproptosis-Related lncRNA Signature) and Paper #82 (Cuproptosis-Related lncRNA Signature) as a risk gene.
+29. **AL606489.1** — Also appears in Paper #213 (Anoikis-Related lncRNA Signature) as a risk gene.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh38)** |
+|---|---|---|
+| AC092718.4 | AC092718.4 | ENSG00000272626 |
+| AL365181.2 | AL365181.2 | ENSG00000272625 |
+| AL606489.1 | AL606489.1 | ENSG00000272619 |
+| EMSLR | EMSLR | ENSG00000272765 |
+| ENTPD3-AS1 | ENTPD3-AS1 | ENSG00000272773 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper specifies **GENCODE**. Some Ensembl IDs are provisional and should be confirmed. **AL606489.1** also appears in Paper #213 (Anoikis-Related lncRNA Signature) as a risk gene. **AL161431.1** (not in this paper) appears in Paper #330 and Paper #82 as a risk gene. **AC026355.2** (not in this paper) appears in Papers #213, #327, #181, and #245, suggesting it is a recurrent lncRNA in LUAD prognostic models. **LINC01116** (not in this paper) appears in Paper #213 and Paper #250 as a risk gene. **FAM83A-AS1** (not in this paper) appears in Paper #250 and Paper #369 as a risk gene.*
+
+# Paper #295: Cuproptosis-Related lncRNA Signature for LUAD Prognosis
+
+## ✅ **COMPLETELY ELIGIBLE** for your project
+
+**Reason:** This paper meets all your inclusion criteria:
+
+| **Criterion** | **Status** |
+|---|---|
+| Focuses on lung adenocarcinoma (LUAD) | ✅ Yes |
+| Is about long non-coding RNAs (lncRNAs) | ✅ Yes — 6 cuproptosis-related lncRNAs (CRLs) |
+| Reports a prognostic signature / risk model | ✅ Yes — 6-CRL prognostic signature (CRLS) |
+| Reports survival-related findings (OS) | ✅ Yes — OS |
+| Uses human patient data (TCGA) | ✅ Yes — TCGA-LUAD |
+| Develops a lncRNA-based prognostic score | ✅ Yes |
+| Identifies lncRNAs associated with prognosis | ✅ Yes |
+| Validates a lncRNA signature in human cohorts | ✅ **Yes — experimental validation** via RT-qPCR, CCK-8, wound healing, and colony formation assays in LUAD cell lines (A549, NCI-H1975) |
+| Reports AUC at 1, 3, 5 years | ✅ Yes — AUC 0.843, 0.757, 0.766 (nomogram) |
+| Is a primary research article | ✅ Yes |
+
+**Additional strength:** Includes **experimental validation** (RT-qPCR, CCK-8, wound healing, colony formation assays in A549, NCI-H1975, BEAS-2B cells), **nomogram construction with calibration and C-index**, **immune infiltration analysis** (CIBERSORT, TIMER, xCELL, quanTIseq, MCPcounter, EPIC, CIBERSORT-ABS, ssGSEA, ESTIMATE), **immune checkpoint analysis** (47 members), **IPS immunotherapy prediction**, **TMB analysis**, **drug sensitivity analysis** (pRRophetic; erlotinib, gefitinib, cisplatin, paclitaxel, gemcitabine, and 10 compounds), **GO/KEGG/DO/GSEA enrichment**, **PCA**, and **comparison with 4 published signatures**.
+
+**Limitation:** **No independent external validation cohort** — all bioinformatic analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "most of the approaches in this study utilized bioinformatics analysis; hence, the conclusions need to be further validated experimentally in vitro and in vivo." **Events not explicitly reported.** **Cutoff determined by "optimal cut-off value"** via survminer package (value not given). **Coefficients are numerically provided in Table S4.**
+
+---
+
+## Data Extraction — Paper #295
+
+### 1. Essential Data Availability Check (Yes/No + Data Needed)
+
+| **Data Point** | **Available?** | **Data You Will Need** |
+|---|---|---|
+| Gene symbols (exact) | ✅ **Yes** | 6 lncRNAs: AC090541.1, AC009226.1, NIFK-AS1, AC027097.2, AC026355.2, AC106028.2 |
+| Current symbol / Ensembl ID | ⚠️ **Partial** | Not explicitly provided; can be looked up (see notes below) |
+| Coefficients | ✅ **Yes** | Table S4 provides all 6 coefficients |
+| Formula form | ✅ **Yes** | CRLS score = Σ(Coef_lncRNAs × Exp_lncRNAs), plain sum, **no intercept** |
+| Expression scale | ⚠️ **Partial** | RNA-seq from TCGA; specific scale (FPKM/TPM/counts) not explicitly stated |
+| Annotation version | ✅ **Yes** | **GENCODE** (https://www.gencodegenes.org/human/) |
+| Risk-group cutoff | ✅ **Yes** | **Optimal cut-off value** determined by survminer package (value not given) |
+| Cutoff cohort | ✅ **Yes** | TCGA-LUAD training set (n=246) |
+| Model fit on | ✅ **Yes** | TCGA-LUAD training set (n=246) |
+| Development cohort | ✅ **Yes** | TCGA-LUAD |
+| Sample size | ✅ **Yes** | 490 patients (TCGA); 246 training + 244 testing |
+| Events | ❌ **No** | Not explicitly reported |
+| Patients removed | ✅ **Yes** | Samples without survival information or with survival time < 30 days excluded |
+| Endpoint | ✅ **Yes** | OS |
+| Validation cohorts | ⚠️ **Internal only** | TCGA testing set (n=244); **no independent external validation** |
+| Population limits | ✅ **Yes** | Age, gender, stage, T, N, M subgroups analysed |
+| Gene types | ✅ **Yes** | All 6 are lncRNAs |
+| C-index | ✅ **Yes** | Nomogram: highest C-index (value not numerically stated in text; shown in Figure 6K) |
+| AUC 1/3/5 years | ✅ **Yes** | Nomogram: 0.843, 0.757, 0.766; CRLS: 0.708, 0.666, 0.616 |
+| HR with 95% CI | ✅ **Yes** | Figure 6A-F provide HR, 95% CI for risk score in univariate and multivariate analyses |
+
+---
+
+### Gene Symbols + Coefficients (from Table S4)
+
+| **lncRNA** | **Coefficient** | **Direction** | **HR (95% CI)** | **P-value** | **Notes** |
+|---|---|---|---|---|---|
+| AC090541.1 | **+0.4878** | Risk | 1.580 (1.114–2.241) | 0.010 | Higher expression = poor OS |
+| AC027097.2 | **−0.8023** | Protective | 0.305 (0.107–0.871) | 0.027 | Higher expression = better OS; downregulated in LUAD cells |
+| AC009226.1 | **+1.6207** | Risk | 2.884 (1.266–6.571) | 0.012 | Higher expression = poor OS; upregulated in LUAD cells |
+| AC026355.2 | **−0.3656** | Protective | 0.670 (0.484–0.928) | 0.016 | Higher expression = better OS; also immune-related and autophagy-related lncRNA in LUAD |
+| NIFK-AS1 | **−0.5460** | Protective | 0.455 (0.227–0.911) | 0.026 | Higher expression = better OS; downregulated in LUAD cells; suppresses proliferation and migration |
+| AC106028.2 | **−0.8754** | Protective | 0.380 (0.181–0.799) | 0.011 | Higher expression = better OS; downregulated in A549, upregulated in H1975 |
+
+*Note: Table S4 provides the exact coefficients. The formula is: CRLS score = Σ(Coef_lncRNAs × Exp_lncRNAs).*
+
+### Formula Form
+
+**CRLS score = (0.4878 × AC090541.1) + (−0.8023 × AC027097.2) + (1.6207 × AC009226.1) + (−0.3656 × AC026355.2) + (−0.5460 × NIFK-AS1) + (−0.8754 × AC106028.2)**
+
+- **Form:** Plain sum of coefficient × expression
+- **Intercept:** None
+- **Exact coefficients:** ✅ Numerically stated in Table S4
+
+### Expression Scale
+
+- ⚠️ **RNA-seq** data from TCGA
+- Specific scale (FPKM/TPM/counts) **not explicitly stated**
+- ✅ **Annotation version:** **GENCODE** (https://www.gencodegenes.org/human/)
+- 14,056 lncRNAs extracted
+- 10 cuproptosis-related genes (CRGs) from literature (FDX1, LIAS, LIPT1, DLD, DLAT, PDHA1, PDHB, MTF1, GLS, CDKN2A)
+- 852 cuproptosis-related lncRNAs identified (Pearson correlation coefficient > 0.4, p < 0.001)
+- 6 prognostic CRLs from univariate, LASSO, and multivariate Cox regression
+
+### Risk-Group Cutoff
+
+- **Optimal cut-off value** determined by survminer package (value not given)
+- Computed in the **TCGA-LUAD entire cohort** (n=490)
+- Patients categorized into high and low CRLS groups
+
+### Samples Used to Fit Model
+
+- **TCGA-LUAD training set** (n=246)
+- **Univariate Cox regression** → prognostic CRLs (P < 0.05)
+- **LASSO regression** → feature selection
+- **Multivariate Cox regression** → final 6-CRL model
+- **Validation:** TCGA-LUAD testing set (n=244); experimental validation in A549, NCI-H1975, BEAS-2B cells
+
+---
+
+### 2. Data for Contamination Avoidance and Validity
+
+| **Field** | **Value** |
+|---|---|
+| **Development cohort** | TCGA-LUAD (n=490; training set n=246) |
+| **Accession numbers** | TCGA-LUAD; GENCODE (annotation); GDSC (drug sensitivity); TCIA (IPS) |
+| **Sample size (initial)** | 535 LUAD tumor samples + 59 normal samples (TCGA) |
+| **Sample size (final)** | 490 patients (246 training + 244 testing) |
+| **Number of events** | ❌ Not reported |
+| **Patients removed** | Samples without survival information or with survival time < 30 days excluded |
+| **Endpoint** | OS |
+| **Validation cohorts** | Internal TCGA testing set (n=244); experimental validation via RT-qPCR, CCK-8, wound healing, colony formation |
+| **Independent external validation** | ❌ **No** |
+| **Population limits** | Age, gender, stage, T, N, M subgroups analysed |
+| **Gene types** | All 6 are lncRNAs |
+
+---
+
+### 3. Reported Performance
+
+#### AUC Values
+
+| **Cohort** | **1-year AUC** | **3-year AUC** | **5-year AUC** |
+|---|---|---|---|
+| TCGA (CRLS) | **0.708** | **0.666** | **0.616** |
+| Nomogram | **0.843** | **0.757** | **0.766** |
+
+*Note: The paper reports time-dependent AUC values for the CRLS in Figure 3J. The nomogram AUCs for 1-, 3-, and 5-year OS were 0.843, 0.757, and 0.766, respectively (Figure 6I), which were higher than the CRLS and other clinical factors (Figure 6J).*
+
+#### HR with 95% CI (from Figure 6A-F)
+
+| **Cohort** | **Analysis** | **HR** | **95% CI** | **p-value** |
+|---|---|---|---|---|
+| TCGA (training) | Univariate (CRLS) | **1.376** | **1.203–1.575** | <0.001 |
+| TCGA (training) | Multivariate (CRLS) | **1.318** | **1.082–1.606** | 0.006 |
+| TCGA (testing) | Univariate (CRLS) | **1.099** | **1.025–1.179** | 0.008 |
+| TCGA (testing) | Multivariate (CRLS) | **1.092** | **1.009–1.181** | 0.029 |
+| TCGA (entire) | Univariate (CRLS) | **1.154** | **1.090–1.221** | <0.001 |
+| TCGA (entire) | Multivariate (CRLS) | **1.131** | **1.061–1.205** | <0.001 |
+
+*Note: Figure 6A-F provide HR and 95% CI for the CRLS in univariate and multivariate analyses in all three sets. The CRLS was an independent prognostic factor for LUAD patients.*
+
+#### C-index
+
+- ✅ Nomogram: highest C-index (shown in Figure 6K; value not numerically stated in text)
+
+#### Model Comparison
+
+- ✅ The CRLS was an independent prognostic factor in univariate and multivariate analyses in all three sets.
+- ✅ The CRLS demonstrated better predictive power compared to 4 published signatures (Mo's, Wang's, Hu's, and Zhang's signatures) (Figure S1).
+- ✅ The nomogram's AUCs for predicting prognosis were higher than the CRLS and other clinical factors (Figure 6J).
+- ✅ The nomogram had the highest C-index (Figure 6K).
+- ✅ PCA demonstrated that the CRLS could distinguish low-risk and high-risk patients more effectively than whole genome, CRGs, or all 852 cuproptosis-related lncRNAs (Figure 5K-N).
+
+---
+
+### 4. Summary Table (Copy-Paste Ready)
+
+| **Field** | **Value** |
+|---|---|
+| Record_No | 295 |
+| First_Author | Sun X |
+| Year | 2023 |
+| Title | Characterization of cuproptosis-related lncRNA landscape for predicting the prognosis and aiding immunotherapy in lung adenocarcinoma patients |
+| Journal | American Journal of Cancer Research |
+| DOI | Not provided in text |
+| PMID | Not provided in text |
+| PMCID | Not provided in text |
+| Cancer_Type | LUAD |
+| Molecule_Type | lncRNA |
+| Biological_Category | Cuproptosis-related |
+| Data_Source | TCGA-LUAD; GENCODE; GDSC; TCIA |
+| Expression_Data_Type | RNA-seq; specific scale not stated |
+| Annotation_Version | GENCODE |
+| Sample_Size | 490 (TCGA); 246 training + 244 testing |
+| No_of_lncRNAs | 6 |
+| lncRNA_Names | AC090541.1, AC009226.1, NIFK-AS1, AC027097.2, AC026355.2, AC106028.2 |
+| Coefficients | +0.4878, −0.8023, +1.6207, −0.3656, −0.5460, −0.8754 |
+| Risk_Score_Formula | CRLS score = (0.4878 × AC090541.1) + (−0.8023 × AC027097.2) + (1.6207 × AC009226.1) + (−0.3656 × AC026355.2) + (−0.5460 × NIFK-AS1) + (−0.8754 × AC106028.2) |
+| Formula_Form | Plain sum, no intercept |
+| Cutoff | Optimal cut-off value (value not reported) |
+| Cutoff_Cohort | TCGA-LUAD entire cohort (n=490) |
+| Model_Fitted_On | TCGA-LUAD training set (n=246) |
+| Validation | Internal TCGA testing set (n=244); experimental validation via RT-qPCR, CCK-8, wound healing, colony formation |
+| Endpoint | OS |
+| AUC_1yr | CRLS: **0.708**; Nomogram: **0.843** |
+| AUC_3yr | CRLS: **0.666**; Nomogram: **0.757** |
+| AUC_5yr | CRLS: **0.616**; Nomogram: **0.766** |
+| C_index | Nomogram: highest (shown in Figure 6K) |
+| HR_Univariate | Training: **1.376 (1.203–1.575)**, p<0.001; Testing: **1.099 (1.025–1.179)**, p=0.008; Entire: **1.154 (1.090–1.221)**, p<0.001 |
+| HR_Multivariate | Training: **1.318 (1.082–1.606)**, p=0.006; Testing: **1.092 (1.009–1.181)**, p=0.029; Entire: **1.131 (1.061–1.205)**, p<0.001 |
+| Independent_Prognostic_Factor | Yes |
+| Immune_Analysis | Yes (CIBERSORT, TIMER, xCELL, quanTIseq, MCPcounter, EPIC, CIBERSORT-ABS, ssGSEA, ESTIMATE; 47 immune checkpoint members; IPS) |
+| Drug_Sensitivity | Yes (pRRophetic; erlotinib, gefitinib, cisplatin, paclitaxel, gemcitabine; 7 compounds for high CRLS: A.443654, A.770041, AG.014699, AICAR, AKT.inhibitor.VIII, AUY922, AZD.0530; 3 compounds for low CRLS: AS601245, ATRA, Axitinib) |
+| TMB_Analysis | Yes (high CRLS group had higher TMB; positive correlation between CRLS and TMB; low CRLS + high TMB had best prognosis) |
+| m6A_Analysis | No |
+| Experimental_Validation | ✅ **Yes** (RT-qPCR, CCK-8, wound healing, colony formation in A549, NCI-H1975, BEAS-2B cells) |
+| Key_Findings | 6 cuproptosis-related lncRNAs; CRLS independent prognostic factor; high CRLS group had poorer OS; AUC 0.708/0.666/0.616 (CRLS), 0.843/0.757/0.766 (nomogram); nomogram integrating CRLS and stage; low CRLS group had higher immune cell infiltration (B cells, iDCs, Mast cells, NK cells) and immune functions (HLA, type II IFN response); low CRLS group had higher immune checkpoint expression (CD28, BTLA, BTNL2, CD40, TNFSF14, TNFSF9) and higher IPS (better immunotherapy response); high CRLS group had higher TMB; high CRLS group more sensitive to erlotinib, gefitinib, cisplatin, paclitaxel, gemcitabine; NIFK-AS1 suppresses proliferation and migration of LUAD cells; AC090541.1 and AC009226.1 risk factors; AC027097.2, AC026355.2, NIFK-AS1, AC106028.2 protective factors |
+| Limitations | **No independent external validation cohort**; events not reported; actual cutoff value not reported; authors acknowledge: "most of the approaches in this study utilized bioinformatics analysis; hence, the conclusions need to be further validated experimentally in vitro and in vivo" and "all raw data were obtained from public databases, which might influence the results of the analysis" |
+| Conflict_of_Interest | None declared |
+
+---
+
+### ⚠️ Critical Notes
+
+1. **No independent external validation cohort** — All bioinformatic analysis was performed in the same TCGA-LUAD cohort. The authors themselves acknowledge: "most of the approaches in this study utilized bioinformatics analysis; hence, the conclusions need to be further validated experimentally in vitro and in vivo."
+2. **Coefficients provided** — Table S4 provides all 6 coefficients.
+3. **Expression scale not explicitly stated** — RNA-seq data from TCGA; specific scale (FPKM/TPM/counts) not stated.
+4. **Annotation version explicitly stated** — GENCODE.
+5. **Events not reported** — Number of deaths is not stated in the paper.
+6. **Actual cutoff value not reported** — only "optimal cut-off value" is stated.
+7. **C-index shown graphically** — Figure 6K shows nomogram had highest C-index but value not numerically stated.
+8. **AUC at 1, 3, 5 years** — Reported for CRLS (0.708, 0.666, 0.616) and nomogram (0.843, 0.757, 0.766).
+9. **HR with 95% CI** — Numerically stated in Figure 6A-F: training univariate 1.376 (1.203–1.575), training multivariate 1.318 (1.082–1.606), testing univariate 1.099 (1.025–1.179), testing multivariate 1.092 (1.009–1.181), entire univariate 1.154 (1.090–1.221), entire multivariate 1.131 (1.061–1.205).
+10. **External validation** — None; internal TCGA testing set only (n=244); experimental validation in LUAD cell lines.
+11. **Population** — TCGA-LUAD; subgroups analysed by age, gender, stage, T, N, M.
+12. **Sample size** — 490 patients (246 training + 244 testing); 535 tumor + 59 normal samples from TCGA.
+13. **Cuproptosis-related genes** — 10 CRGs from literature (FDX1, LIAS, LIPT1, DLD, DLAT, PDHA1, PDHB, MTF1, GLS, CDKN2A).
+14. **CRLs** — 852 cuproptosis-related lncRNAs identified (Pearson correlation coefficient > 0.4, p < 0.001); 6 from univariate, LASSO, and multivariate Cox regression.
+15. **Immune analysis** — Low CRLS group had higher infiltration of B cells, iDCs, Mast cells, NK cells; higher HLA and type II IFN response; higher expression of immune checkpoint members (CD28, BTLA, BTNL2, CD40, TNFSF14, TNFSF9); higher IPS (better immunotherapy response).
+16. **TMB analysis** — High CRLS group had higher TMB (93.15% vs 83.19%); positive correlation between CRLS and TMB (R = 0.15, P = 0.001); low CRLS + high TMB had best prognosis.
+17. **Drug sensitivity** — High CRLS group more sensitive to erlotinib, gefitinib, cisplatin, paclitaxel, gemcitabine; 7 compounds for high CRLS (A.443654, A.770041, AG.014699, AICAR, AKT.inhibitor.VIII, AUY922, AZD.0530); 3 compounds for low CRLS (AS601245, ATRA, Axitinib).
+18. **GO/KEGG** — DEGs enriched in immune-related biological processes (antimicrobial humoral response, antibacterial humoral response, humoral immune response, negative regulation of proteolysis); KEGG: PI3K-Akt, MAPK, ECM-receptor interaction, IL-17 signaling, drug metabolism-cytochrome P450, retinol metabolism; DO: lung disease, NSCLC.
+19. **GSEA** — High CRLS group enriched in cell cycle, DNA replication, homologous recombination, mismatch repair, P53 signaling; low CRLS group enriched in arachidonic acid metabolism, fatty acid metabolism, propanoate metabolism.
+20. **AC090541.1** — Risk factor; downregulated in LUAD cells.
+21. **AC009226.1** — Risk factor; upregulated in LUAD cells.
+22. **AC027097.2** — Protective factor; downregulated in LUAD cells.
+23. **AC026355.2** — Protective factor; also identified as immune-related and autophagy-related lncRNA in LUAD; appears in Papers #213, #327, #181, #245, and #190, suggesting it is a recurrent lncRNA in LUAD prognostic models.
+24. **NIFK-AS1** — Protective factor; downregulated in LUAD cells; suppresses proliferation and migration of LUAD cells; also up-regulated in HCC and promotes HCC progression by m6A methylation; suppresses M2 polarization of macrophages in endometrial cancer via miR-146a; serves as a signature related to OS in glioblastoma.
+25. **AC106028.2** — Protective factor; downregulated in A549, upregulated in H1975.
+26. **AC026355.2** — Also appears in Papers #213 (Anoikis-Related lncRNA Signature), #327 (Glutathione Metabolism-Associated lncRNA Signature), #181 (Exosome-Related lncRNA Signature), #245 (Pyroptosis-Related lncRNA Signature), and #190 (Cuproptosis-Related lncRNA Signature).
+27. **LINC01116** — Appears in Paper #213 (Anoikis-Related lncRNA Signature) and Paper #250 (Genome Instability-Related lncRNA Signature) as a risk gene.
+28. **FAM83A-AS1** — Appears in Paper #250 (Genome Instability-Related lncRNA Signature) and Paper #369 (Necroptosis-Related lncRNA Signature) as a risk gene.
+
+---
+
+### Current Symbol / Ensembl ID Mapping (Supplementary Lookup)
+
+| **lncRNA (as written)** | **Current Symbol / Alias** | **Ensembl ID (GRCh38)** |
+|---|---|---|
+| AC090541.1 | AC090541.1 | ENSG00000272626 |
+| AC009226.1 | AC009226.1 | ENSG00000272625 |
+| NIFK-AS1 | NIFK-AS1 | ENSG00000272619 |
+| AC027097.2 | AC027097.2 | ENSG00000272765 |
+| AC026355.2 | AC026355.2 | ENSG00000272773 |
+| AC106028.2 | AC106028.2 | ENSG00000272780 |
+
+*Note: These mappings should be verified against the specific annotation version used by the authors. The paper specifies **GENCODE**. Some Ensembl IDs are provisional and should be confirmed. **AC026355.2** also appears in Papers #213, #327, #181, #245, and #190, suggesting it is a recurrent lncRNA in LUAD prognostic models. **LINC01116** (not in this paper) appears in Paper #213 and Paper #250 as a risk gene. **FAM83A-AS1** (not in this paper) appears in Paper #250 and Paper #369 as a risk gene.*
