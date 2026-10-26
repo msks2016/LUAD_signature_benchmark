@@ -96,6 +96,7 @@ seed 2026).
 | 40_paper_outputs.R | Manuscript tables and figures | results/paper/tables, results/paper/figures |
 | 41_reporting_completeness.R | Reporting completeness of 76 papers | results/paper/tables/supp_reporting_completeness_76.csv |
 | 42_supplementary_workbook.R | Supplementary Tables S1-S19 in one workbook | results/paper/Supplementary_Tables_S1-S19.xlsx |
+| 43_graphical_abstract.R | Graphical abstract, drawn from the result tables | results/paper/figures/graphical_abstract.tif |
 
 ## Manuscript items
 

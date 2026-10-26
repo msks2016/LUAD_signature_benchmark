@@ -26,7 +26,8 @@ steps <- c(
   "scripts/34_sensitivity.R",
   "scripts/40_paper_outputs.R",     # manuscript tables and figures (results/paper)
   "scripts/41_reporting_completeness.R", # literature reporting completeness (76 papers)
-  "scripts/42_supplementary_workbook.R"   # Supplementary Tables S1-S19 (Excel; needs openxlsx)
+  "scripts/42_supplementary_workbook.R",  # Supplementary Tables S1-S19 (Excel; needs openxlsx)
+  "scripts/43_graphical_abstract.R"       # graphical abstract for the journal
 )
 for (s in steps) {
   message("\n==== ", s, " ====")
